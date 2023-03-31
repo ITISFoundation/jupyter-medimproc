@@ -1,0 +1,56 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Build folders
+build/
+deploy/
+
+# test folders
+test/
+
+# .env files
+.env
+
+# Python
+__pycache__/
+.venv/
+.pytest_cache/
+
+# java
+*.class
+
+# vscode
+.vscode/
+
+# docker
+.env
+# temp folders
+tmp/
+.tmp
+# gitlab
+*.toml
+
+.cache/
+
+# not interested in storing this file
+docker-compose.yml
+
+# ignore all files in validation
+validation/
+
+*.ignore.*

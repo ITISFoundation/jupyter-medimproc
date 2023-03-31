@@ -1,0 +1,20 @@
+restart-policy: no-restart
+settings:
+  - name: ports
+    type: int
+    value: 8888
+  - name: constraints
+    type: string
+    value:
+      - node.platform.os == linux
+  - name: Resources
+    type: Resources
+    value:
+      Limits:
+        NanoCPUs: 4000000000
+        MemoryBytes: 17179869184
+paths-mapping:
+  inputs_path: /home/jovyan/work/inputs
+  outputs_path: /home/jovyan/work/outputs
+  state_paths:
+    - /home/jovyan/work/workspace

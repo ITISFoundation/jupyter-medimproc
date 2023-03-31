@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  jupyter-fsl:
+    image: simcore/services/dynamic/jupyter-fsl:1.0.1
+    ports:
+      - "8888:8888"
+    environment:
+      - DY_SIDECAR_PATH_INPUTS=mnt/tmp/inputs
+      - DY_SIDECAR_PATH_OUTPUTS=/tmp/outputs
+      - DY_BOOT_OPTION_BOOT_MODE=0
+      - DY_SIDECAR_PATH/home/jovyan/work/workspace
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${PWD}/validation/workspace:/home/jovyan/work/workspace
+      - ${PWD}/validation/inputs:/tmp/inputs
+      - ${PWD}/validation/outputs:/tmp/outputs
