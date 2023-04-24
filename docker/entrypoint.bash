@@ -1,6 +1,6 @@
 #!/bin/bash
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
-# set -euo pipefail
+set -euo pipefail
 IFS=$'\n\t'
 INFO="INFO: [$(basename "$0")] "
 
