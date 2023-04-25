@@ -28,24 +28,12 @@ compose-spec: ## runs ooil to assemble the docker-compose.yml file
 		itisfoundation/ci-service-integration-library:v1.0.1-dev-40 \
 		sh -c "cd /${DOCKER_IMAGE_NAME} && ooil compose"
 
-### NEW: install docker-compose (v1), necessary for compilation
-export DOCKER_COMPOSE_VERSION = 1.29.2
-.PHONY: install-docker-compose ## necessary to install docker compose v1 (so it works correctly)
-install-docker-compose:
-	@# sudo apt update
-	@# sudo apt install python3-pip 
-	@# sudo sed -i '1573d' /usr/lib/python3/dist-packages/OpenSSL/crypto.py  # offending line, generates an error
-	@# pip3 --version
-	@pip install docker-compose==${DOCKER_COMPOSE_VERSION} --quiet
-	@# sudo pip install --no-cache-dir --upgrade pip docker-compose==${DOCKER_COMPOSE_VERSION}
-
-
 .PHONY: build
-build: install-docker-compose compose-spec	## build docker image
+build: compose-spec	## build docker image
 	docker-compose build
 
 .PHONY: run-local
-run-local: install-docker-compose	## runs image with local configuration
+run-local: 	## runs image with local configuration
 	docker-compose --file docker-compose-local.yml up
 
 .PHONY: publish-local

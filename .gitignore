@@ -54,3 +54,6 @@ docker-compose.yml
 validation/
 
 *.ignore.*
+
+## Test folder, only for local testing
+Fariba_FSL_codes/
