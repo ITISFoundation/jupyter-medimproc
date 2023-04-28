@@ -3,7 +3,7 @@
 SHELL = /bin/sh
 .DEFAULT_GOAL := help
 
-export DOCKER_IMAGE_NAME ?= jupyter-fsl
+export DOCKER_IMAGE_NAME ?= jupyter-medimproc
 export DOCKER_IMAGE_TAG ?= 1.0.1
 
 

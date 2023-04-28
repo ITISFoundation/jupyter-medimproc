@@ -1,7 +1,7 @@
 version: '3.7'
 services:
-  jupyter-fsl:
-    image: simcore/services/dynamic/jupyter-fsl:1.0.1
+  jupyter-medimproc:
+    image: simcore/services/dynamic/jupyter-medimproc:1.0.1
     ports:
       - "8888:8888"
     environment:

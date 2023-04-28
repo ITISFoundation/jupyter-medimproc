@@ -11,7 +11,7 @@ assignees: JavierGOrdonnez , elisabettai
 Check in osparc UI: 
 - Search for 'math' under SERVICES
 - Open the info dialog 
-- Copy& paste here the service KEY and VERSION. e.g. simcore/services/dynamic/jupyter-fsl 1.0.1
+- Copy& paste here the service KEY and VERSION. e.g. simcore/services/dynamic/jupyter-medimproc 1.0.1
 -->
 
 ## Long story short

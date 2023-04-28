@@ -1,4 +1,4 @@
 services:
-  jupyter-fsl:
+  jupyter-medimproc:
     build:
       dockerfile: Dockerfile

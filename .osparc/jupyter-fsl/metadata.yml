@@ -7,7 +7,7 @@ description:
   FSL commands can be run both in a terminal or from Jupyter Lab (thus also offering visualization possibilities).
   Either single commands can be run, or full .sh files.
   "
-key: simcore/services/dynamic/jupyter-fsl
+key: simcore/services/dynamic/jupyter-medimproc
 version: 1.0.1
 integration-version: 2.0.0
 type: dynamic

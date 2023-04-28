@@ -1,3 +1,7 @@
-## additional packages
 nibabel
 pyvista
+
+PyOpenGL
+PyOpenGL_accelerate
+fsleyes
+connected-components-3d

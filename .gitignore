@@ -56,4 +56,5 @@ validation/
 *.ignore.*
 
 ## Test folder, only for local testing
-Fariba_FSL_codes/
+Fariba_FSL_codes
+Fariba_full_pipeline
