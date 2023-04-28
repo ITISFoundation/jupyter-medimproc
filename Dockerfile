@@ -18,20 +18,19 @@ RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1
 
 ############################################################
 ## FSL
-# FROM python:3.8 as fsl_installer
-# FROM base as fsl_installer
-# ENV FSLDIR ${HOME}/fsl
-# RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
-# RUN echo "" | python fslinstaller.py -d ${FSLDIR}
-# RUN . ${FSLDIR}/etc/fslconf/fsl.sh
+FROM base as fsl_installer
+ENV FSLDIR ${HOME}/fsl
+RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
+RUN echo "" | python fslinstaller.py -d ${FSLDIR}
+RUN . ${FSLDIR}/etc/fslconf/fsl.sh
 
 ############################################################
 ## Freesurfer
-# FROM base as freesurfer_installer
-# RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules
-# ENV FREESURFER /${HOME}/freesurfer
-# RUN mkdir ${FREESURFER} && wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${FREESURFER}
-# COPY freesurfer_license.txt ${FREESURFER}/freesurfer/license.txt
+FROM base as freesurfer_installer
+RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules
+ENV FREESURFER ${HOME}/freesurfer
+RUN mkdir ${FREESURFER} && wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${FREESURFER}
+COPY freesurfer_license.txt ${FREESURFER}/freesurfer/license.txt
 
 
 ############################################################
@@ -89,25 +88,26 @@ COPY --from=SCT_installer  /root/sct_4.2.1/ ${HOME}/sct
 
 
 # Copy Freesurfer installation
-# ENV FREESURFER_HOME ${HOME}/freesurfer
-# COPY --from=freesurfer_installer ${FREESURFER_HOME}/freesurfer ${FREESURFER_HOME}
-RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules
-# RUN mkdir ${FREESURFER_HOME} && wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${FREESURFER_HOME}
-RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${HOME}
 ENV FREESURFER_HOME ${HOME}/freesurfer
-COPY freesurfer_license.txt ${FREESURFER_HOME}/freesurfer/license.txt
+COPY --from=freesurfer_installer ${FREESURFER_HOME}/freesurfer ${FREESURFER_HOME}
+# RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules
+# # RUN mkdir ${FREESURFER_HOME} && wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${FREESURFER_HOME}
+# RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${HOME}
+# ENV FREESURFER_HOME ${HOME}/freesurfer
+# COPY freesurfer_license.txt ${FREESURFER_HOME}/freesurfer/license.txt
 ENV FSFAST_HOME==$FREESURFER_HOME/fsfast \
   MINC_BIN_DIR=$FREESURFER_HOME/mni/bin \
-  MNI_DIR=$FREESURFER_HOME/mni 
-ENV PATH=$HOME/freesurfer/bin:$MINC_BIN_DIR:$PATH
+  MNI_DIR=$FREESURFER_HOME/mni \
+  PERL5LIB=$FREESURFER_HOME/mni/share/perl5
+ENV PATH=$FREESURFER_HOME/bin:$MINC_BIN_DIR:$PATH
 
 # Copy FSL installation
-# ENV FSLDIR ${HOME}/fsl
-# COPY --from=fsl_installer $/{FSLDIR} ${FSLDIR}
 ENV FSLDIR ${HOME}/fsl
-RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
-RUN echo "" | python fslinstaller.py -d ${FSLDIR}
-RUN . ${FSLDIR}/etc/fslconf/fsl.sh
+COPY --from=fsl_installer ${FSLDIR} ${FSLDIR}
+# ENV FSLDIR ${HOME}/fsl
+# RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
+# RUN echo "" | python fslinstaller.py -d ${FSLDIR}
+# RUN . ${FSLDIR}/etc/fslconf/fsl.sh
 ### Set all necessary FSL environment variables
 ENV FSLOUTPUTTYPE="NIFTI_GZ" \
   FSLTCLSH="$FSLDIR/bin/fsltclsh" \
@@ -181,14 +181,37 @@ RUN sudo apt update && sudo apt install -y jq &&\
   && mv ${KERNEL_DIR}/temp.json ${KERNEL_DIR}/kernel.json
 
 ## Modified README file, to include info about FSL
-COPY --chown=$NB_UID:$NB_GID TODO_README.ipynb ${NOTEBOOK_BASE_DIR}/TODO_README.ipynb
+COPY --chown=$NB_UID:$NB_GID README.ipynb ${NOTEBOOK_BASE_DIR}/README.ipynb
 ## NAME CHANGED TEMP
 
 ## TEMP : for testing
 COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
 ## TODO move above, whenever I will actually need to recompile
-COPY freesurfer_license.txt ${FREESURFER_HOME}/license.txt
-ENV PERL5LIB=$FREESURFER_HOME/mni/share/perl5
+# COPY freesurfer_license.txt ${FREESURFER_HOME}/license.txt
+# ENV PERL5LIB=$FREESURFER_HOME/mni/share/perl5
+
+### It can not connect to the docker daemon
+# ## Try installing docker
+# RUN apt-get update && apt-get install -y ca-certificates curl gnupg
+
+# RUN install -m 0755 -d /etc/apt/keyrings &&\
+#   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg &&\
+#   sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# RUN echo \
+#   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+#   "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+#   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# RUN sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# # RUN sudo docker run hello-world
+
+## Reduce image size
+RUN rm -rf ${FREESURFER_HOME}/subjects
+
+
+## TODO move higher up at some point - adds SCT to path
+ENV PATH=${HOME}/sct/bin:${PATH}
 
 EXPOSE 8888
 
