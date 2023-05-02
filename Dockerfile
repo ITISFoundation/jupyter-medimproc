@@ -31,6 +31,8 @@ RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules
 ENV FREESURFER ${HOME}/freesurfer
 RUN mkdir ${FREESURFER} && wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${FREESURFER}
 COPY freesurfer_license.txt ${FREESURFER}/freesurfer/license.txt
+## Reduce image size
+RUN rm -rf ${FREESURFER}/subjects
 
 
 ############################################################
@@ -129,24 +131,24 @@ COPY --from=mrtrix3-builder /opt/mrtrix3 ${HOME}/mrtrix3
 # Install runtime system dependencies.
 RUN apt-get -qq update \
   && apt-get install -yq --no-install-recommends \
-  tcsh
-#   binutils \
-#   dc \
-#   less \
-#   libfftw3-3 \
-#   libgl1-mesa-glx \
-#   libgomp1 \
-#   liblapack3 \
-#   libpng16-16 \
-#   libqt5core5a \
-#   libqt5gui5 \
-#   libqt5network5 \
-#   libqt5svg5 \
-#   libqt5widgets5 \
-#   libquadmath0 \
-#   libtiff5 \
-#   python3-distutils \
-#   && rm -rf /var/lib/apt/lists/*
+  tcsh \
+  #   binutils \
+  #   dc \
+  #   less \
+  #   libfftw3-3 \
+  #   libgl1-mesa-glx \
+  #   libgomp1 \
+  #   liblapack3 \
+  #   libpng16-16 \
+  #   libqt5core5a \
+  #   libqt5gui5 \
+  #   libqt5network5 \
+  #   libqt5svg5 \
+  #   libqt5widgets5 \
+  #   libquadmath0 \
+  #   libtiff5 \
+  #   python3-distutils \
+  && rm -rf /var/lib/apt/lists/*
 
 ENV ANTSPATH="$HOME/ants/bin" \
   ARTHOME="$HOME/art" \
@@ -190,7 +192,9 @@ COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_fu
 # COPY freesurfer_license.txt ${FREESURFER_HOME}/license.txt
 # ENV PERL5LIB=$FREESURFER_HOME/mni/share/perl5
 
-### It can not connect to the docker daemon
+
+
+# ## It can not connect to the docker daemon
 # ## Try installing docker
 # RUN apt-get update && apt-get install -y ca-certificates curl gnupg
 
@@ -204,10 +208,9 @@ COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_fu
 #   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # RUN sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-# # RUN sudo docker run hello-world
+# RUN sudo service docker start
+# ## nah, still does not work, can not connect to daemon
 
-## Reduce image size
-RUN rm -rf ${FREESURFER_HOME}/subjects
 
 
 ## TODO move higher up at some point - adds SCT to path
