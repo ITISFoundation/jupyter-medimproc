@@ -41,3 +41,5 @@ jobs:
         uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
         with:
           args: docker-compose build
+      - name: print docker image info
+        run: docker images
