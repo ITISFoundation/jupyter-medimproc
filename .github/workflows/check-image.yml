@@ -40,6 +40,6 @@ jobs:
       - name: Build all images if multiple
         uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
         with:
-          args: docker-compose build
+          args: docker-compose build --quiet
       - name: print docker image info
         run: docker images
