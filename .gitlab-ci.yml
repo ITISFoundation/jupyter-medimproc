@@ -1,45 +1,26 @@
-name: Build and check image
+image:
+  name: itisfoundation/ci-service-integration-library:v1.0.1-dev-40
+  entrypoint: ["/bin/sh", "-c"]
 
-on: push
+stages:
+  - build
 
-jobs:
-  verify-image-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo content
-        uses: actions/checkout@v2
-      - name: ooil version
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
-        with:
-          args: ooil --version
-      - name: Assemble docker-compose spec
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
-        with:
-          args: ooil compose
-      - name: create new dir
-        run: sudo mkdir -p /mnt/docker
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 4096
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          build-mount-path: '/mnt/docker'
-      - name: change docker default root path
-        run: |
-          docker info | grep "Docker Root"
-          sudo service docker stop
-          sudo sed -i "s|}|,'data-root': '/mnt/docker'}|" /etc/docker/daemon.json
-          sudo sed -i "s/'/\"/g" /etc/docker/daemon.json
-          sudo cat /etc/docker/daemon.json
-          sudo service docker start
-          docker info | grep "Docker Root"
-      - name: check disk space before image build
-        run: df -h
-      - name: Build all images if multiple
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
-        with:
-          args: docker-compose build --quiet
-      - name: print docker image info
-        run: docker images
+verify-image-build:
+  stage: build
+  script:
+    - apt-get update -qq && apt-get install -y -qq docker.io
+    - docker info
+    - ooil --version
+    - ooil compose
+    - mkdir -p /mnt/docker
+    - easimon/maximize-build-space --root-reserve-mb 4096 --remove-dotnet true --remove-android true --remove-haskell true --build-mount-path /mnt/docker
+    - docker info | grep "Docker Root"
+    - service docker stop
+    - sed -i 's|}|,"data-root": "/mnt/docker"}|' /etc/docker/daemon.json
+    - sed -i "s/'/\"/g" /etc/docker/daemon.json
+    - cat /etc/docker/daemon.json
+    - service docker start
+    - docker info | grep "Docker Root"
+    - df -h
+    - docker-compose build --quiet
+    - docker images
