@@ -6,8 +6,12 @@ stages:
   - build
 
 verify-image-build:
+  image: itisfoundation/ci-service-integration-library:v1.0.1-dev-40
   tags:
     - PYTHON38
+    - DOCKER
+    - LINUX
+
   stage: build
   script:
     - apt-get update -qq && apt-get install -y -qq docker.io
@@ -24,5 +28,7 @@ verify-image-build:
     - service docker start
     - docker info | grep "Docker Root"
     - df -h
-    - docker-compose build --quiet
+    # - docker-compose build --quiet
+    - make build
     - docker images
+    - echo "DONE"
