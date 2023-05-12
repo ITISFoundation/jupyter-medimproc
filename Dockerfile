@@ -11,21 +11,21 @@ COPY freesurfer_license.txt ${FREESURFER}/freesurfer/license.txt
 ## Reduce image size
 RUN rm -rf ${FREESURFER}/subjects
 
-############################################################
-## Spinal Cord Toolbox (command line)
-# FROM python:3.6 as SCT_installer
-FROM base as SCT_installer
-WORKDIR /usr/sct
-# RUN apt install gcc && apt-get update &&\
-#   apt-get install -y curl sudo bzip2 xorg xterm lxterminal openssh-server &&\
-#   apt-get update && apt-get install -y build-essential libgtkmm-3.0-dev libgtkglext1-dev \
-#   libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev  \
-#   # libwebkitgtk-3.0-dev libwebkitgtk-dev python-pip  ## not found
-#   psmisc net-tools  git python3-dev  python3-pip  liblapack-dev gfortran  libjpeg-dev
-RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1.tar.gz | gunzip | tar x &&\
-  cd spinalcordtoolbox-4.2.1 && yes | ./install_sct && cd - && rm -rf spinalcordtoolbox-4.2.1
-# CMD ["./app"]  
-# CMD ["/bin/bash"]
+# ############################################################
+# ## Spinal Cord Toolbox (command line)
+# # FROM python:3.6 as SCT_installer
+# FROM base as SCT_installer
+# WORKDIR /usr/sct
+# # RUN apt install gcc && apt-get update &&\
+# #   apt-get install -y curl sudo bzip2 xorg xterm lxterminal openssh-server &&\
+# #   apt-get update && apt-get install -y build-essential libgtkmm-3.0-dev libgtkglext1-dev \
+# #   libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev  \
+# #   # libwebkitgtk-3.0-dev libwebkitgtk-dev python-pip  ## not found
+# #   psmisc net-tools  git python3-dev  python3-pip  liblapack-dev gfortran  libjpeg-dev
+# RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1.tar.gz | gunzip | tar x &&\
+#   cd spinalcordtoolbox-4.2.1 && yes | ./install_sct && cd - && rm -rf spinalcordtoolbox-4.2.1
+# # CMD ["./app"]  
+# # CMD ["/bin/bash"]
 
 ############################################################
 ## FSL
@@ -102,9 +102,9 @@ ENV FSFAST_HOME==$FREESURFER_HOME/fsfast \
   PERL5LIB=$FREESURFER_HOME/mni/share/perl5
 ENV PATH=$FREESURFER_HOME/bin:$MINC_BIN_DIR:$PATH
 
-# Copy SpCordToolbox installation; adds executable to path
-COPY --from=SCT_installer  /root/sct_4.2.1/ ${HOME}/sct
-ENV PATH=${HOME}/sct/bin:${PATH}
+# # Copy SpCordToolbox installation; adds executable to path
+# COPY --from=SCT_installer  /root/sct_4.2.1/ ${HOME}/sct
+# ENV PATH=${HOME}/sct/bin:${PATH}
 
 # Copy FSL installation
 ENV FSLDIR ${HOME}/fsl
