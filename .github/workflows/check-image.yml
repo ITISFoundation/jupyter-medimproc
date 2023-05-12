@@ -9,14 +9,37 @@ jobs:
       - name: Checkout repo content
         uses: actions/checkout@v2
       - name: ooil version
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-25
+        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
         with:
           args: ooil --version
       - name: Assemble docker-compose spec
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-25
+        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
         with:
           args: ooil compose
-      - name: Build all images if multiple
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-25
+      - name: create new dir
+        run: sudo mkdir -p /mnt/docker
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
         with:
-          args: docker-compose build
+          root-reserve-mb: 4096
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          build-mount-path: '/mnt/docker'
+      - name: change docker default root path
+        run: |
+          docker info | grep "Docker Root"
+          sudo service docker stop
+          sudo sed -i "s|}|,'data-root': '/mnt/docker'}|" /etc/docker/daemon.json
+          sudo sed -i "s/'/\"/g" /etc/docker/daemon.json
+          sudo cat /etc/docker/daemon.json
+          sudo service docker start
+          docker info | grep "Docker Root"
+      - name: check disk space before image build
+        run: df -h
+      - name: Build all images if multiple
+        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
+        with:
+          args: docker-compose build --quiet
+      - name: print docker image info
+        run: docker images
