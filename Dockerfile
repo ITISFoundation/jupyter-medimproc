@@ -2,8 +2,19 @@ FROM itisfoundation/jupyter-math:2.0.8 as base
 ### the path (from HOME) gets writen into some files - better have access to that straighaway
 
 ############################################################
+## Freesurfer
+FROM base as freesurfer_installer
+RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules
+ENV FREESURFER ${HOME}/freesurfer
+RUN mkdir ${FREESURFER} && wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${FREESURFER}
+COPY freesurfer_license.txt ${FREESURFER}/freesurfer/license.txt
+## Reduce image size
+RUN rm -rf ${FREESURFER}/subjects
+
+############################################################
 ## Spinal Cord Toolbox (command line)
-FROM python:3.6 as SCT_installer
+# FROM python:3.6 as SCT_installer
+FROM base as SCT_installer
 WORKDIR /usr/sct
 # RUN apt install gcc && apt-get update &&\
 #   apt-get install -y curl sudo bzip2 xorg xterm lxterminal openssh-server &&\
@@ -24,15 +35,6 @@ RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
 RUN echo "" | python fslinstaller.py -d ${FSLDIR}
 RUN . ${FSLDIR}/etc/fslconf/fsl.sh
 
-############################################################
-## Freesurfer
-FROM base as freesurfer_installer
-RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules
-ENV FREESURFER ${HOME}/freesurfer
-RUN mkdir ${FREESURFER} && wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${FREESURFER}
-COPY freesurfer_license.txt ${FREESURFER}/freesurfer/license.txt
-## Reduce image size
-RUN rm -rf ${FREESURFER}/subjects
 
 
 ############################################################
@@ -81,13 +83,10 @@ RUN curl -fsSL https://osf.io/yswa4/download \
 
 
 #############################################################
-FROM itisfoundation/jupyter-math:2.0.8 as production
+# FROM itisfoundation/jupyter-math:2.0.8 as production
+FROM base as production
 LABEL maintainer="ordonez"
 USER root
-
-# Copy SpCordToolbox installation
-COPY --from=SCT_installer  /root/sct_4.2.1/ ${HOME}/sct
-
 
 # Copy Freesurfer installation
 ENV FREESURFER_HOME ${HOME}/freesurfer
@@ -102,6 +101,10 @@ ENV FSFAST_HOME==$FREESURFER_HOME/fsfast \
   MNI_DIR=$FREESURFER_HOME/mni \
   PERL5LIB=$FREESURFER_HOME/mni/share/perl5
 ENV PATH=$FREESURFER_HOME/bin:$MINC_BIN_DIR:$PATH
+
+# Copy SpCordToolbox installation; adds executable to path
+COPY --from=SCT_installer  /root/sct_4.2.1/ ${HOME}/sct
+ENV PATH=${HOME}/sct/bin:${PATH}
 
 # Copy FSL installation
 ENV FSLDIR ${HOME}/fsl
@@ -187,7 +190,7 @@ COPY --chown=$NB_UID:$NB_GID README.ipynb ${NOTEBOOK_BASE_DIR}/README.ipynb
 ## NAME CHANGED TEMP
 
 ## TEMP : for testing
-COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
+# COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
 ## TODO move above, whenever I will actually need to recompile
 # COPY freesurfer_license.txt ${FREESURFER_HOME}/license.txt
 # ENV PERL5LIB=$FREESURFER_HOME/mni/share/perl5
@@ -213,8 +216,6 @@ COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_fu
 
 
 
-## TODO move higher up at some point - adds SCT to path
-ENV PATH=${HOME}/sct/bin:${PATH}
 
 EXPOSE 8888
 
