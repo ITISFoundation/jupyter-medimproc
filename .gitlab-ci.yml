@@ -8,7 +8,6 @@ stages:
 verify-image-build:
   image: itisfoundation/ci-service-integration-library:v1.0.1-dev-40
   tags:
-    - PYTHON38
     - DOCKER
     - LINUX
 
