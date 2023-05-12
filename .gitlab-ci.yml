@@ -6,6 +6,8 @@ stages:
   - build
 
 verify-image-build:
+  tags:
+    - PYTHON38
   stage: build
   script:
     - apt-get update -qq && apt-get install -y -qq docker.io
