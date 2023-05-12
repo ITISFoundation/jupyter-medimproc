@@ -67,6 +67,7 @@ ENV FSLOUTPUTTYPE="NIFTI_GZ" \
 ############################################################
 ## python packages in requirements.in
 ## before pip install fsleyes, we need to install wxPython:
+WORKDIR ${HOME}
 RUN .venv/bin/pip --no-cache install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxpython &&\
   .venv/bin/pip install attrdict
 # apt-get install freeglut3 libsdl1.2debian &&\
