@@ -17,7 +17,7 @@ verify-image-build:
     - ooil compose
     - mkdir -p /mnt/docker
     # - easimon/maximize-build-space --root-reserve-mb 4096 --remove-dotnet true --remove-android true --remove-haskell true --build-mount-path /mnt/docker
-    - git clone https://gitlab.com/easimon/maximize-build-space.git
+    - git clone https://github.com/easimon/maximize-build-space.git
     - cd maximize-build-space
     - git checkout master
     - ./maximize-build-space.sh --root-reserve-mb 4096 --remove-dotnet true --remove-android true --remove-haskell true --build-mount-path /mnt/docker
