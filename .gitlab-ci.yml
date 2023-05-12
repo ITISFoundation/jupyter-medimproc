@@ -16,7 +16,7 @@ verify-image-build:
     - easimon/maximize-build-space --root-reserve-mb 4096 --remove-dotnet true --remove-android true --remove-haskell true --build-mount-path /mnt/docker
     - docker info | grep "Docker Root"
     - service docker stop
-    - sed -i "s|}|,'data-root': '/mnt/docker'}|" /etc/docker/daemon.json
+    - sed -i "s|}|,'data-root':'/mnt/docker'}|" /etc/docker/daemon.json
     - sed -i "s/'/\"/g" /etc/docker/daemon.json
     - cat /etc/docker/daemon.json
     - service docker start
