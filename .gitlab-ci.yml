@@ -13,8 +13,6 @@ verify-image-build:
 
   stage: build
   script:
-    - apt-get update -qq && apt-get install -y -qq docker.io
-    - docker info
     - ooil --version
     - ooil compose
     - mkdir -p /mnt/docker
