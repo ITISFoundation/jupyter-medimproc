@@ -15,18 +15,6 @@ verify-image-build:
   script:
     - ooil --version
     - ooil compose
-    - mkdir -p /mnt/docker
-    # - easimon/maximize-build-space --root-reserve-mb 4096 --remove-dotnet true --remove-android true --remove-haskell true --build-mount-path /mnt/docker
-    - git clone https://github.com/easimon/maximize-build-space.git
-    - cd maximize-build-space
-    - git checkout master
-    - ./maximize-build-space.sh --root-reserve-mb 4096 --remove-dotnet true --remove-android true --remove-haskell true --build-mount-path /mnt/docker
-    - cd ..
-    - docker info | grep "Docker Root"
-    - service docker stop
-    - sed -i "s|}|,'data-root':'/mnt/docker'}|" /etc/docker/daemon.json
-    - sed -i "s/'/\"/g" /etc/docker/daemon.json
-    - cat /etc/docker/daemon.json
     - service docker start
     - docker info | grep "Docker Root"
     - df -h
