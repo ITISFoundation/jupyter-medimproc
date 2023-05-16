@@ -98,6 +98,26 @@ RUN .venv/bin/pip --no-cache install torch torchvision torchaudio --index-url ht
 RUN chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt &&\
   chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements.txt
 
+#############################################################################
+## non-containerized Synb0-Disco
+# 1: clone the github repo
+WORKDIR ${HOME}
+RUN mkdir synb0-disco && git clone -b "master" --depth 1 https://github.com/MASILab/Synb0-DISCO ${HOME}/synb0-disco &&\
+  rm -rf ${HOME}/synb0-disco/v1_0 
+# save a bit of space; only 430MB and most of it is the Neural Net save files (75MB each * 5 folds)
+
+# 2: overwrite pipeline.sh with the correct paths in our system
+ENV PIPELINE_PATH=${HOME}/synb0-disco/src
+COPY --chown=$NB_UID:$NB_GID pipeline_synb0_disco.sh ${PIPELINE_PATH}/pipeline_no_docker.sh
+
+# 3: make "synb0-disco" a recognized command for the bash console
+### create a symbolic link and make it executable
+RUN mkdir -p /usr/local/bin && \
+  # ln -s -f ${PIPELINE_PATH}/pipeline.sh /usr/local/bin/synb0-disco &&\
+  ln -s -f ${PIPELINE_PATH}/pipeline_no_docker.sh /usr/local/bin &&\
+  mv /usr/local/bin/pipeline_no_docker.sh /usr/local/bin/synb0-disco &&\
+  chmod +x /usr/local/bin/synb0-disco 
+
 ## change the name of the kernel (just for display) in the kernel JSON file
 ENV PYTHON_KERNEL_NAME="python (Medical Image Processing)"
 ENV KERNEL_DIR ${HOME}/.local/share/jupyter/kernels/python-maths
