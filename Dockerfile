@@ -105,8 +105,8 @@ RUN sudo apt update && sudo apt install -y jq &&\
 ## Modified README file, to include info about FSL
 COPY --chown=$NB_UID:$NB_GID README.ipynb ${NOTEBOOK_BASE_DIR}/README.ipynb
 
-# TEMP : for testing
-COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
+# # TEMP : for testing
+# COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
 
 EXPOSE 8888
 
