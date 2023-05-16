@@ -69,13 +69,9 @@ ENV FSLOUTPUTTYPE="NIFTI_GZ" \
 ############################################################
 ## Spinal Cord Toolbox (command line)
 # RUN apt update && apt-get install -y curl   ## already installed for MRTrix3 
-# WORKDIR /usr/sct
-RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1.tar.gz | gunzip | tar x 
-RUN cd spinalcordtoolbox-4.2.1 && (yes "y" 2>/dev/null || true) | ./install_sct && cd - && rm -rf spinalcordtoolbox-4.2.1
-# RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1.tar.gz | gunzip | tar x &&\
-#   cd spinalcordtoolbox-4.2.1 && yes | ./install_sct && cd - && rm -rf spinalcordtoolbox-4.2.1
-# RUN cp /root/sct_4.2.1/ ${HOME}/sct && rm -rf /root/sct_4.2.1/
-# # CMD ["/bin/bash"]
+WORKDIR ${HOME}
+RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1.tar.gz | gunzip | tar x &&\
+  cd spinalcordtoolbox-4.2.1 && (yes "y" 2>/dev/null || true) | ./install_sct && cd - && rm -rf spinalcordtoolbox-4.2.1
 
 ############################################################
 ## python packages in requirements.in
