@@ -105,7 +105,6 @@ ENV FSFAST_HOME==$FREESURFER_HOME/fsfast \
   PERL5LIB=$FREESURFER_HOME/mni/share/perl5
 ENV PATH=$FREESURFER_HOME/bin:$MINC_BIN_DIR:$PATH
 
-
 # Copy FSL installation
 ENV FSLDIR ${HOME}/fsl
 COPY --from=fsl_installer ${FSLDIR} ${FSLDIR}
@@ -189,12 +188,8 @@ RUN sudo apt update && sudo apt install -y jq &&\
 COPY --chown=$NB_UID:$NB_GID README.ipynb ${NOTEBOOK_BASE_DIR}/README.ipynb
 ## NAME CHANGED TEMP
 
-## TEMP : for testing
-# COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
-## TODO move above, whenever I will actually need to recompile
-# COPY freesurfer_license.txt ${FREESURFER_HOME}/license.txt
-# ENV PERL5LIB=$FREESURFER_HOME/mni/share/perl5
-
+# TEMP : for testing
+COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
 
 
 # ## It can not connect to the docker daemon

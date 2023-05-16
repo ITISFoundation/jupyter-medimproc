@@ -39,12 +39,13 @@ ENV ANTSPATH="$HOME/ants/bin" \
 
 ############################################################
 ## Freesurfer
+WORKDIR ${HOME}
 RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules \
   && rm -rf /var/lib/apt/lists/*
+RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${HOME} \
+  && rm -rf ${HOME}/freesurfer/subjects
 ENV FREESURFER_HOME ${HOME}/freesurfer
-RUN mkdir ${FREESURFER_HOME} && wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${FREESURFER_HOME} \
-  && rm -rf ${FREESURFER_HOME}/subjects
-COPY freesurfer_license.txt ${FREESURFER_HOME}/freesurfer/license.txt
+COPY freesurfer_license.txt ${FREESURFER_HOME}/license.txt
 ENV FSFAST_HOME==$FREESURFER_HOME/fsfast \
   MINC_BIN_DIR=$FREESURFER_HOME/mni/bin \
   MNI_DIR=$FREESURFER_HOME/mni \
@@ -53,6 +54,7 @@ ENV PATH=$FREESURFER_HOME/bin:$MINC_BIN_DIR:$PATH
 
 ############################################################
 ## FSL
+WORKDIR ${HOME}
 ENV FSLDIR ${HOME}/fsl
 RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py &&\ 
   echo "" | python fslinstaller.py -d ${FSLDIR} &&\ 
@@ -63,6 +65,17 @@ ENV FSLOUTPUTTYPE="NIFTI_GZ" \
   LD_LIBRARY_PATH=$FSLDIR/fslpython/envs/fslpython/lib/ \
   LD_LIBRARY_PATH="$FSLDIR/lib:$LD_LIBRARY_PATH" \
   PATH=$FSLDIR/share/fsl/bin:$PATH
+
+############################################################
+## Spinal Cord Toolbox (command line)
+# RUN apt update && apt-get install -y curl   ## already installed for MRTrix3 
+# WORKDIR /usr/sct
+RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1.tar.gz | gunzip | tar x 
+RUN cd spinalcordtoolbox-4.2.1 && (yes "y" 2>/dev/null || true) | ./install_sct && cd - && rm -rf spinalcordtoolbox-4.2.1
+# RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1.tar.gz | gunzip | tar x &&\
+#   cd spinalcordtoolbox-4.2.1 && yes | ./install_sct && cd - && rm -rf spinalcordtoolbox-4.2.1
+# RUN cp /root/sct_4.2.1/ ${HOME}/sct && rm -rf /root/sct_4.2.1/
+# # CMD ["/bin/bash"]
 
 ############################################################
 ## python packages in requirements.in
@@ -96,6 +109,10 @@ RUN sudo apt update && sudo apt install -y jq &&\
 ## Modified README file, to include info about FSL
 COPY --chown=$NB_UID:$NB_GID README.ipynb ${NOTEBOOK_BASE_DIR}/README.ipynb
 
+# TEMP : for testing
+COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
+
 EXPOSE 8888
 
+# ENTRYPOINT [ "/bin/bash" ]
 ENTRYPOINT [ "/bin/bash", "/docker/entrypoint.bash" ]

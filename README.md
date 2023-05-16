@@ -1,4 +1,4 @@
-# JupyterLab Dakota
+# JupyterLab for Medical Image Processing (MedImProc)
 
 This is the source code of the JupyterLab Medical Image Processing OSPARC service. It is mostly centered on MRI data, and contains the following packages:
   "[JupyterLab](https://jupyter.org/) with a variety of Medical Image Processing packages pre-installed, mostly centered on MRI data:
