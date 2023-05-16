@@ -91,6 +91,9 @@ RUN .venv/bin/pip --no-cache install pip-tools &&\
   echo "Your environment contains these python packages:" && \
   .venv/bin/pip list 
 
+## install PyTorch for Synb0-Disco
+RUN .venv/bin/pip --no-cache install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
 # remove write permissions from files which are not supposed to be edited
 RUN chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt &&\
   chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements.txt
