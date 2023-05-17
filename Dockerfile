@@ -92,7 +92,7 @@ RUN .venv/bin/pip --no-cache install pip-tools &&\
   .venv/bin/pip list 
 
 ## install PyTorch for Synb0-Disco
-RUN .venv/bin/pip --no-cache install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+RUN .venv/bin/pip --no-cache install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 
 # remove write permissions from files which are not supposed to be edited
 RUN chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt &&\
@@ -105,6 +105,14 @@ WORKDIR ${HOME}
 RUN mkdir synb0-disco && git clone -b "master" --depth 1 https://github.com/MASILab/Synb0-DISCO ${HOME}/synb0-disco &&\
   rm -rf ${HOME}/synb0-disco/v1_0 
 # save a bit of space; only 430MB and most of it is the Neural Net save files (75MB each * 5 folds)
+### create symbolic links for other .sh files used by synb0-disco
+RUN ln -s ${HOME}/synb0-disco/data_processing/normalize_T1.sh /usr/local/bin 
+
+## pre-create INPUTS / OUTPUTS directories in synb0-disco; set all permissions
+RUN mkdir synb0-disco/INPUTS &&\
+  chmod gua+rwx synb0-disco/INPUTS &&\
+  mkdir synb0-disco/OUTPUTS &&\
+  chmod gua+rwx synb0-disco/OUTPUTS
 
 # 2: overwrite pipeline.sh with the correct paths in our system
 ENV PIPELINE_PATH=${HOME}/synb0-disco/src
@@ -118,6 +126,21 @@ RUN mkdir -p /usr/local/bin && \
   mv /usr/local/bin/pipeline_no_docker.sh /usr/local/bin/synb0-disco &&\
   chmod +x /usr/local/bin/synb0-disco 
 
+RUN apt-get -qq update \
+  && apt-get install -yq --no-install-recommends \
+  dc 
+## TODO move up when going to re-compile; just add "dc"
+
+RUN curl -SL https://sourceforge.net/projects/c3d/files/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz/download | tar xz
+ENV PATH=$PATH:$HOME/c3d-1.0.0-Linux-x86_64/bin/
+## install ANTS for synb0-disco
+RUN curl -SL https://github.com/ANTsX/ANTs/releases/download/v2.4.4/ants-2.4.4-ubuntu-20.04-X64-gcc.zip -o ./ants-2-4-4.zip &&\
+  unzip ./ants-2-4-4.zip &&\
+  rm -rf ./ants-2-4-4.zip
+ENV PATH=$PATH:$HOME/ants-2.4.4/bin/ \
+  ANTSPATH=$HOME/ants-2.4.4/bin/
+
+#############################################################################
 ## change the name of the kernel (just for display) in the kernel JSON file
 ENV PYTHON_KERNEL_NAME="python (Medical Image Processing)"
 ENV KERNEL_DIR ${HOME}/.local/share/jupyter/kernels/python-maths
@@ -133,5 +156,4 @@ COPY --chown=$NB_UID:$NB_GID README.ipynb ${NOTEBOOK_BASE_DIR}/README.ipynb
 
 EXPOSE 8888
 
-# ENTRYPOINT [ "/bin/bash" ]
 ENTRYPOINT [ "/bin/bash", "/docker/entrypoint.bash" ]
