@@ -42,8 +42,8 @@ ENV ANTSPATH="$HOME/ants/bin" \
 WORKDIR ${HOME}
 RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules \
   && rm -rf /var/lib/apt/lists/*
-RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${HOME} \
-  && rm -rf ${HOME}/freesurfer/subjects
+RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${HOME} 
+# \ && rm -rf ${HOME}/freesurfer/subjects  # we actually need subjects/fsaverage for recon-all
 ENV FREESURFER_HOME ${HOME}/freesurfer
 COPY freesurfer_license.txt ${FREESURFER_HOME}/license.txt
 ENV FSFAST_HOME==$FREESURFER_HOME/fsfast \
@@ -128,7 +128,8 @@ RUN mkdir -p /usr/local/bin && \
 
 RUN apt-get -qq update \
   && apt-get install -yq --no-install-recommends \
-  dc 
+  dc \
+  && rm -rf /var/lib/apt/lists/*
 ## TODO move up when going to re-compile; just add "dc"
 
 RUN curl -SL https://sourceforge.net/projects/c3d/files/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz/download | tar xz

@@ -4,14 +4,14 @@ SHELL = /bin/sh
 .DEFAULT_GOAL := help
 
 export DOCKER_IMAGE_NAME ?= jupyter-medimproc
-export DOCKER_IMAGE_TAG ?= 1.1.0
+export DOCKER_IMAGE_TAG ?= 1.1.1
 
 
 define _bumpversion
 	# upgrades as $(subst $(1),,$@) version, commits and tags
 	@docker run -it --rm -v $(PWD):/${DOCKER_IMAGE_NAME} \
 		-u $(shell id -u):$(shell id -g) \
-		itisfoundation/ci-service-integration-library:v1.0.1-dev-40 \
+		itisfoundation/ci-service-integration-library:v1.0.1-dev-33 \
 		sh -c "cd /${DOCKER_IMAGE_NAME} && bump2version --verbose --python-math-list --config-file $(1) $(subst $(2),,$@)"
 endef
 
@@ -25,7 +25,7 @@ version-patch version-minor version-major: .bumpversion.cfg ## increases service
 compose-spec: ## runs ooil to assemble the docker-compose.yml file
 	@docker run -it --rm -v $(PWD):/${DOCKER_IMAGE_NAME} \
 		-u $(shell id -u):$(shell id -g) \
-		itisfoundation/ci-service-integration-library:v1.0.1-dev-40 \
+		itisfoundation/ci-service-integration-library:v1.0.1-dev-33 \
 		sh -c "cd /${DOCKER_IMAGE_NAME} && ooil compose"
 
 .PHONY: build
