@@ -151,6 +151,13 @@ RUN sudo apt update && sudo apt install -y jq &&\
 
 ## Modified README file, to include info about FSL
 COPY --chown=$NB_UID:$NB_GID README.ipynb ${NOTEBOOK_BASE_DIR}/README.ipynb
+## Change synb0-disco to run on CPU (as we can not ensure GPU)
+RUN sed -i '83s/.*/    device = torch.device("cpu")/' $HOME/synb0-disco/src/inference.py
+RUN sed -i '87s/.*/    model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))/' $HOME/synb0-disco/src/inference.py
+
+## copy LUT file as Lut (to avoid error in Fariba code)
+# RUN cp ${HOME}/freesurfer/FreeSurferColorLUT.txt ${HOME}/freesurfer/FreeSurferColorLut.txt
+
 
 # # TEMP : for testing
 # COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
