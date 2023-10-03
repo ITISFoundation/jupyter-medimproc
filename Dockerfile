@@ -1,6 +1,6 @@
 ## Refactor as normal (ie no multistage) dockerfile
 ## also have a smaller base image
-FROM itisfoundation/jupyter-math:2.0.8 as main
+FROM itisfoundation/jupyter-math:2.0.9 as main
 LABEL maintainer="ordonez"
 USER root
 
