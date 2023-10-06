@@ -9,6 +9,7 @@ USER root
 RUN apt-get -qq update \
   && apt-get install -yq --no-install-recommends \
   curl \
+  dc \
   libeigen3-dev \
   libfftw3-dev \
   libgl1-mesa-dev \
@@ -66,6 +67,47 @@ ENV FSLOUTPUTTYPE="NIFTI_GZ" \
   LD_LIBRARY_PATH="$FSLDIR/lib:$LD_LIBRARY_PATH" \
   PATH=$FSLDIR/share/fsl/bin:$PATH
 
+#############################################################################
+## non-containerized Synb0-Disco
+# 1: clone the github repo
+WORKDIR ${HOME}
+## install PyTorch for Synb0-Disco
+RUN .venv/bin/pip --no-cache install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu &&\
+  ## clone synb0-disco
+  mkdir synb0-disco && git clone -b "master" --depth 1 https://github.com/MASILab/Synb0-DISCO ${HOME}/synb0-disco &&\
+  rm -rf ${HOME}/synb0-disco/v1_0 &&\
+  # save a bit of space; only 430MB and most of it is the Neural Net save files (75MB each * 5 folds)
+  ### create symbolic links for other .sh files used by synb0-disco
+  ln -s ${HOME}/synb0-disco/data_processing/normalize_T1.sh /usr/local/bin &&\
+  ## pre-create INPUTS / OUTPUTS directories in synb0-disco; set all permissions
+  mkdir synb0-disco/INPUTS &&\
+  chmod gua+rwx synb0-disco/INPUTS &&\
+  mkdir synb0-disco/OUTPUTS &&\
+  chmod gua+rwx synb0-disco/OUTPUTS
+
+# 2: overwrite pipeline.sh with the correct paths in our system
+ENV PIPELINE_PATH=${HOME}/synb0-disco/src
+COPY --chown=$NB_UID:$NB_GID pipeline_synb0_disco.sh ${PIPELINE_PATH}/pipeline_no_docker.sh
+
+# 3: make "synb0-disco" a recognized command for the bash console
+### create a symbolic link and make it executable
+RUN mkdir -p /usr/local/bin && \
+  ln -s -f ${PIPELINE_PATH}/pipeline_no_docker.sh /usr/local/bin &&\
+  mv /usr/local/bin/pipeline_no_docker.sh /usr/local/bin/synb0-disco &&\
+  chmod +x /usr/local/bin/synb0-disco && \
+  ## make synb0-disco TORCH to execute in CPU (mo)
+  sed -i '83s/.*/    device = torch.device("cpu")/' $HOME/synb0-disco/src/inference.py &&\
+  sed -i '87s/.*/    model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))/' $HOME/synb0-disco/src/inference.py
+
+## install ANTS & c3d for synb0-disco
+RUN curl -SL https://github.com/ANTsX/ANTs/releases/download/v2.4.4/ants-2.4.4-ubuntu-20.04-X64-gcc.zip -o ./ants-2-4-4.zip &&\
+  unzip ./ants-2-4-4.zip &&\
+  rm -rf ./ants-2-4-4.zip && \ 
+  curl -SL https://sourceforge.net/projects/c3d/files/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz/download | tar xz
+ENV PATH=$PATH:$HOME/ants-2.4.4/bin/ 
+ENV ANTSPATH=$HOME/ants-2.4.4/bin/
+ENV PATH=$PATH:$HOME/c3d-1.0.0-Linux-x86_64/bin/ 
+
 ############################################################
 ## Spinal Cord Toolbox (command line)
 # RUN apt update && apt-get install -y curl   ## already installed for MRTrix3 
@@ -79,9 +121,7 @@ RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1
 WORKDIR ${HOME}
 RUN .venv/bin/pip --no-cache install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxpython &&\
   .venv/bin/pip install attrdict
-# apt-get install freeglut3 libsdl1.2debian &&\
 
-COPY --chown=$NB_UID:$NB_GID requirements.in ${NOTEBOOK_BASE_DIR}/requirements.in
 RUN .venv/bin/pip --no-cache install pip-tools &&\
   ## rename the previously existing "requirements.txt" from the jupyter-math service (we want to keep it for user reference)
   mv ${NOTEBOOK_BASE_DIR}/requirements.txt ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt   &&\
@@ -90,56 +130,7 @@ RUN .venv/bin/pip --no-cache install pip-tools &&\
   rm ${NOTEBOOK_BASE_DIR}/requirements.in && \
   echo "Your environment contains these python packages:" && \
   .venv/bin/pip list 
-
-## install PyTorch for Synb0-Disco
-RUN .venv/bin/pip --no-cache install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-
-# remove write permissions from files which are not supposed to be edited
-RUN chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt &&\
-  chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements.txt
-
-#############################################################################
-## non-containerized Synb0-Disco
-# 1: clone the github repo
-WORKDIR ${HOME}
-RUN mkdir synb0-disco && git clone -b "master" --depth 1 https://github.com/MASILab/Synb0-DISCO ${HOME}/synb0-disco &&\
-  rm -rf ${HOME}/synb0-disco/v1_0 
-# save a bit of space; only 430MB and most of it is the Neural Net save files (75MB each * 5 folds)
-### create symbolic links for other .sh files used by synb0-disco
-RUN ln -s ${HOME}/synb0-disco/data_processing/normalize_T1.sh /usr/local/bin 
-
-## pre-create INPUTS / OUTPUTS directories in synb0-disco; set all permissions
-RUN mkdir synb0-disco/INPUTS &&\
-  chmod gua+rwx synb0-disco/INPUTS &&\
-  mkdir synb0-disco/OUTPUTS &&\
-  chmod gua+rwx synb0-disco/OUTPUTS
-
-# 2: overwrite pipeline.sh with the correct paths in our system
-ENV PIPELINE_PATH=${HOME}/synb0-disco/src
-COPY --chown=$NB_UID:$NB_GID pipeline_synb0_disco.sh ${PIPELINE_PATH}/pipeline_no_docker.sh
-
-# 3: make "synb0-disco" a recognized command for the bash console
-### create a symbolic link and make it executable
-RUN mkdir -p /usr/local/bin && \
-  # ln -s -f ${PIPELINE_PATH}/pipeline.sh /usr/local/bin/synb0-disco &&\
-  ln -s -f ${PIPELINE_PATH}/pipeline_no_docker.sh /usr/local/bin &&\
-  mv /usr/local/bin/pipeline_no_docker.sh /usr/local/bin/synb0-disco &&\
-  chmod +x /usr/local/bin/synb0-disco 
-
-RUN apt-get -qq update \
-  && apt-get install -yq --no-install-recommends \
-  dc \
-  && rm -rf /var/lib/apt/lists/*
-## TODO move up when going to re-compile; just add "dc"
-
-RUN curl -SL https://sourceforge.net/projects/c3d/files/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz/download | tar xz
-ENV PATH=$PATH:$HOME/c3d-1.0.0-Linux-x86_64/bin/
-## install ANTS for synb0-disco
-RUN curl -SL https://github.com/ANTsX/ANTs/releases/download/v2.4.4/ants-2.4.4-ubuntu-20.04-X64-gcc.zip -o ./ants-2-4-4.zip &&\
-  unzip ./ants-2-4-4.zip &&\
-  rm -rf ./ants-2-4-4.zip
-ENV PATH=$PATH:$HOME/ants-2.4.4/bin/ \
-  ANTSPATH=$HOME/ants-2.4.4/bin/
+COPY --chown=$NB_UID:$NB_GID requirements.in ${NOTEBOOK_BASE_DIR}/requirements.in
 
 #############################################################################
 ## change the name of the kernel (just for display) in the kernel JSON file
@@ -148,19 +139,12 @@ ENV KERNEL_DIR ${HOME}/.local/share/jupyter/kernels/python-maths
 RUN sudo apt update && sudo apt install -y jq &&\
   jq --arg a "$PYTHON_KERNEL_NAME" '.display_name = $a' ${KERNEL_DIR}/kernel.json > ${KERNEL_DIR}/temp.json \
   && mv ${KERNEL_DIR}/temp.json ${KERNEL_DIR}/kernel.json
+# remove write permissions from files which are not supposed to be edited
+RUN chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt &&\
+  chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements.txt
 
 ## Modified README file, to include info about FSL
 COPY --chown=$NB_UID:$NB_GID README.ipynb ${NOTEBOOK_BASE_DIR}/README.ipynb
-## Change synb0-disco to run on CPU (as we can not ensure GPU)
-RUN sed -i '83s/.*/    device = torch.device("cpu")/' $HOME/synb0-disco/src/inference.py
-RUN sed -i '87s/.*/    model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))/' $HOME/synb0-disco/src/inference.py
-
-## copy LUT file as Lut (to avoid error in Fariba code)
-# RUN cp ${HOME}/freesurfer/FreeSurferColorLUT.txt ${HOME}/freesurfer/FreeSurferColorLut.txt
-
-
-# # TEMP : for testing
-# COPY --chown=$NB_UID:$NB_GID Fariba_full_pipeline ${NOTEBOOK_BASE_DIR}/Fariba_full_pipeline
 
 EXPOSE 8888
 
