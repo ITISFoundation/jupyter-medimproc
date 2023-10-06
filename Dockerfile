@@ -108,12 +108,13 @@ ENV PATH=$PATH:$HOME/ants-2.4.4/bin/
 ENV ANTSPATH=$HOME/ants-2.4.4/bin/
 ENV PATH=$PATH:$HOME/c3d-1.0.0-Linux-x86_64/bin/ 
 
-############################################################
-## Spinal Cord Toolbox (command line)
-# RUN apt update && apt-get install -y curl   ## already installed for MRTrix3 
-WORKDIR ${HOME}
-RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1.tar.gz | gunzip | tar x &&\
-  cd spinalcordtoolbox-4.2.1 && (yes "y" 2>/dev/null || true) | ./install_sct && cd - && rm -rf spinalcordtoolbox-4.2.1
+### Temporarily removed for GitHub building space issues
+# ############################################################
+# ## Spinal Cord Toolbox (command line)
+# # RUN apt update && apt-get install -y curl   ## already installed for MRTrix3 
+# WORKDIR ${HOME}
+# RUN curl --location https://github.com/neuropoly/spinalcordtoolbox/archive/4.2.1.tar.gz | gunzip | tar x &&\
+#   cd spinalcordtoolbox-4.2.1 && (yes "y" 2>/dev/null || true) | ./install_sct && cd - && rm -rf spinalcordtoolbox-4.2.1
 
 ############################################################
 ## python packages in requirements.in
