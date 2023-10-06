@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo content
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: ooil version
         uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
         with:
