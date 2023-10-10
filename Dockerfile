@@ -123,6 +123,7 @@ WORKDIR ${HOME}
 RUN .venv/bin/pip --no-cache install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxpython &&\
   .venv/bin/pip install attrdict
 
+COPY --chown=$NB_UID:$NB_GID requirements.in ${NOTEBOOK_BASE_DIR}/requirements.in
 RUN .venv/bin/pip --no-cache install pip-tools &&\
   ## rename the previously existing "requirements.txt" from the jupyter-math service (we want to keep it for user reference)
   mv ${NOTEBOOK_BASE_DIR}/requirements.txt ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt   &&\
@@ -131,7 +132,6 @@ RUN .venv/bin/pip --no-cache install pip-tools &&\
   rm ${NOTEBOOK_BASE_DIR}/requirements.in && \
   echo "Your environment contains these python packages:" && \
   .venv/bin/pip list 
-COPY --chown=$NB_UID:$NB_GID requirements.in ${NOTEBOOK_BASE_DIR}/requirements.in
 
 #############################################################################
 ## change the name of the kernel (just for display) in the kernel JSON file
