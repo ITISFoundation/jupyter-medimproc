@@ -21,9 +21,10 @@ RUN apt-get -qq update \
   zlib1g-dev \
   && rm -rf /var/lib/apt/lists/*
 
-WORKDIR ${HOME}/mrtrix3
-RUN git clone -b "master" --depth 1 https://github.com/MRtrix3/mrtrix3.git . \
-  && ./configure "" && NUMBER_OF_PROCESSORS=4 ./build -persistent -nopaginate \
+WORKDIR ${HOME}
+RUN git clone https://github.com/MRtrix3/mrtrix3.git \
+  && cd mrtrix3 && git checkout 3.0.4 \
+  && ./configure && ./build -persistent -nopaginate \
   && rm -rf tmp
 
 WORKDIR ${HOME}/art
