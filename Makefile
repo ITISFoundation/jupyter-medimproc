@@ -4,7 +4,7 @@ SHELL = /bin/sh
 .DEFAULT_GOAL := help
 
 export DOCKER_IMAGE_NAME ?= jupyter-medimproc
-export DOCKER_IMAGE_TAG ?= 1.2.0
+export DOCKER_IMAGE_TAG ?= 1.2.1
 
 
 define _bumpversion
@@ -12,7 +12,7 @@ define _bumpversion
 	@docker run -it --rm -v $(PWD):/${DOCKER_IMAGE_NAME} \
 		-u $(shell id -u):$(shell id -g) \
 		itisfoundation/ci-service-integration-library:v1.0.1-dev-33 \
-		sh -c "cd /${DOCKER_IMAGE_NAME} && bump2version --verbose --python-math-list --config-file $(1) $(subst $(2),,$@)"
+		sh -c "cd /${DOCKER_IMAGE_NAME} && bump2version --verbose --config-file $(1) $(subst $(2),,$@)"
 endef
 
 .PHONY: version-patch version-minor version-major
