@@ -18,6 +18,21 @@ jobs:
           args: ooil compose
       - name: create new dir
         run: sudo mkdir -p /mnt/docker
+
+      - name: Find Docker daemon.json location
+        run: |
+          sudo find / -name "daemon.json" 2>/dev/null || echo "daemon.json not found"
+
+      - name: Find Docker daemon.json location
+        run: |
+          LOCATIONS=$(sudo find / -name "daemon.json" 2>/dev/null)
+          if [ -n "$LOCATIONS" ]; then
+            echo "daemon.json found at:"
+            echo "$LOCATIONS"
+          else
+            echo "daemon.json not found"
+          fi
+
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
