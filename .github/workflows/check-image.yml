@@ -27,14 +27,12 @@ jobs:
           remove-haskell: 'true'
           build-mount-path: '/mnt/docker'
 
-      - name: check docker config file location
-        run: docker info
       - name: change docker default root path
         run: |
+          docker info
           docker info | grep "Docker Root"
           sudo service docker stop
-          sudo sed -i "s|}|,'data-root': '/mnt/docker'}|" /etc/docker/daemon.json
-          sudo sed -i "s/'/\"/g" /etc/docker/daemon.json
+          sudo echo "{'data-root': '/mnt/docker'}" > /etc/docker/daemon.json
           sudo cat /etc/docker/daemon.json
           sudo service docker start
           docker info | grep "Docker Root"
