@@ -32,7 +32,8 @@ jobs:
           docker info
           docker info | grep "Docker Root"
           sudo service docker stop
-          sudo echo "{'data-root': '/mnt/docker'}" > /etc/docker/daemon.json
+          sudo sh -c 'echo "{ \"data-root\": \"/mnt/docker\" }" > /etc/docker/daemon.json'
+          sudo chmod 644 /etc/docker/daemon.json
           sudo cat /etc/docker/daemon.json
           sudo service docker start
           docker info | grep "Docker Root"
