@@ -2,12 +2,7 @@ name: Build and check image
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-    types: [opened, synchronize, reopened]
+  pull_request_target:
 
 jobs:
   verify-image-build:
