@@ -9,11 +9,11 @@ jobs:
       - name: Checkout repo content
         uses: actions/checkout@v3
       - name: ooil version
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
+        uses: docker://itisfoundation/ci-service-integration-library:v2.0.10
         with:
           args: ooil --version
       - name: Assemble docker-compose spec
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
+        uses: docker://itisfoundation/ci-service-integration-library:v2.0.10
         with:
           args: ooil compose
       - name: create new dir
@@ -38,7 +38,7 @@ jobs:
       - name: check disk space before image build
         run: df -h
       - name: Build all images if multiple
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
+        uses: docker://itisfoundation/ci-service-integration-library:v2.0.10
         with:
           args: docker-compose build --quiet
       - name: print docker image info
