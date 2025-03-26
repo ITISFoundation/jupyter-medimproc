@@ -30,11 +30,11 @@ compose-spec: ## runs ooil to assemble the docker-compose.yml file
 
 .PHONY: build
 build: compose-spec	## build docker image
-	docker-compose build
+	docker compose build
 
 .PHONY: run-local
 run-local: 	## runs image with local configuration
-	docker-compose --file docker-compose-local.yml up
+	docker compose --file docker-compose-local.yml up
 
 .PHONY: publish-local
 publish-local: ## push to local throw away registry to test integration
