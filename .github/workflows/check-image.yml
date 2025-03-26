@@ -1,6 +1,13 @@
 name: Build and check image
 
-on: ["push", "pull_request"]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+    types: [opened, synchronize, reopened]
 
 jobs:
   verify-image-build:
@@ -22,10 +29,10 @@ jobs:
         uses: easimon/maximize-build-space@master
         with:
           root-reserve-mb: 4096
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          build-mount-path: '/mnt/docker'
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
+          build-mount-path: "/mnt/docker"
 
       - name: change docker default root path
         run: |
