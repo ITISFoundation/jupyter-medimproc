@@ -1,19 +1,23 @@
 name: Build and check image
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   verify-image-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo content
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: ooil version
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
+        uses: docker://itisfoundation/ci-service-integration-library:v2.0.10
         with:
           args: ooil --version
-      - name: Assemble docker-compose spec
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
+      - name: Assemble docker compose spec
+        uses: docker://itisfoundation/ci-service-integration-library:v2.0.10
         with:
           args: ooil compose
       - name: create new dir
@@ -22,25 +26,26 @@ jobs:
         uses: easimon/maximize-build-space@master
         with:
           root-reserve-mb: 4096
-          remove-dotnet: 'true'
-          remove-android: 'true'
-          remove-haskell: 'true'
-          build-mount-path: '/mnt/docker'
+          remove-dotnet: "true"
+          remove-android: "true"
+          remove-haskell: "true"
+          build-mount-path: "/mnt/docker"
+
       - name: change docker default root path
         run: |
+          docker info
           docker info | grep "Docker Root"
           sudo service docker stop
-          sudo sed -i "s|}|,'data-root': '/mnt/docker'}|" /etc/docker/daemon.json
-          sudo sed -i "s/'/\"/g" /etc/docker/daemon.json
+          sudo sh -c 'echo "{ \"data-root\": \"/mnt/docker\" }" > /etc/docker/daemon.json'
+          sudo chmod 644 /etc/docker/daemon.json
           sudo cat /etc/docker/daemon.json
           sudo service docker start
           docker info | grep "Docker Root"
       - name: check disk space before image build
         run: df -h
       - name: Build all images if multiple
-        uses: docker://itisfoundation/ci-service-integration-library:v1.0.1-dev-40
+        uses: docker://itisfoundation/ci-service-integration-library:v2.0.10
         with:
-          args: docker-compose build --quiet
+          args: docker compose build --quiet
       - name: print docker image info
         run: docker images
-
