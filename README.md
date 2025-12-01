@@ -14,6 +14,36 @@ Either single commands can be run, or full .sh files.
 
 ____
 
+## Service Modernization
+
+**Current Version:** 1.2.1
+
+A comprehensive modernization plan is available in [`MODERNIZATION_PLAN.md`](./MODERNIZATION_PLAN.md). This plan covers:
+
+- **Current Software Versions:** Detailed inventory of all installed medical imaging software and their versions
+- **Version Updates:** Investigation of newer versions and update strategies for all components
+- **Dockerfile Optimization:** Multi-stage build implementation and layer optimization techniques
+- **Image Size Reduction:** Strategies to reduce the Docker image size by ~15-20%
+- **Build Time Optimization:** Techniques to reduce build time by ~20-30%
+- **Implementation Roadmap:** Phased approach for modernization over 12 weeks
+- **Testing & Validation:** Comprehensive testing strategy to ensure no regression
+
+### Quick Version Reference
+
+| Component | Current Version | Location in Dockerfile |
+|-----------|----------------|------------------------|
+| Base Image | jupyter-math:2.0.9 | Line 3 |
+| MRtrix3 | 3.0.4 | Lines 23-27 |
+| FreeSurfer | 6.0.0 | Lines 41-49 |
+| FSL | Not pinned | Lines 57-63 |
+| ANTs | 2.4.4 | Lines 105-107 |
+| Synb0-DISCO | master (unpinned) | Lines 75-103 |
+| Spinal Cord Toolbox | 4.2.1 (disabled) | Lines 112-115 |
+
+For detailed version information, update strategies, and optimization techniques, please refer to the [Modernization Plan](./MODERNIZATION_PLAN.md).
+
+____
+
 ## Information for developers of this **o<sup>2</sup>S<sup>2</sup>PARC** service
 Building the docker image:
 
