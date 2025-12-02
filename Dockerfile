@@ -1,5 +1,7 @@
-## Refactor as normal (ie no multistage) dockerfile
-## also have a smaller base image
+## Multi-stage build: use FreeSurfer official Docker image to avoid slow server downloads
+FROM freesurfer/freesurfer:7.4.1@sha256:10b6468cbd9fcd2db3708f4651d59ad75d4da849a2c5d8bb6dba217f08b8c46b as freesurfer-source
+
+## Main build stage
 FROM itisfoundation/jupyter-math:2.0.9 as main
 LABEL maintainer="ordonez"
 USER root
@@ -40,19 +42,22 @@ ENV ANTSPATH="$HOME/ants/bin" \
   PATH="$HOME/mrtrix3/bin:$HOME/ants/bin:$HOME/art/bin:$PATH"
 
 ############################################################
-## Freesurfer
+## Freesurfer v7.4.1 (copied from official Docker image to avoid slow download)
 WORKDIR ${HOME}
+# Install FreeSurfer runtime dependencies
 RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules \
   && rm -rf /var/lib/apt/lists/*
-RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${HOME} 
-# \ && rm -rf ${HOME}/freesurfer/subjects  # we actually need subjects/fsaverage for recon-all
-ENV FREESURFER_HOME ${HOME}/freesurfer
-COPY freesurfer_license.txt ${FREESURFER_HOME}/license.txt
-ENV FSFAST_HOME==$FREESURFER_HOME/fsfast \
-  MINC_BIN_DIR=$FREESURFER_HOME/mni/bin \
-  MNI_DIR=$FREESURFER_HOME/mni \
-  PERL5LIB=$FREESURFER_HOME/mni/share/perl5
+# Copy FreeSurfer installation from official Docker image
+COPY --from=freesurfer-source /usr/local/freesurfer /usr/local/freesurfer
+# Set up FreeSurfer environment variables
+ENV FREESURFER_HOME=/usr/local/freesurfer/7.4.1 \
+    FSFAST_HOME=/usr/local/freesurfer/7.4.1/fsfast \
+    MINC_BIN_DIR=/usr/local/freesurfer/7.4.1/mni/bin \
+    MNI_DIR=/usr/local/freesurfer/7.4.1/mni \
+    PERL5LIB=/usr/local/freesurfer/7.4.1/mni/share/perl5
 ENV PATH=$FREESURFER_HOME/bin:$MINC_BIN_DIR:$PATH
+# Copy license file to FreeSurfer home (v7 method)
+COPY freesurfer_license.txt $FREESURFER_HOME/license.txt
 
 ############################################################
 ## FSL
