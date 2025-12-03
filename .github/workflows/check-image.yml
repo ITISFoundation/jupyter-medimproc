@@ -17,9 +17,13 @@ jobs:
       - name: Pull CI service integration library
         run: docker pull ${{ env.CI_SERVICE_INTEGRATION_LIBRARY }}
       - name: ooil version
-        run: docker run --rm ${{ env.CI_SERVICE_INTEGRATION_LIBRARY }} ooil --version
+        uses: docker://itisfoundation/ci-service-integration-library:v2.1.25
+        with:
+          args: ooil --version
       - name: Assemble docker compose spec
-        run: docker run --rm ${{ env.CI_SERVICE_INTEGRATION_LIBRARY }} ooil compose
+        uses: docker://itisfoundation/ci-service-integration-library:v2.1.25
+        with:
+          args: ooil compose
       - name: create new dir
         run: sudo mkdir -p /mnt/docker
       - name: Maximize build space
