@@ -10,18 +10,18 @@ jobs:
   verify-image-build:
     runs-on: ubuntu-latest
     env:
-      CI_SERVICE_INTEGRATION_LIBRARY: itisfoundation/ci-service-integration-library:v2.1.25
+      CI_SERVICE_INTEGRATION_LIBRARY: itisfoundation/ci-service-integration-library:v2.1.27
     steps:
       - name: Checkout repo content
         uses: actions/checkout@v3
       - name: Pull CI service integration library
         run: docker pull ${{ env.CI_SERVICE_INTEGRATION_LIBRARY }}
       - name: ooil version
-        uses: docker://itisfoundation/ci-service-integration-library:v2.1.25
+        uses: docker://itisfoundation/ci-service-integration-library:v2.1.27
         with:
           args: ooil --version
       - name: Assemble docker compose spec
-        uses: docker://itisfoundation/ci-service-integration-library:v2.1.25
+        uses: docker://itisfoundation/ci-service-integration-library:v2.1.27
         with:
           args: ooil compose
       - name: create new dir
