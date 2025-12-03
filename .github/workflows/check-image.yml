@@ -9,13 +9,9 @@ on:
 jobs:
   verify-image-build:
     runs-on: ubuntu-latest
-    env:
-      CI_SERVICE_INTEGRATION_LIBRARY: itisfoundation/ci-service-integration-library:v2.1.27
     steps:
       - name: Checkout repo content
         uses: actions/checkout@v3
-      - name: Pull CI service integration library
-        run: docker pull ${{ env.CI_SERVICE_INTEGRATION_LIBRARY }}
       - name: ooil version
         uses: docker://itisfoundation/ci-service-integration-library:v2.1.27
         with:
@@ -48,6 +44,8 @@ jobs:
       - name: check disk space before image build
         run: df -h
       - name: Build all images if multiple
-        run: docker run --rm ${{ env.CI_SERVICE_INTEGRATION_LIBRARY }} docker compose build
+        uses: docker://itisfoundation/ci-service-integration-library:v2.1.27
+        with:
+          args: docker compose build --quiet
       - name: print docker image info
         run: docker images
