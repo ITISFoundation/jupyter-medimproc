@@ -54,10 +54,10 @@ RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules \
 COPY --from=freesurfer-source /usr/local/freesurfer /usr/local/freesurfer
 # Set up FreeSurfer environment variables
 ENV FREESURFER_HOME=/usr/local/freesurfer/7.4.1 \
-    FSFAST_HOME=/usr/local/freesurfer/7.4.1/fsfast \
-    MINC_BIN_DIR=/usr/local/freesurfer/7.4.1/mni/bin \
-    MNI_DIR=/usr/local/freesurfer/7.4.1/mni \
-    PERL5LIB=/usr/local/freesurfer/7.4.1/mni/share/perl5
+    FSFAST_HOME=$FREESURFER_HOME/fsfast \
+    MINC_BIN_DIR=$FREESURFER_HOME/mni/bin \
+    MNI_DIR=$FREESURFER_HOME/mni \
+    PERL5LIB=$FREESURFER_HOME/mni/share/perl5
 ENV PATH=$FREESURFER_HOME/bin:$MINC_BIN_DIR:$PATH
 # Copy license file to FreeSurfer home (v7 method)
 COPY freesurfer_license.txt $FREESURFER_HOME/license.txt
