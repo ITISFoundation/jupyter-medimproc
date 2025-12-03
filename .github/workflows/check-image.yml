@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo content
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3  ## update?? up to v6 released
       - name: ooil version
         uses: docker://itisfoundation/ci-service-integration-library:v2.1.27
         with:
@@ -46,6 +46,6 @@ jobs:
       - name: Build all images if multiple
         uses: docker://itisfoundation/ci-service-integration-library:v2.1.27
         with:
-          args: docker compose build --verbose
+          args: docker compose build --progress=plain
       - name: print docker image info
         run: docker images
