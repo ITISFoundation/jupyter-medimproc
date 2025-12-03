@@ -9,7 +9,7 @@ Dockerfile          @GitHK
 Makefile            @GitHK
 
 # NOTE: '/' denotes the root of the repository
-/.github/            @pcrespov @GitHK
-/.osparc/            @pcrespov @GitHK @elisabettai
-/kernels/            @elisabettai
-/docker/             @pcrespov @GitHK
+/.github/            @GitHK
+/.osparc/            @GitHK @JavierGOrdonnez
+/kernels/            @JavierGOrdonnez
+/docker/             @GitHK
