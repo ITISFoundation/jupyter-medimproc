@@ -1,5 +1,9 @@
 name: Build and check image
 
+env: 
+  CI_SERVICE_INTEGRATION_LIBRARY: itisfoundation/ci-service-integration-library:v2.1.25
+
+
 on:
   push:
     branches:
@@ -13,11 +17,11 @@ jobs:
       - name: Checkout repo content
         uses: actions/checkout@v3
       - name: ooil version
-        uses: docker://${CI_SERVICE_INTEGRATION_LIBRARY}
+        uses: docker://$CI_SERVICE_INTEGRATION_LIBRARY
         with:
           args: ooil --version
       - name: Assemble docker compose spec
-        uses: docker://${CI_SERVICE_INTEGRATION_LIBRARY}
+        uses: docker://$CI_SERVICE_INTEGRATION_LIBRARY
         with:
           args: ooil compose
       - name: create new dir
@@ -44,7 +48,7 @@ jobs:
       - name: check disk space before image build
         run: df -h
       - name: Build all images if multiple
-        uses: docker://${CI_SERVICE_INTEGRATION_LIBRARY}
+        uses: docker://$CI_SERVICE_INTEGRATION_LIBRARY
         with:
           args: docker compose build --quiet
       - name: print docker image info
