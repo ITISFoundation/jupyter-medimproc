@@ -19,7 +19,10 @@ RUN apt-get -qq update \
   libqt5opengl5-dev \
   libqt5svg5-dev \
   libtiff5-dev \
-  qt5-default \
+  qtbase5-dev \
+  qtchooser \
+  qt5-qmake \
+  qtbase5-dev-tools \
   zlib1g-dev \
   && rm -rf /var/lib/apt/lists/*
 
@@ -124,17 +127,19 @@ ENV PATH=$PATH:$HOME/c3d-1.0.0-Linux-x86_64/bin/
 
 ############################################################
 ## python packages in requirements.in
-## before pip install fsleyes, we need to install wxPython:
+## fsleyes requires wxPython, which has pre-built wheels available
 WORKDIR ${HOME}
-RUN .venv/bin/pip --no-cache install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxpython &&\
-  .venv/bin/pip install attrdict
 
 COPY --chown=$NB_UID:$NB_GID requirements.in ${NOTEBOOK_BASE_DIR}/requirements.in
 RUN .venv/bin/pip --no-cache install pip-tools &&\
   ## rename the previously existing "requirements.txt" from the jupyter-math service (we want to keep it for user reference)
   mv ${NOTEBOOK_BASE_DIR}/requirements.txt ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt   &&\
+  ## Run pip-compile with find-links and only-binary to ensure wxpython wheel is used
+  PIP_FIND_LINKS=https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 \
+  PIP_ONLY_BINARY=wxpython \
   .venv/bin/pip-compile --build-isolation --output-file ${NOTEBOOK_BASE_DIR}/requirements.txt ${NOTEBOOK_BASE_DIR}/requirements.in   &&\
-  .venv/bin/pip --no-cache install -r ${NOTEBOOK_BASE_DIR}/requirements.txt && \
+  ## Install all packages, ensuring wxpython comes from the wheel
+  .venv/bin/pip --no-cache install --only-binary=wxpython --find-links https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 -r ${NOTEBOOK_BASE_DIR}/requirements.txt && \
   rm ${NOTEBOOK_BASE_DIR}/requirements.in && \
   echo "Your environment contains these python packages:" && \
   .venv/bin/pip list 

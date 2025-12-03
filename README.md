@@ -1,5 +1,14 @@
 # JupyterLab for Medical Image Processing (MedImProc)
 
+<!-- TODO'S
+- DONE fix build process
+- bump version to 2.2.0 after bump in FreeSurfer + make sure pipeline Fariba runs end to end
+- add version details in the README
+- add badges
+- then keep going through modernization plan (reduce image size, build time etc); add these learning to my Obsidian notes
+- in future, download FreeSurfer 8.1.0 .deb and put in filesrv and fetch from there (like in ASCENT service) so we can have the latest version without increasing build time
+ -->
+
 This is the source code of the JupyterLab Medical Image Processing OSPARC service. It is mostly centered on MRI data, and contains the following packages:
   "[JupyterLab](https://jupyter.org/) with a variety of Medical Image Processing packages pre-installed, mostly centered on MRI data:
   - [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki), a comprehensive library of analysis tools for FMRI, MRI and DTI brain imaging data.
