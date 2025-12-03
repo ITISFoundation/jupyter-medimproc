@@ -1,11 +1,20 @@
 # JupyterLab for Medical Image Processing (MedImProc)
 
+<!-- TODO'S
+- DONE fix build process
+- bump version to 2.2.0 after bump in FreeSurfer + make sure pipeline Fariba runs end to end
+- add version details in the README
+- add badges
+- then keep going through modernization plan (reduce image size, build time etc); add these learning to my Obsidian notes
+- in future, download FreeSurfer 8.1.0 .deb and put in filesrv and fetch from there (like in ASCENT service) so we can have the latest version without increasing build time
+ -->
+
 This is the source code of the JupyterLab Medical Image Processing OSPARC service. It is mostly centered on MRI data, and contains the following packages:
   "[JupyterLab](https://jupyter.org/) with a variety of Medical Image Processing packages pre-installed, mostly centered on MRI data:
   - [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki), a comprehensive library of analysis tools for FMRI, MRI and DTI brain imaging data.
-  - [FreeSurfer](https://surfer.nmr.mgh.harvard.edu/), an open source neuroimaging toolkit for processing, analyzing, and visualizing human brain MR images-
+  - [FreeSurfer](https://surfer.nmr.mgh.harvard.edu/) version 7.4.1 (June 2023), an open source neuroimaging toolkit for processing, analyzing, and visualizing human brain MR images.
   - [MRtrix3](https://www.mrtrix.org/) provides a set of tools to perform various types of diffusion MRI analyses.
-  - [Spinal Cord Toolbox](https://spinalcordtoolbox.com/), a comprehensive, free and open-source set of command-line tools dedicated to the processing and analysis of spinal cord MRI data.
+  <!-- - [Spinal Cord Toolbox](https://spinalcordtoolbox.com/), a comprehensive, free and open-source set of command-line tools dedicated to the processing and analysis of spinal cord MRI data. -->
   - [Synb0 Disco](https://github.com/MASILab/Synb0-DISCO#readme), for distortion correction of diffusion weighted MRI without reverse phase-encoding scans or field-maps.
   - Python packages like [nibabel](https://nipy.org/nibabel/), [pyvista](https://docs.pyvista.org/version/stable/), [fsleyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes) and [cc3d](https://github.com/seung-lab/connected-components-3d#readme).
 

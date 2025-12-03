@@ -1,7 +1,9 @@
-nibabel
-pyvista
+# Medical image processing and visualization packages
+# Pinned versions for reproducibility (checked December 2025)
 
-PyOpenGL
-PyOpenGL_accelerate
-fsleyes
-connected-components-3d
+nibabel==5.3.2  # 23 Oct 2024
+pyvista==0.46.4  # 30 Oct 2025
+PyOpenGL==3.1.10  # 18 Aug 2025
+PyOpenGL_accelerate==3.1.10  # 18 Aug 2025
+fsleyes==1.16.3  # 21 Nov 2025
+connected-components-3d==3.26.1 # 3 Nov 2025

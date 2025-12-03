@@ -1,0 +1,50 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+UPDATING_FREESURFER.md
+MODERNIZATION_PLAN.md
+
+# Docker files (except those needed for build)
+docker-compose*.yml
+MultiStage_Dockerfile
+
+# Validation and test data
+validation/
+Fariba_full_pipeline/TVB1/
+
+# Python cache
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist/
+build/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+*.tmp
+*.log
+.cache/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Only include specific notebooks needed in the image
+validation/workspace/*.ipynb
+!README.ipynb
