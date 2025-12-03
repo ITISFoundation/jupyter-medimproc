@@ -46,6 +46,6 @@ jobs:
       - name: Build all images if multiple
         uses: docker://itisfoundation/ci-service-integration-library:v2.1.27
         with:
-          args: docker compose build --quiet
+          args: docker compose build --verbose
       - name: print docker image info
         run: docker images
