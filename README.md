@@ -41,3 +41,8 @@ If you already have a local copy of **o<sup>2</sup>S<sup>2</sup>PARC** running a
 
 ```shell
 make publish-local
+```
+
+## Testing
+
+A separate repository with test data and pipeline scripts is internally available to validate the usability for internal IT'IS use cases. This is also used to validate new versions of this service.

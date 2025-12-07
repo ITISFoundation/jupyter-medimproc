@@ -7,10 +7,11 @@ services:
     environment:
       - DY_SIDECAR_PATH_INPUTS=/tmp/inputs
       - DY_SIDECAR_PATH_OUTPUTS=/tmp/outputs
+      - DY_SIDECAR_PATH_WORKSPACE=/home/jovyan/work/workspace
       - DY_BOOT_OPTION_BOOT_MODE=0
-      - DY_SIDECAR_PATH/home/jovyan/work/workspace
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ${PWD}/validation/workspace:/home/jovyan/work/workspace
       - ${PWD}/validation/inputs:/tmp/inputs
       - ${PWD}/validation/outputs:/tmp/outputs
+      - ${PWD}/tests:/home/jovyan/work/workspace/tests
