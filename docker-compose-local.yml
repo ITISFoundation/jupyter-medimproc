@@ -1,7 +1,9 @@
-version: '3.7'
 services:
   jupyter-medimproc:
-    image: simcore/services/dynamic/jupyter-medimproc:1.2.1
+    ## Locally-built image
+    # image: simcore/services/dynamic/jupyter-medimproc:1.2.1
+    ## Remote (production) image
+    image: registry.speag.com/ci/osparc-sparc-internal/main/jupyter-medimproc:1.2.1
     ports:
       - "8888:8888"
     environment:
@@ -11,7 +13,7 @@ services:
       - DY_BOOT_OPTION_BOOT_MODE=0
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${PWD}/validation/workspace:/home/jovyan/work/workspace
+      - ${PWD}/tests:/home/jovyan/work/workspace
       - ${PWD}/validation/inputs:/tmp/inputs
       - ${PWD}/validation/outputs:/tmp/outputs
-      - ${PWD}/tests:/home/jovyan/work/workspace/tests
+      - ${PWD}/validation/workspace/README.ipynb:/home/jovyan/work/workspace/README.ipynb:ro
