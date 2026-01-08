@@ -5,3 +5,5 @@ PyOpenGL
 PyOpenGL_accelerate
 fsleyes
 connected-components-3d
+# Pin wxpython to version with pre-built wheel available for Python 3.9/Ubuntu 20.04
+wxpython==4.2.3

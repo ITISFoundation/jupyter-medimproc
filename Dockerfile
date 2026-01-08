@@ -120,16 +120,24 @@ ENV PATH=$PATH:$HOME/c3d-1.0.0-Linux-x86_64/bin/
 ############################################################
 ## python packages in requirements.in
 ## before pip install fsleyes, we need to install wxPython:
+## Use pre-built wheel from wxPython extras to avoid build issues with GTK version mismatches
 WORKDIR ${HOME}
-RUN .venv/bin/pip --no-cache install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxpython &&\
-  .venv/bin/pip install attrdict
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  libgtk-3-0 \
+  libwebkit2gtk-4.0-37 \
+  libnotify4 \
+  libsdl2-2.0-0 \
+  freeglut3 \
+  && rm -rf /var/lib/apt/lists/* \
+  && .venv/bin/pip --no-cache install --only-binary :all: -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxpython \
+  && .venv/bin/pip install attrdict
 
 COPY --chown=$NB_UID:$NB_GID requirements.in ${NOTEBOOK_BASE_DIR}/requirements.in
 RUN .venv/bin/pip --no-cache install pip-tools &&\
   ## rename the previously existing "requirements.txt" from the jupyter-math service (we want to keep it for user reference)
   mv ${NOTEBOOK_BASE_DIR}/requirements.txt ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt   &&\
   .venv/bin/pip-compile --build-isolation --output-file ${NOTEBOOK_BASE_DIR}/requirements.txt ${NOTEBOOK_BASE_DIR}/requirements.in   &&\
-  .venv/bin/pip --no-cache install -r ${NOTEBOOK_BASE_DIR}/requirements.txt && \
+  .venv/bin/pip --no-cache install --only-binary wxpython -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 -r ${NOTEBOOK_BASE_DIR}/requirements.txt && \
   rm ${NOTEBOOK_BASE_DIR}/requirements.in && \
   echo "Your environment contains these python packages:" && \
   .venv/bin/pip list 
