@@ -1,9 +1,9 @@
 services:
   jupyter-medimproc:
     ## Locally-built image
-    # image: simcore/services/dynamic/jupyter-medimproc:1.2.1
+    # image: simcore/services/dynamic/jupyter-medimproc:1.3.0
     ## Remote (production) image
-    image: registry.speag.com/ci/osparc-sparc-internal/main/jupyter-medimproc:1.2.1
+    image: registry.speag.com/ci/osparc-sparc-internal/main/jupyter-medimproc:1.3.0
     ports:
       - "8888:8888"
     environment:

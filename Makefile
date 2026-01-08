@@ -4,7 +4,7 @@ SHELL = /bin/sh
 .DEFAULT_GOAL := help
 
 export DOCKER_IMAGE_NAME ?= jupyter-medimproc
-export DOCKER_IMAGE_TAG ?= 1.2.1
+export DOCKER_IMAGE_TAG ?= 1.3.0
 
 
 define _bumpversion
