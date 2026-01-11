@@ -1,0 +1,1331 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.optimized
+#1 transferring dockerfile: 14.52kB done
+#1 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 15)
+#1 WARN: UndefinedVar: Usage of undefined variable '$LD_LIBRARY_PATH' (line 210)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/itisfoundation/jupyter-math:2.0.9
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/23] FROM docker.io/itisfoundation/jupyter-math:2.0.9
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 153B done
+#5 DONE 0.0s
+
+#6 [ 9/23] COPY freesurfer_license.txt /home/jovyan/freesurfer/license.txt
+#6 CACHED
+
+#7 [ 8/23] RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C /home/jovyan   && rm -rf /home/jovyan/freesurfer/trctrain   && rm -rf /home/jovyan/freesurfer/diffusion   && rm -rf /home/jovyan/freesurfer/docs   && rm -rf /home/jovyan/freesurfer/matlab   && rm -rf /home/jovyan/freesurfer/fsafd   && rm -rf /home/jovyan/freesurfer/tktools   && find /home/jovyan/freesurfer/subjects -maxdepth 1 -mindepth 1 -type d ! -name 'fsaverage' -exec rm -rf {} +   && rm -f /home/jovyan/freesurfer/subjects/*.mgz   && rm -rf /home/jovyan/freesurfer/average/cvs_avg35*   && rm -rf /home/jovyan/freesurfer/average/mult-comp-cor   && find /home/jovyan/freesurfer/average -name "*.gca" ! -name "RB_all*.gca" -delete 2>/dev/null || true   && rm -rf /home/jovyan/freesurfer/python   && find /home/jovyan/freesurfer -name "*.log" -delete 2>/dev/null || true   && find /home/jovyan/freesurfer -name "*~" -delete 2>/dev/null || true
+#7 CACHED
+
+#8 [ 2/23] WORKDIR /home/jovyan
+#8 CACHED
+
+#9 [ 6/23] WORKDIR /home/jovyan
+#9 CACHED
+
+#10 [ 3/23] RUN apt-get -qq update   && apt-get install -yq --no-install-recommends     curl     dc     libeigen3-dev     libfftw3-dev     libgl1-mesa-dev     libpng-dev     libqt5opengl5-dev     libqt5svg5-dev     libtiff5-dev     qt5-default     zlib1g-dev   && git clone https://github.com/MRtrix3/mrtrix3.git   && cd mrtrix3 && git checkout 3.0.4   && ./configure && ./build -persistent -nopaginate   && rm -rf tmp   && cd ..   && apt-get purge -y     libeigen3-dev     libfftw3-dev     libgl1-mesa-dev     libpng-dev     libqt5opengl5-dev     libqt5svg5-dev     libtiff5-dev     zlib1g-dev   && apt-get autoremove -y   && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [ 7/23] RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules   && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [ 5/23] RUN curl -fsSL https://osf.io/73h5s/download   | tar xz --strip-components 1
+#12 CACHED
+
+#13 [ 4/23] WORKDIR /home/jovyan/art
+#13 CACHED
+
+#14 [10/23] WORKDIR /home/jovyan
+#14 CACHED
+
+#15 [11/23] RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py   && echo "" | python fslinstaller.py -d /home/jovyan/fsl   && . /home/jovyan/fsl/etc/fslconf/fsl.sh   && rm -rf /home/jovyan/fsl/data/atlases   && rm -rf /home/jovyan/fsl/data/possum   && rm -rf /home/jovyan/fsl/data/tbss   && rm -rf /home/jovyan/fsl/doc   && rm -rf /home/jovyan/fsl/tcl   && rm -rf /home/jovyan/fsl/etc/matlab   && rm -f /home/jovyan/fsl/bin/*_cuda* 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/fsleyes* 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/fslview* 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/*_gui 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/lesion_* 2>/dev/null || true   && rm -rf /home/jovyan/fsl/data/first   && find /home/jovyan/fsl/data/standard -name "*.nii.gz"      ! -name "MNI152_T1_2mm*"      ! -name "MNI152_T1_1mm*"      -delete 2>/dev/null || true   && rm -rf /home/jovyan/fsl/data/xtract   && rm -f /home/jovyan/fslinstaller.py   && rm -rf /home/jovyan/fsl/pkgs   && rm -rf /home/jovyan/fsl/conda-meta   && rm -rf /home/jovyan/fsl/lib/qt6   && rm -f /home/jovyan/fsl/lib/libLLVM*   && rm -f /home/jovyan/fsl/lib/libclang*   && rm -rf /home/jovyan/fsl/lib/openvino*   && rm -rf /home/jovyan/fsl/lib/gcc   && rm -rf /home/jovyan/fsl/include   && rm -rf /home/jovyan/fsl/man   && rm -rf /home/jovyan/fsl/share/man   && rm -rf /home/jovyan/fsl/compiler_compat   && rm -rf /home/jovyan/fsl/libexec
+#15 0.343 --2026-01-11 10:56:25--  https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
+#15 0.349 Resolving fsl.fmrib.ox.ac.uk (fsl.fmrib.ox.ac.uk)... 129.67.248.66
+#15 0.556 Connecting to fsl.fmrib.ox.ac.uk (fsl.fmrib.ox.ac.uk)|129.67.248.66|:443... connected.
+#15 0.610 HTTP request sent, awaiting response... 301 Moved Permanently
+#15 0.660 Location: https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py [following]
+#15 0.660 --2026-01-11 10:56:25--  https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py
+#15 0.660 Reusing existing connection to fsl.fmrib.ox.ac.uk:443.
+#15 0.660 HTTP request sent, awaiting response... 200 OK
+#15 0.685 Length: 149168 (146K) [application/octet-stream]
+#15 0.685 Saving to: ‘fslinstaller.py’
+#15 0.685 
+#15 0.685      0K .......... .......... .......... .......... .......... 34% 1007K 0s
+#15 0.735     50K .......... .......... .......... .......... .......... 68% 1.98M 0s
+#15 0.760    100K .......... .......... .......... .......... .....     100% 70.1M=0.07s
+#15 0.760 
+#15 0.760 2026-01-11 10:56:25 (1.90 MB/s) - ‘fslinstaller.py’ saved [149168/149168]
+#15 0.760 
+#15 0.891 [1m[4mFSL installer version:[0m 3.17.0[0m
+#15 0.891 [37mPress CTRL+C at any time to cancel installation[0m
+#15 0.891 [93m[1mRunning the installer script as root user is discouraged! You should
+#15 0.891 run this script as a regular user - you will be asked for your administrator
+#15 0.891 password if required.[0m
+#15 0.895 [37mInstallation log file: /tmp/fslinstaller_z8or7xzd.log
+#15 0.895 [0m
+#15 1.040 [92mInstalling FSL implies agreement with the terms of the FSL license - if you
+#15 1.040 do not agree with these terms, you can cancel the installation by pressing
+#15 1.040 CTRL+C.[0m[92m You can view the license at
+#15 1.040 [0m[92m[4mhttps://fsl.fmrib.ox.ac.uk/fsl/docs/license.html[0m
+#15 1.040 [0m
+#15 1.040 [37mDuring the installation process, please note that some system details will
+#15 1.040 be automatically sent to the FSL development team. These details are extremely
+#15 1.040 basic and cannot be used in any way to identify individual users. If you do not
+#15 1.040 want any information to be sent, please cancel this installation by pressing
+#15 1.040 CTRL+C, and re-run the installer with the --skip_registration option.
+#15 1.040 [0m
+#15 1.040 FSL 6.0.7.19 selected for installation[0m
+#15 1.044 Downloading FSL environment specification from https://fsl.fmrib.ox.ac.uk/fsldow
+#15 1.044 nloads/fslconda/releases/fsl-6.0.7.19_linux-64.yml...[0m
+#15 1.127 Downloading FSL environment specification from
+#15 1.127 https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fsl-6.0.7.19_osl-
+#15 1.127 dynamics_linux-64.yml...[0m
+#15 1.208 Downloading FSL environment specification from https://fsl.fmrib.ox.ac.uk/fsldow
+#15 1.208 nloads/fslconda/releases/fsl-6.0.7.19_truenet_linux-64.yml...[0m
+#15 1.295 [1m
+#15 1.295 Installing FSL in /home/jovyan/fsl
+#15 1.295 [0m
+#15 1.295 Downloading miniconda from https://anaconda.org/conda-
+#15 1.295 forge/micromamba/2.1.0/download/linux-64/micromamba-2.1.0-0.tar.bz2...[0m
+#15 2.194 1 / 4 [                                                        ] 0.0 / 5.9 MB[0m [0m|[0m1 / 4 [#                                                       ] 0.1 / 5.9 MB[0m [0m/[0m1 / 4 [##                                                      ] 0.2 / 5.9 MB[0m [0m-[0m1 / 4 [####                                                    ] 0.4 / 5.9 MB[0m [0m\[0m1 / 4 [#####                                                   ] 0.5 / 5.9 MB[0m [0m|[0m1 / 4 [######                                                  ] 0.6 / 5.9 MB[0m [0m/[0m1 / 4 [#######                                                 ] 0.8 / 5.9 MB[0m [0m-[0m1 / 4 [########                                                ] 0.9 / 5.9 MB[0m [0m\[0m1 / 4 [#########                                               ] 1.0 / 5.9 MB[0m [0m|[0m1 / 4 [###########                                             ] 1.1 / 5.9 MB[0m [0m/[0m1 / 4 [############                                            ] 1.2 / 5.9 MB[0m [0m-[0m1 / 4 [#############                                           ] 1.4 / 5.9 MB[0m [0m\[0m1 / 4 [##############                                          ] 1.5 / 5.9 MB[0m [0m|[0m1 / 4 [###############                                         ] 1.6 / 5.9 MB[0m [0m/[0m1 / 4 [#################                                       ] 1.8 / 5.9 MB[0m [0m-[0m1 / 4 [##################                                      ] 1.9 / 5.9 MB[0m [0m\[0m1 / 4 [###################                                     ] 2.0 / 5.9 MB[0m [0m|[0m1 / 4 [####################                                    ] 2.1 / 5.9 MB[0m [0m/[0m1 / 4 [#####################                                   ] 2.2 / 5.9 MB[0m [0m-[0m1 / 4 [######################                                  ] 2.4 / 5.9 MB[0m [0m\[0m1 / 4 [########################                                ] 2.5 / 5.9 MB[0m [0m|[0m1 / 4 [#########################                               ] 2.6 / 5.9 MB[0m [0m/[0m1 / 4 [##########################                              ] 2.8 / 5.9 MB[0m [0m-[0m1 / 4 [###########################                             ] 2.9 / 5.9 MB[0m [0m\[0m1 / 4 [############################                            ] 3.0 / 5.9 MB[0m [0m|[0m1 / 4 [#############################                           ] 3.1 / 5.9 MB[0m [0m/[0m1 / 4 [###############################                         ] 3.2 / 5.9 MB[0m [0m-[0m1 / 4 [################################                        ] 3.4 / 5.9 MB[0m [0m\[0m1 / 4 [#################################                       ] 3.5 / 5.9 MB[0m [0m|[0m1 / 4 [##################################                      ] 3.6 / 5.9 MB[0m [0m/[0m1 / 4 [###################################                     ] 3.8 / 5.9 MB[0m [0m-[0m1 / 4 [#####################################                   ] 3.9 / 5.9 MB[0m [0m\[0m1 / 4 [######################################                  ] 4.0 / 5.9 MB[0m [0m|[0m1 / 4 [#######################################                 ] 4.1 / 5.9 MB[0m [0m/[0m1 / 4 [########################################                ] 4.2 / 5.9 MB[0m [0m-[0m1 / 4 [#########################################               ] 4.4 / 5.9 MB[0m [0m\[0m1 / 4 [##########################################              ] 4.5 / 5.9 MB[0m [0m|[0m1 / 4 [############################################            ] 4.6 / 5.9 MB[0m [0m/[0m1 / 4 [#############################################           ] 4.8 / 5.9 MB[0m [0m-[0m1 / 4 [##############################################          ] 4.9 / 5.9 MB[0m [0m\[0m1 / 4 [###############################################         ] 5.0 / 5.9 MB[0m [0m|[0m1 / 4 [################################################        ] 5.1 / 5.9 MB[0m [0m/[0m1 / 4 [##################################################      ] 5.2 / 5.9 MB[0m [0m-[0m1 / 4 [###################################################     ] 5.4 / 5.9 MB[0m [0m\[0m1 / 4 [####################################################    ] 5.5 / 5.9 MB[0m [0m|[0m1 / 4 [#####################################################   ] 5.6 / 5.9 MB[0m [0m/[0m1 / 4 [######################################################  ] 5.8 / 5.9 MB[0m [0m-[0m1 / 4 [####################################################### ] 5.9 / 5.9 MB[0m [0m\[0m1 / 4 [########################################################] 5.9 / 5.9 MB[0m [0m|[0m[0m
+#15 3.443 Installing conda at /home/jovyan/fsl...[0m
+#15 3.448 2 / 4 [#############################                             ] 50 / 100 %[0m [0m|[0m2 / 4 [#############################                             ] 50 / 100 %[0m [0m/[0m[0m
+#15 4.048 Creating FSL wrapper management scripts...[0m
+#15 4.061 3 / 4 [#########################################################] 100 / 100 %[0m [0m|[0m[0m
+#15 4.066 Installing FSL into /home/jovyan/fsl...[0m
+#15 4.068 4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.optimized
+#1 transferring dockerfile: 14.52kB done
+#1 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 15)
+#1 WARN: UndefinedVar: Usage of undefined variable '$LD_LIBRARY_PATH' (line 210)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/itisfoundation/jupyter-math:2.0.9
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/23] FROM docker.io/itisfoundation/jupyter-math:2.0.9
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 153B done
+#5 DONE 0.0s
+
+#6 [ 7/23] RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules   && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [ 2/23] WORKDIR /home/jovyan
+#7 CACHED
+
+#8 [ 4/23] WORKDIR /home/jovyan/art
+#8 CACHED
+
+#9 [ 6/23] WORKDIR /home/jovyan
+#9 CACHED
+
+#10 [ 3/23] RUN apt-get -qq update   && apt-get install -yq --no-install-recommends     curl     dc     libeigen3-dev     libfftw3-dev     libgl1-mesa-dev     libpng-dev     libqt5opengl5-dev     libqt5svg5-dev     libtiff5-dev     qt5-default     zlib1g-dev   && git clone https://github.com/MRtrix3/mrtrix3.git   && cd mrtrix3 && git checkout 3.0.4   && ./configure && ./build -persistent -nopaginate   && rm -rf tmp   && cd ..   && apt-get purge -y     libeigen3-dev     libfftw3-dev     libgl1-mesa-dev     libpng-dev     libqt5opengl5-dev     libqt5svg5-dev     libtiff5-dev     zlib1g-dev   && apt-get autoremove -y   && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [ 5/23] RUN curl -fsSL https://osf.io/73h5s/download   | tar xz --strip-components 1
+#11 CACHED
+
+#12 [ 9/23] COPY freesurfer_license.txt /home/jovyan/freesurfer/license.txt
+#12 CACHED
+
+#13 [ 8/23] RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C /home/jovyan   && rm -rf /home/jovyan/freesurfer/trctrain   && rm -rf /home/jovyan/freesurfer/diffusion   && rm -rf /home/jovyan/freesurfer/docs   && rm -rf /home/jovyan/freesurfer/matlab   && rm -rf /home/jovyan/freesurfer/fsafd   && rm -rf /home/jovyan/freesurfer/tktools   && find /home/jovyan/freesurfer/subjects -maxdepth 1 -mindepth 1 -type d ! -name 'fsaverage' -exec rm -rf {} +   && rm -f /home/jovyan/freesurfer/subjects/*.mgz   && rm -rf /home/jovyan/freesurfer/average/cvs_avg35*   && rm -rf /home/jovyan/freesurfer/average/mult-comp-cor   && find /home/jovyan/freesurfer/average -name "*.gca" ! -name "RB_all*.gca" -delete 2>/dev/null || true   && rm -rf /home/jovyan/freesurfer/python   && find /home/jovyan/freesurfer -name "*.log" -delete 2>/dev/null || true   && find /home/jovyan/freesurfer -name "*~" -delete 2>/dev/null || true
+#13 CACHED
+
+#14 [10/23] WORKDIR /home/jovyan
+#14 CACHED
+
+#15 [11/23] RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py   && echo "" | python fslinstaller.py -d /home/jovyan/fsl   && . /home/jovyan/fsl/etc/fslconf/fsl.sh   && rm -rf /home/jovyan/fsl/data/atlases   && rm -rf /home/jovyan/fsl/data/possum   && rm -rf /home/jovyan/fsl/data/tbss   && rm -rf /home/jovyan/fsl/doc   && rm -rf /home/jovyan/fsl/tcl   && rm -rf /home/jovyan/fsl/etc/matlab   && rm -f /home/jovyan/fsl/bin/*_cuda* 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/fsleyes* 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/fslview* 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/*_gui 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/lesion_* 2>/dev/null || true   && rm -rf /home/jovyan/fsl/data/first   && find /home/jovyan/fsl/data/standard -name "*.nii.gz"      ! -name "MNI152_T1_2mm*"      ! -name "MNI152_T1_1mm*"      -delete 2>/dev/null || true   && rm -rf /home/jovyan/fsl/data/xtract   && rm -f /home/jovyan/fslinstaller.py   && rm -rf /home/jovyan/fsl/pkgs   && rm -rf /home/jovyan/fsl/conda-meta   && rm -rf /home/jovyan/fsl/lib/qt6   && rm -f /home/jovyan/fsl/lib/libLLVM*   && rm -f /home/jovyan/fsl/lib/libclang*   && rm -rf /home/jovyan/fsl/lib/openvino*   && rm -rf /home/jovyan/fsl/lib/gcc   && rm -rf /home/jovyan/fsl/include   && rm -rf /home/jovyan/fsl/man   && rm -rf /home/jovyan/fsl/share/man   && rm -rf /home/jovyan/fsl/compiler_compat   && rm -rf /home/jovyan/fsl/libexec
+#15 0.331 --2026-01-11 12:47:12--  https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
+#15 0.337 Resolving fsl.fmrib.ox.ac.uk (fsl.fmrib.ox.ac.uk)... 129.67.248.66
+#15 0.411 Connecting to fsl.fmrib.ox.ac.uk (fsl.fmrib.ox.ac.uk)|129.67.248.66|:443... connected.
+#15 0.462 HTTP request sent, awaiting response... 301 Moved Permanently
+#15 0.509 Location: https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py [following]
+#15 0.509 --2026-01-11 12:47:13--  https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py
+#15 0.509 Reusing existing connection to fsl.fmrib.ox.ac.uk:443.
+#15 0.509 HTTP request sent, awaiting response... 200 OK
+#15 0.537 Length: 149168 (146K) [application/octet-stream]
+#15 0.538 Saving to: ‘fslinstaller.py’
+#15 0.538 
+#15 0.538      0K .......... .......... .......... .......... .......... 34% 1.02M 0s
+#15 0.586     50K .......... .......... .......... .......... .......... 68% 2.06M 0s
+#15 0.610    100K .......... .......... .......... .......... .....     100% 80.7M=0.07s
+#15 0.610 
+#15 0.610 2026-01-11 12:47:13 (1.97 MB/s) - ‘fslinstaller.py’ saved [149168/149168]
+#15 0.610 
+#15 0.743 [1m[4mFSL installer version:[0m 3.17.0[0m
+#15 0.743 [37mPress CTRL+C at any time to cancel installation[0m
+#15 0.743 [93m[1mRunning the installer script as root user is discouraged! You should
+#15 0.743 run this script as a regular user - you will be asked for your administrator
+#15 0.743 password if required.[0m
+#15 0.748 [37mInstallation log file: /tmp/fslinstaller_zd4ehkty.log
+#15 0.748 [0m
+#15 0.891 [92mInstalling FSL implies agreement with the terms of the FSL license - if you
+#15 0.891 do not agree with these terms, you can cancel the installation by pressing
+#15 0.891 CTRL+C.[0m[92m You can view the license at
+#15 0.891 [0m[92m[4mhttps://fsl.fmrib.ox.ac.uk/fsl/docs/license.html[0m
+#15 0.891 [0m
+#15 0.891 [37mDuring the installation process, please note that some system details will
+#15 0.891 be automatically sent to the FSL development team. These details are extremely
+#15 0.891 basic and cannot be used in any way to identify individual users. If you do not
+#15 0.891 want any information to be sent, please cancel this installation by pressing
+#15 0.891 CTRL+C, and re-run the installer with the --skip_registration option.
+#15 0.891 [0m
+#15 0.891 FSL 6.0.7.19 selected for installation[0m
+#15 0.895 Downloading FSL environment specification from https://fsl.fmrib.ox.ac.uk/fsldow
+#15 0.895 nloads/fslconda/releases/fsl-6.0.7.19_linux-64.yml...[0m
+#15 0.977 Downloading FSL environment specification from
+#15 0.977 https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fsl-6.0.7.19_osl-
+#15 0.977 dynamics_linux-64.yml...[0m
+#15 1.063 Downloading FSL environment specification from https://fsl.fmrib.ox.ac.uk/fsldow
+#15 1.063 nloads/fslconda/releases/fsl-6.0.7.19_truenet_linux-64.yml...[0m
+#15 1.149 [1m
+#15 1.149 Installing FSL in /home/jovyan/fsl
+#15 1.149 [0m
+#15 1.149 Downloading miniconda from https://anaconda.org/conda-
+#15 1.149 forge/micromamba/2.1.0/download/linux-64/micromamba-2.1.0-0.tar.bz2...[0m
+#15 2.033 1 / 4 [                                                        ] 0.0 / 5.9 MB[0m [0m|[0m1 / 4 [#                                                       ] 0.1 / 5.9 MB[0m [0m/[0m1 / 4 [##                                                      ] 0.2 / 5.9 MB[0m [0m-[0m1 / 4 [####                                                    ] 0.4 / 5.9 MB[0m [0m\[0m1 / 4 [#####                                                   ] 0.5 / 5.9 MB[0m [0m|[0m1 / 4 [######                                                  ] 0.6 / 5.9 MB[0m [0m/[0m1 / 4 [#######                                                 ] 0.8 / 5.9 MB[0m [0m-[0m1 / 4 [########                                                ] 0.9 / 5.9 MB[0m [0m\[0m1 / 4 [#########                                               ] 1.0 / 5.9 MB[0m [0m|[0m1 / 4 [###########                                             ] 1.1 / 5.9 MB[0m [0m/[0m1 / 4 [############                                            ] 1.2 / 5.9 MB[0m [0m-[0m1 / 4 [#############                                           ] 1.4 / 5.9 MB[0m [0m\[0m1 / 4 [##############                                          ] 1.5 / 5.9 MB[0m [0m|[0m1 / 4 [###############                                         ] 1.6 / 5.9 MB[0m [0m/[0m1 / 4 [#################                                       ] 1.8 / 5.9 MB[0m [0m-[0m1 / 4 [##################                                      ] 1.9 / 5.9 MB[0m [0m\[0m1 / 4 [###################                                     ] 2.0 / 5.9 MB[0m [0m|[0m1 / 4 [####################                                    ] 2.1 / 5.9 MB[0m [0m/[0m1 / 4 [#####################                                   ] 2.2 / 5.9 MB[0m [0m-[0m1 / 4 [######################                                  ] 2.4 / 5.9 MB[0m [0m\[0m1 / 4 [########################                                ] 2.5 / 5.9 MB[0m [0m|[0m1 / 4 [#########################                               ] 2.6 / 5.9 MB[0m [0m/[0m1 / 4 [##########################                              ] 2.8 / 5.9 MB[0m [0m-[0m1 / 4 [###########################                             ] 2.9 / 5.9 MB[0m [0m\[0m1 / 4 [############################                            ] 3.0 / 5.9 MB[0m [0m|[0m1 / 4 [#############################                           ] 3.1 / 5.9 MB[0m [0m/[0m1 / 4 [###############################                         ] 3.2 / 5.9 MB[0m [0m-[0m1 / 4 [################################                        ] 3.4 / 5.9 MB[0m [0m\[0m1 / 4 [#################################                       ] 3.5 / 5.9 MB[0m [0m|[0m1 / 4 [##################################                      ] 3.6 / 5.9 MB[0m [0m/[0m1 / 4 [###################################                     ] 3.8 / 5.9 MB[0m [0m-[0m1 / 4 [#####################################                   ] 3.9 / 5.9 MB[0m [0m\[0m1 / 4 [######################################                  ] 4.0 / 5.9 MB[0m [0m|[0m1 / 4 [#######################################                 ] 4.1 / 5.9 MB[0m [0m/[0m1 / 4 [########################################                ] 4.2 / 5.9 MB[0m [0m-[0m1 / 4 [#########################################               ] 4.4 / 5.9 MB[0m [0m\[0m1 / 4 [##########################################              ] 4.5 / 5.9 MB[0m [0m|[0m1 / 4 [############################################            ] 4.6 / 5.9 MB[0m [0m/[0m1 / 4 [#############################################           ] 4.8 / 5.9 MB[0m [0m-[0m1 / 4 [##############################################          ] 4.9 / 5.9 MB[0m [0m\[0m1 / 4 [###############################################         ] 5.0 / 5.9 MB[0m [0m|[0m1 / 4 [################################################        ] 5.1 / 5.9 MB[0m [0m/[0m1 / 4 [##################################################      ] 5.2 / 5.9 MB[0m [0m-[0m1 / 4 [###################################################     ] 5.4 / 5.9 MB[0m [0m\[0m1 / 4 [####################################################    ] 5.5 / 5.9 MB[0m [0m|[0m1 / 4 [#####################################################   ] 5.6 / 5.9 MB[0m [0m/[0m1 / 4 [######################################################  ] 5.8 / 5.9 MB[0m [0m-[0m1 / 4 [####################################################### ] 5.9 / 5.9 MB[0m [0m\[0m1 / 4 [########################################################] 5.9 / 5.9 MB[0m [0m|[0m[0m
+#15 3.371 Installing conda at /home/jovyan/fsl...[0m
+#15 3.376 2 / 4 [#############################                             ] 50 / 100 %[0m [0m|[0m2 / 4 [#############################                             ] 50 / 100 %[0m [0m/[0m[0m
+#15 3.987 Creating FSL wrapper management scripts...[0m
+#15 4.000 3 / 4 [#########################################################] 100 / 100 %[0m [0m|[0m[0m
+#15 4.004 Installing FSL into /home/jovyan/fsl...[0m
+#15 4.006 4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 1 / 100 %[0m [0m\[0m4 / 4 [##                                                         ] 4 / 100 %[0m [0m|[0m4 / 4 [####                                                       ] 6 / 100 %[0m [0m/[0m4 / 4 [#####                                                      ] 8 / 100 %[0m [0m-[0m4 / 4 [#######                                                   ] 12 / 100 %[0m [0m\[0m4 / 4 [#########                                                 ] 15 / 100 %[0m [0m|[0m4 / 4 [###########                                               ] 18 / 100 %[0m [0m/[0m4 / 4 [#############                                             ] 22 / 100 %[0m [0m-[0m4 / 4 [###############                                           ] 25 / 100 %[0m [0m\[0m4 / 4 [#################                                         ] 29 / 100 %[0m [0m|[0m4 / 4 [###################                                       ] 34 / 100 %[0m [0m/[0m4 / 4 [######################                                    ] 38 / 100 %[0m [0m-[0m4 / 4 [#######################                                   ] 39 / 100 %[0m [0m\[0m4 / 4 [########################                                  ] 41 / 100 %[0m [0m|[0m4 / 4 [#########################                                 ] 43 / 100 %[0m [0m/[0m4 / 4 [#########################                                 ] 44 / 100 %[0m [0m-[0m4 / 4 [###########################                               ] 47 / 100 %[0m [0m\[0m4 / 4 [##############################                            ] 51 / 100 %[0m [0m|[0m4 / 4 [###############################                           ] 54 / 100 %[0m [0m/[0m4 / 4 [################################                          ] 56 / 100 %[0m [0m-[0m4 / 4 [#################################                         ] 58 / 100 %[0m [0m\[0m4 / 4 [##################################                        ] 59 / 100 %[0m [0m|[0m4 / 4 [###################################                       ] 60 / 100 %[0m [0m/[0m4 / 4 [###################################                       ] 61 / 100 %[0m [0m-[0m4 / 4 [####################################                      ] 61 / 100 %[0m [0m\[0m4 / 4 [####################################                      ] 62 / 100 %[0m [0m|[0m4 / 4 [#####################################                     ] 63 / 100 %[0m [0m/[0m4 / 4 [#####################################                     ] 64 / 100 %[0m [0m-[0m4 / 4 [######################################                    ] 65 / 100 %[0m [0m\[0m4 / 4 [######################################                    ] 66 / 100 %[0m [0m|[0m4 / 4 [#######################################                   ] 67 / 100 %[0m [0m/[0m4 / 4 [########################################                  ] 68 / 100 %[0m [0m-[0m4 / 4 [########################################                  ] 69 / 100 %[0m [0m\[0m4 / 4 [#########################################                 ] 70 / 100 %[0m [0m|[0m4 / 4 [#########################################                 ] 71 / 100 %[0m [0m/[0m4 / 4 [##########################################                ] 73 / 100 %[0m [0m-[0m4 / 4 [###########################################               ] 74 / 100 %[0m [0m\[0m4 / 4 [############################################              ] 76 / 100 %[0m [0m|[0m4 / 4 [#############################################             ] 78 / 100 %[0m [0m/[0m4 / 4 [###############################################           ] 81 / 100 %[0m [0m-[0m4 / 4 [################################################          ] 83 / 100 %[0m [0m\[0m4 / 4 [#################################################         ] 85 / 100 %[0m [0m|[0m4 / 4 [##################################################        ] 86 / 100 %[0m [0m/[0m4 / 4 [###################################################       ] 88 / 100 %[0m [0m-[0m4 / 4 [###################################################       ] 89 / 100 %[0m [0m\[0m4 / 4 [####################################################      ] 89 / 100 %[0m [0m|[0m4 / 4 [####################################################      ] 90 / 100 %[0m [0m/[0m4 / 4 [#####################################################     ] 91 / 100 %[0m [0m-[0m4 / 4 [######################################################    ] 92 / 100 %[0m [0m\[0m4 / 4 [######################################################    ] 94 / 100 %[0m [0m|[0m4 / 4 [#######################################################   ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m-[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m\[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m|[0m4 / 4 [########################################################  ] 96 / 100 %[0m [0m/[0m4 / 4 [#########################################################] 100 / 100 %[0m [0m-[0m[0m
+#15 343.7 [92m
+#15 343.7 FSL successfully installed
+#15 343.7 [0m
+#15 DONE 348.7s
+
+#16 [12/23] WORKDIR /home/jovyan
+#16 DONE 0.1s
+
+#17 [13/23] RUN .venv/bin/pip --no-cache install torch torchvision --index-url https://download.pytorch.org/whl/cpu   && mkdir -p synb0-disco   && git clone -b "master" --depth 1 https://github.com/MASILab/Synb0-DISCO /home/jovyan/synb0-disco   && rm -rf /home/jovyan/synb0-disco/v1_0   && ln -s /home/jovyan/synb0-disco/data_processing/normalize_T1.sh /usr/local/bin   && mkdir -p synb0-disco/INPUTS synb0-disco/OUTPUTS   && chmod gua+rwx synb0-disco/INPUTS synb0-disco/OUTPUTS   && rm -rf /home/jovyan/synb0-disco/.git
+#17 1.024 Looking in indexes: https://download.pytorch.org/whl/cpu
+#17 1.817 Collecting torch
+#17 1.817   Obtaining dependency information for torch from https://download.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata
+#17 1.848   Downloading https://download.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata (29 kB)
+#17 2.541 Collecting torchvision
+#17 2.542   Obtaining dependency information for torchvision from https://download.pytorch.org/whl/cpu/torchvision-0.23.0%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata
+#17 2.556   Downloading https://download.pytorch.org/whl/cpu/torchvision-0.23.0%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata (6.1 kB)
+#17 2.991 Collecting filelock (from torch)
+#17 2.991   Obtaining dependency information for filelock from https://files.pythonhosted.org/packages/42/14/42b2651a2f46b022ccd948bca9f2d5af0fd8929c4eec235b8d6d844fbe67/filelock-3.19.1-py3-none-any.whl.metadata
+#17 3.061   Downloading filelock-3.19.1-py3-none-any.whl.metadata (2.1 kB)
+#17 3.373 Collecting typing-extensions>=4.10.0 (from torch)
+#17 3.374   Obtaining dependency information for typing-extensions>=4.10.0 from https://download.pytorch.org/whl/typing_extensions-4.15.0-py3-none-any.whl.metadata
+#17 3.378   Downloading https://download.pytorch.org/whl/typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+#17 3.379 Discarding https://download.pytorch.org/whl/typing_extensions-4.15.0-py3-none-any.whl (from https://download.pytorch.org/whl/cpu/typing-extensions/): Requested typing-extensions>=4.10.0 from https://download.pytorch.org/whl/typing_extensions-4.15.0-py3-none-any.whl (from torch) has inconsistent Name: expected 'typing-extensions', but metadata has 'typing_extensions'
+#17 3.383   Obtaining dependency information for typing-extensions>=4.10.0 from https://download.pytorch.org/whl/typing_extensions-4.14.0-py3-none-any.whl.metadata
+#17 3.388   Downloading https://download.pytorch.org/whl/typing_extensions-4.14.0-py3-none-any.whl.metadata (3.0 kB)
+#17 3.389 Discarding https://download.pytorch.org/whl/typing_extensions-4.14.0-py3-none-any.whl (from https://download.pytorch.org/whl/cpu/typing-extensions/): Requested typing-extensions>=4.10.0 from https://download.pytorch.org/whl/typing_extensions-4.14.0-py3-none-any.whl (from torch) has inconsistent Name: expected 'typing-extensions', but metadata has 'typing_extensions'
+#17 3.393   Obtaining dependency information for typing-extensions>=4.10.0 from https://download.pytorch.org/whl/typing_extensions-4.12.2-py3-none-any.whl.metadata
+#17 3.398   Downloading https://download.pytorch.org/whl/typing_extensions-4.12.2-py3-none-any.whl.metadata (3.0 kB)
+#17 3.399 Discarding https://download.pytorch.org/whl/typing_extensions-4.12.2-py3-none-any.whl (from https://download.pytorch.org/whl/cpu/typing-extensions/): Requested typing-extensions>=4.10.0 from https://download.pytorch.org/whl/typing_extensions-4.12.2-py3-none-any.whl (from torch) has inconsistent Name: expected 'typing-extensions', but metadata has 'typing_extensions'
+#17 3.399 INFO: pip is looking at multiple versions of torch to determine which version is compatible with other requirements. This could take a while.
+#17 3.403 Collecting torch
+#17 3.403   Obtaining dependency information for torch from https://download.pytorch.org/whl/cpu/torch-2.7.1%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata
+#17 3.418   Downloading https://download.pytorch.org/whl/cpu/torch-2.7.1%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata (27 kB)
+#17 3.427   Obtaining dependency information for torch from https://download.pytorch.org/whl/cpu/torch-2.7.0%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata
+#17 3.442   Downloading https://download.pytorch.org/whl/cpu/torch-2.7.0%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata (27 kB)
+#17 3.451   Obtaining dependency information for torch from https://download.pytorch.org/whl/cpu/torch-2.6.0%2Bcpu-cp39-cp39-linux_x86_64.whl.metadata
+#17 3.463   Downloading https://download.pytorch.org/whl/cpu/torch-2.6.0%2Bcpu-cp39-cp39-linux_x86_64.whl.metadata (26 kB)
+#17 3.487   Downloading https://download.pytorch.org/whl/cpu/torch-2.5.1%2Bcpu-cp39-cp39-linux_x86_64.whl (174.7 MB)
+#17 4.982      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 174.7/174.7 MB 117.6 MB/s eta 0:00:00
+#17 5.212 Collecting typing-extensions>=4.8.0 (from torch)
+#17 5.218   Downloading https://download.pytorch.org/whl/typing_extensions-4.9.0-py3-none-any.whl (32 kB)
+#17 5.672 Collecting networkx (from torch)
+#17 5.673   Obtaining dependency information for networkx from https://files.pythonhosted.org/packages/d5/f0/8fbc882ca80cf077f1b246c0e3c3465f7f415439bdea6b899f6b19f61f70/networkx-3.2.1-py3-none-any.whl.metadata
+#17 5.687   Downloading networkx-3.2.1-py3-none-any.whl.metadata (5.2 kB)
+#17 5.688 Requirement already satisfied: jinja2 in ./.venv/lib/python3.9/site-packages (from torch) (3.1.2)
+#17 6.119 Collecting fsspec (from torch)
+#17 6.119   Obtaining dependency information for fsspec from https://files.pythonhosted.org/packages/eb/02/a6b21098b1d5d6249b7c5ab69dde30108a71e4e819d4a9778f1de1d5b70d/fsspec-2025.10.0-py3-none-any.whl.metadata
+#17 6.133   Downloading fsspec-2025.10.0-py3-none-any.whl.metadata (10 kB)
+#17 6.550 Collecting sympy==1.13.1 (from torch)
+#17 6.550   Obtaining dependency information for sympy==1.13.1 from https://files.pythonhosted.org/packages/b2/fe/81695a1aa331a842b582453b605175f419fe8540355886031328089d840a/sympy-1.13.1-py3-none-any.whl.metadata
+#17 6.565   Downloading sympy-1.13.1-py3-none-any.whl.metadata (12 kB)
+#17 6.569 Requirement already satisfied: mpmath<1.4,>=1.1.0 in ./.venv/lib/python3.9/site-packages (from sympy==1.13.1->torch) (1.3.0)
+#17 6.573 Requirement already satisfied: numpy in ./.venv/lib/python3.9/site-packages (from torchvision) (1.24.3)
+#17 6.575 Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in ./.venv/lib/python3.9/site-packages (from torchvision) (9.5.0)
+#17 6.581 Collecting torchvision
+#17 6.581   Obtaining dependency information for torchvision from https://download.pytorch.org/whl/cpu/torchvision-0.22.1%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata
+#17 6.596   Downloading https://download.pytorch.org/whl/cpu/torchvision-0.22.1%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata (6.1 kB)
+#17 6.607   Obtaining dependency information for torchvision from https://download.pytorch.org/whl/cpu/torchvision-0.22.0%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata
+#17 6.622   Downloading https://download.pytorch.org/whl/cpu/torchvision-0.22.0%2Bcpu-cp39-cp39-manylinux_2_28_x86_64.whl.metadata (6.1 kB)
+#17 6.632   Obtaining dependency information for torchvision from https://download.pytorch.org/whl/cpu/torchvision-0.21.0%2Bcpu-cp39-cp39-linux_x86_64.whl.metadata
+#17 6.644   Downloading https://download.pytorch.org/whl/cpu/torchvision-0.21.0%2Bcpu-cp39-cp39-linux_x86_64.whl.metadata (6.1 kB)
+#17 6.651 INFO: pip is looking at multiple versions of torch to determine which version is compatible with other requirements. This could take a while.
+#17 6.669   Downloading https://download.pytorch.org/whl/cpu/torchvision-0.20.1%2Bcpu-cp39-cp39-linux_x86_64.whl (1.8 MB)
+#17 6.687      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 113.7 MB/s eta 0:00:00
+#17 6.799 Requirement already satisfied: MarkupSafe>=2.0 in ./.venv/lib/python3.9/site-packages (from jinja2->torch) (2.1.2)
+#17 6.843 Downloading sympy-1.13.1-py3-none-any.whl (6.2 MB)
+#17 6.954    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 56.7 MB/s eta 0:00:00
+#17 6.968 Downloading filelock-3.19.1-py3-none-any.whl (15 kB)
+#17 6.983 Downloading fsspec-2025.10.0-py3-none-any.whl (200 kB)
+#17 6.986    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.0/201.0 kB 187.7 MB/s eta 0:00:00
+#17 7.004 Downloading networkx-3.2.1-py3-none-any.whl (1.6 MB)
+#17 7.023    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 99.3 MB/s eta 0:00:00
+#17 7.039 Downloading sympy-1.13.1-py3-none-any.whl (6.2 MB)
+#17 7.109    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 90.3 MB/s eta 0:00:00
+#17 7.138 Downloading filelock-3.19.1-py3-none-any.whl (15 kB)
+#17 7.152 Downloading fsspec-2025.10.0-py3-none-any.whl (200 kB)
+#17 7.156    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.0/201.0 kB 140.1 MB/s eta 0:00:00
+#17 7.176 Downloading networkx-3.2.1-py3-none-any.whl (1.6 MB)
+#17 7.195    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 100.1 MB/s eta 0:00:00
+#17 8.266 Installing collected packages: typing-extensions, sympy, networkx, fsspec, filelock, torch, torchvision
+#17 8.266   Attempting uninstall: typing-extensions
+#17 8.267     Found existing installation: typing_extensions 4.6.2
+#17 8.269     Uninstalling typing_extensions-4.6.2:
+#17 11.51       Successfully uninstalled typing_extensions-4.6.2
+#17 11.52   Attempting uninstall: sympy
+#17 11.53     Found existing installation: sympy 1.12
+#17 11.64     Uninstalling sympy-1.12:
+#17 13.25       Successfully uninstalled sympy-1.12
+#17 25.26 Successfully installed filelock-3.19.1 fsspec-2025.10.0 networkx-3.2.1 sympy-1.13.1 torch-2.5.1+cpu torchvision-0.20.1+cpu typing-extensions-4.9.0
+#17 25.72 Cloning into '/home/jovyan/synb0-disco'...
+#17 56.10 Updating files:  47% (29/61)Updating files:  49% (30/61)Updating files:  50% (31/61)Updating files:  52% (32/61)Updating files:  54% (33/61)Updating files:  55% (34/61)Updating files:  57% (35/61)Updating files:  59% (36/61)Updating files:  60% (37/61)Updating files:  62% (38/61)Updating files:  63% (39/61)Updating files:  65% (40/61)Updating files:  67% (41/61)Updating files:  68% (42/61)Updating files:  70% (43/61)Updating files:  72% (44/61)Updating files:  73% (45/61)Updating files:  75% (46/61)Updating files:  77% (47/61)Updating files:  78% (48/61)Updating files:  80% (49/61)Updating files:  81% (50/61)Updating files:  83% (51/61)Updating files:  85% (52/61)Updating files:  86% (53/61)Updating files:  88% (54/61)Updating files:  90% (55/61)Updating files:  91% (56/61)Updating files:  93% (57/61)Updating files:  95% (58/61)Updating files:  96% (59/61)Updating files:  98% (60/61)Updating files: 100% (61/61)Updating files: 100% (61/61), done.
+#17 DONE 57.3s
+
+#18 [14/23] COPY --chown=1000:100 pipeline_synb0_disco.sh /home/jovyan/synb0-disco/src/pipeline_no_docker.sh
+#18 DONE 0.0s
+
+#19 [15/23] RUN mkdir -p /usr/local/bin   && ln -s -f /home/jovyan/synb0-disco/src/pipeline_no_docker.sh /usr/local/bin   && mv /usr/local/bin/pipeline_no_docker.sh /usr/local/bin/synb0-disco   && chmod +x /usr/local/bin/synb0-disco   && sed -i '83s/.*/    device = torch.device("cpu")/' /home/jovyan/synb0-disco/src/inference.py   && sed -i '87s/.*/    model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))/' /home/jovyan/synb0-disco/src/inference.py
+#19 DONE 0.4s
+
+#20 [16/23] RUN curl -SL https://github.com/ANTsX/ANTs/releases/download/v2.4.4/ants-2.4.4-ubuntu-20.04-X64-gcc.zip -o ./ants-2-4-4.zip   && unzip ./ants-2-4-4.zip   && rm -rf ./ants-2-4-4.zip   && curl -SL https://sourceforge.net/projects/c3d/files/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz/download | tar xz
+#20 0.469 curl: /home/jovyan/fsl/lib/libcurl.so.4: no version information available (required by curl)
+#20 0.471   % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+#20 0.471                                  Dload  Upload  Total   Spent   Left   Speed
+#20 0.471   0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0                              0
+#20 0.682   0      0   0      0   0      0      0      0                              0  4 717.5M   4 30.00M   0      0 23.28M      0   00:30   00:01   00:29 27.85M  8 717.5M   8 63.35M   0      0 27.31M      0   00:26   00:02   00:24 30.05M 13 717.5M  13 100.1M   0      0 29.90M      0   00:23   00:03   00:20 31.91M 19 717.5M  19 141.6M   0      0 32.58M      0   00:22   00:04   00:18 34.24M 25 717.5M  25 181.4M   0      0 33.94M      0   00:21   00:05   00:16 35.34M 31 717.5M  31 225.8M   0      0 35.59M      0   00:20   00:06   00:14 38.73M 37 717.5M  37 270.0M   0      0 36.14M      0   00:19   00:07   00:12 40.12M 43 717.5M  43 310.0M   0      0 36.47M      0   00:19   00:08   00:11 40.74M 48 717.5M  48 350.0M   0      0 36.71M      0   00:19   00:09   00:10 40.19M 54 717.5M  54 390.0M   0      0 36.79M      0   00:19   00:10   00:09 39.70M 59 717.5M  59 430.0M   0      0 36.99M      0   00:19   00:11   00:08 38.68M 65 717.5M  65 470.0M   0      0 36.97M      0   00:19   00:12   00:07 38.14M 71 717.5M  71 514.0M   0      0 37.49M      0   00:19   00:13   00:06 39.14M 76 717.5M  76 552.4M   0      0 37.55M      0   00:19   00:14   00:05 39.08M 82 717.5M  82 589.9M   0      0 37.55M      0   00:19   00:15   00:04 39.10M 87 717.5M  87 630.0M   0      0 37.40M      0   00:19   00:16   00:03 38.30M 90 717.5M  90 646.8M   0      0 36.25M      0   00:19   00:17   00:02 34.46M 93 717.5M  93 670.0M   0      0 35.43M      0   00:20   00:18   00:02 30.00M 98 717.5M  98 710.0M   0      0 35.56M      0   00:20   00:19   00:01 29.99M100 717.5M 100 717.5M   0      0 35.79M      0   00:20   00:20         29.99M100 717.5M 100 717.5M   0      0 35.79M      0   00:20   00:20         29.99M100 717.5M 100 717.5M   0      0 35.79M      0   00:20   00:20         29.99M
+#20 20.53 Archive:  ./ants-2-4-4.zip
+#20 20.53    creating: ants-2.4.4/
+#20 20.53    creating: ants-2.4.4/lib/
+#20 20.53   inflating: ants-2.4.4/lib/libl_N4BiasFieldCorrection.a  
+#20 20.54   inflating: ants-2.4.4/lib/libl_StackSlices.a  
+#20 20.55   inflating: ants-2.4.4/lib/libl_antsAffineInitializer.a  
+#20 20.57   inflating: ants-2.4.4/lib/libl_SimulateDisplacementField.a  
+#20 20.59   inflating: ants-2.4.4/lib/libl_MeasureImageSimilarity.a  
+#20 20.64   inflating: ants-2.4.4/lib/libl_SurfaceBasedSmoothing.a  
+#20 20.65   inflating: ants-2.4.4/lib/libl_SmoothDisplacementField.a  
+#20 20.66   inflating: ants-2.4.4/lib/libl_DeNrrd.a  
+#20 20.66   inflating: ants-2.4.4/lib/libl_ClusterImageStatistics.a  
+#20 20.67   inflating: ants-2.4.4/lib/libl_ExtractRegionFromImageByMask.a  
+#20 20.68   inflating: ants-2.4.4/lib/libl_ANTSIntegrateVelocityField.a  
+#20 20.69   inflating: ants-2.4.4/lib/libl_simpleSynRegistration.a  
+#20 20.75   inflating: ants-2.4.4/lib/libl_ImageCompare.a  
+#20 20.75   inflating: ants-2.4.4/lib/libl_CreateWarpedGridImage.a  
+#20 20.76   inflating: ants-2.4.4/lib/libl_TextureCooccurrenceFeatures.a  
+#20 20.76   inflating: ants-2.4.4/lib/libl_SetOrigin.a  
+#20 20.77   inflating: ants-2.4.4/lib/libl_GetConnectedComponentsFeatureImages.a  
+#20 20.78   inflating: ants-2.4.4/lib/libl_CreateDisplacementField.a  
+#20 20.79   inflating: ants-2.4.4/lib/libl_KellySlater.a  
+#20 20.81   inflating: ants-2.4.4/lib/libantsUtilities.a  
+#20 21.35   inflating: ants-2.4.4/lib/libl_AverageAffineTransformNoRigid.a  
+#20 21.35   inflating: ants-2.4.4/lib/libl_PasteImageIntoImage.a  
+#20 21.35   inflating: ants-2.4.4/lib/libl_DenoiseImage.a  
+#20 21.37   inflating: ants-2.4.4/lib/libl_SmoothImage.a  
+#20 21.38   inflating: ants-2.4.4/lib/libl_antsUtilitiesTesting.a  
+#20 21.39   inflating: ants-2.4.4/lib/libl_TileImages.a  
+#20 21.40   inflating: ants-2.4.4/lib/libl_SuperResolution.a  
+#20 21.41   inflating: ants-2.4.4/lib/libl_LesionFilling.a  
+#20 21.43   inflating: ants-2.4.4/lib/libl_ConvertInputImagePixelTypeToFloat.a  
+#20 21.44   inflating: ants-2.4.4/lib/libl_compareTwoTransforms.a  
+#20 21.45   inflating: ants-2.4.4/lib/libl_LabelOverlapMeasures.a  
+#20 21.45   inflating: ants-2.4.4/lib/libl_PermuteFlipImageOrientationAxes.a  
+#20 21.46   inflating: ants-2.4.4/lib/libl_ConvertScalarImageToRGB.a  
+#20 21.47   inflating: ants-2.4.4/lib/libl_MeasureMinMaxMean.a  
+#20 21.48   inflating: ants-2.4.4/lib/libl_NonLocalSuperResolution.a  
+#20 21.50   inflating: ants-2.4.4/lib/libl_SetDirectionByMatrix.a  
+#20 21.51   inflating: ants-2.4.4/lib/libl_iMath.a  
+#20 21.57   inflating: ants-2.4.4/lib/libl_ExtractSliceFromImage.a  
+#20 21.58   inflating: ants-2.4.4/lib/libl_antsApplyTransformsToPoints.a  
+#20 21.61   inflating: ants-2.4.4/lib/libl_ResetDirection.a  
+#20 21.61   inflating: ants-2.4.4/lib/libl_ImageIntensityStatistics.a  
+#20 21.62   inflating: ants-2.4.4/lib/libl_ImageSetStatistics.a  
+#20 21.62   inflating: ants-2.4.4/lib/libl_ConvertImage.a  
+#20 21.69   inflating: ants-2.4.4/lib/libl_antsTransformInfo.a  
+#20 21.69   inflating: ants-2.4.4/lib/libl_WarpTimeSeriesImageMultiTransform.a  
+#20 21.71   inflating: ants-2.4.4/lib/libl_Atropos.a  
+#20 21.75   inflating: ants-2.4.4/lib/libl_AverageImages.a  
+#20 21.77   inflating: ants-2.4.4/lib/libl_MultiplyImages.a  
+#20 21.79   inflating: ants-2.4.4/lib/libl_LabelClustersUniquely.a  
+#20 21.80   inflating: ants-2.4.4/lib/libl_sccan.a  
+#20 21.82   inflating: ants-2.4.4/lib/libl_ExtractRegionFromImage.a  
+#20 21.83   inflating: ants-2.4.4/lib/libl_ANTSUseDeformationFieldToGetAffineTransform.a  
+#20 21.83   inflating: ants-2.4.4/lib/libl_ANTS.a  
+#20 21.88   inflating: ants-2.4.4/lib/libl_ANTSUseLandmarkImagesToGetAffineTransform.a  
+#20 21.89   inflating: ants-2.4.4/lib/libl_AddNoiseToImage.a  
+#20 21.90   inflating: ants-2.4.4/lib/libl_ANTSUseLandmarkImagesToGetBSplineDisplacementField.a  
+#20 21.90   inflating: ants-2.4.4/lib/libl_TextureRunLengthFeatures.a  
+#20 21.91   inflating: ants-2.4.4/lib/libl_antsJointTensorFusion.a  
+#20 21.92   inflating: ants-2.4.4/lib/libl_ANTSIntegrateVectorField.a  
+#20 21.93   inflating: ants-2.4.4/lib/libl_antsMotionCorrDiffusionDirection.a  
+#20 21.94   inflating: ants-2.4.4/lib/libl_SetSpacing.a  
+#20 21.94   inflating: ants-2.4.4/lib/libl_ANTSJacobian.a  
+#20 21.94   inflating: ants-2.4.4/lib/libl_CreateJacobianDeterminantImage.a  
+#20 21.95   inflating: ants-2.4.4/lib/libl_ComposeMultiTransform.a  
+#20 21.96   inflating: ants-2.4.4/lib/libl_PrintHeader.a  
+#20 21.97   inflating: ants-2.4.4/lib/libl_CreateDTICohort.a  
+#20 21.98   inflating: ants-2.4.4/lib/libl_ReorientTensorImage.a  
+#20 21.99   inflating: ants-2.4.4/lib/libl_WarpTensorImageMultiTransform.a  
+#20 22.00   inflating: ants-2.4.4/lib/libl_RebaseTensorImage.a  
+#20 22.00   inflating: ants-2.4.4/lib/libl_ResampleImage.a  
+#20 22.06   inflating: ants-2.4.4/lib/libl_antsMotionCorr.a  
+#20 22.11   inflating: ants-2.4.4/lib/libl_TimeSCCAN.a  
+#20 22.12   inflating: ants-2.4.4/lib/libl_FitBSplineToPoints.a  
+#20 22.13   inflating: ants-2.4.4/lib/libl_CreateImage.a  
+#20 22.13   inflating: ants-2.4.4/lib/libl_AverageTensorImages.a  
+#20 22.14   inflating: ants-2.4.4/lib/libl_antsAI.a  
+#20 22.17   inflating: ants-2.4.4/lib/libl_ThresholdImage.a  
+#20 22.18   inflating: ants-2.4.4/lib/libl_antsRegistration.a  
+#20 22.18   inflating: ants-2.4.4/lib/libl_antsAlignOrigin.a  
+#20 22.19   inflating: ants-2.4.4/lib/libl_antsApplyTransforms.a  
+#20 22.30   inflating: ants-2.4.4/lib/libl_SurfaceCurvature.a  
+#20 22.30   inflating: ants-2.4.4/lib/libl_ConvertToJpg.a  
+#20 22.31   inflating: ants-2.4.4/lib/libl_antsSliceRegularizedRegistration.a  
+#20 22.34   inflating: ants-2.4.4/lib/libl_CompositeTransformUtil.a  
+#20 22.34   inflating: ants-2.4.4/lib/libl_WarpImageMultiTransform.a  
+#20 22.36   inflating: ants-2.4.4/lib/libl_antsJointFusion.a  
+#20 22.37   inflating: ants-2.4.4/lib/libl_N3BiasFieldCorrection.a  
+#20 22.40   inflating: ants-2.4.4/lib/libl_KellyKapowski.a  
+#20 22.44   inflating: ants-2.4.4/lib/libl_CopyImageHeaderInformation.a  
+#20 22.45   inflating: ants-2.4.4/lib/libl_LabelGeometryMeasures.a  
+#20 22.46   inflating: ants-2.4.4/lib/libl_CreateTiledMosaic.a  
+#20 22.47   inflating: ants-2.4.4/lib/libl_LaplacianThickness.a  
+#20 22.49   inflating: ants-2.4.4/lib/libl_ConvertTransformFile.a  
+#20 22.50   inflating: ants-2.4.4/lib/libl_AverageAffineTransform.a  
+#20 22.50   inflating: ants-2.4.4/lib/libl_MemoryTest.a  
+#20 22.51   inflating: ants-2.4.4/lib/libl_antsMotionCorrStats.a  
+#20 22.52   inflating: ants-2.4.4/lib/libl_ConvertImagePixelType.a  
+#20 22.53   inflating: ants-2.4.4/lib/libl_ResampleImageBySpacing.a  
+#20 22.54   inflating: ants-2.4.4/lib/libl_ImageMath.a  
+#20 22.54   inflating: ants-2.4.4/lib/libl_antsLandmarkBasedTransformInitializer.a  
+#20 22.55    creating: ants-2.4.4/bin/
+#20 22.55   inflating: ants-2.4.4/bin/RebaseTensorImage  
+#20 22.70   inflating: ants-2.4.4/bin/CreateJacobianDeterminantImage  
+#20 22.80   inflating: ants-2.4.4/bin/ConvertImagePixelType  
+#20 22.90   inflating: ants-2.4.4/bin/N4BiasFieldCorrection  
+#20 23.01   inflating: ants-2.4.4/bin/antsNeuroimagingBattery  
+#20 23.01   inflating: ants-2.4.4/bin/LesionFilling  
+#20 23.11   inflating: ants-2.4.4/bin/SuperResolution  
+#20 23.22   inflating: ants-2.4.4/bin/LabelClustersUniquely  
+#20 23.32   inflating: ants-2.4.4/bin/AverageImages  
+#20 23.43   inflating: ants-2.4.4/bin/KellyKapowski  
+#20 23.54   inflating: ants-2.4.4/bin/SmoothImage  
+#20 23.65   inflating: ants-2.4.4/bin/StackSlices  
+#20 23.75   inflating: ants-2.4.4/bin/ExtractRegionFromImageByMask  
+#20 23.85   inflating: ants-2.4.4/bin/KellySlater  
+#20 24.01   inflating: ants-2.4.4/bin/GetConnectedComponentsFeatureImages  
+#20 24.12   inflating: ants-2.4.4/bin/antsMotionCorrStats  
+#20 24.27   inflating: ants-2.4.4/bin/ComposeMultiTransform  
+#20 24.42   inflating: ants-2.4.4/bin/CreateDisplacementField  
+#20 24.52   inflating: ants-2.4.4/bin/antsNetworkAnalysis.R  
+#20 24.52   inflating: ants-2.4.4/bin/LaplacianThickness  
+#20 24.63   inflating: ants-2.4.4/bin/CreateImage  
+#20 24.73   inflating: ants-2.4.4/bin/ReorientTensorImage  
+#20 24.88   inflating: ants-2.4.4/bin/antsRegistrationSyNQuick.sh  
+#20 24.88   inflating: ants-2.4.4/bin/DenoiseImage  
+#20 24.99   inflating: ants-2.4.4/bin/DeNrrd   
+#20 25.09   inflating: ants-2.4.4/bin/ImageIntensityStatistics  
+#20 25.19   inflating: ants-2.4.4/bin/MemoryTest  
+#20 25.30   inflating: ants-2.4.4/bin/SurfaceBasedSmoothing  
+#20 25.40   inflating: ants-2.4.4/bin/SetOrigin  
+#20 25.51   inflating: ants-2.4.4/bin/waitForPBSQJobs.pl  
+#20 25.51   inflating: ants-2.4.4/bin/antsMultivariateTemplateConstruction2.sh  
+#20 25.51   inflating: ants-2.4.4/bin/FitBSplineToPoints  
+#20 25.61   inflating: ants-2.4.4/bin/LabelOverlapMeasures  
+#20 25.71   inflating: ants-2.4.4/bin/AverageAffineTransform  
+#20 25.86   inflating: ants-2.4.4/bin/antsASLProcessing.sh  
+#20 25.86   inflating: ants-2.4.4/bin/ANTSUseDeformationFieldToGetAffineTransform  
+#20 26.01   inflating: ants-2.4.4/bin/ExtractSliceFromImage  
+#20 26.11   inflating: ants-2.4.4/bin/PermuteFlipImageOrientationAxes  
+#20 26.21   inflating: ants-2.4.4/bin/ResampleImageBySpacing  
+#20 26.32   inflating: ants-2.4.4/bin/CompositeTransformUtil  
+#20 26.47   inflating: ants-2.4.4/bin/ConvertTransformFile  
+#20 26.63   inflating: ants-2.4.4/bin/iMath    
+#20 26.77   inflating: ants-2.4.4/bin/antsLaplacianBoundaryCondition.R  
+#20 26.77   inflating: ants-2.4.4/bin/Atropos  
+#20 26.91   inflating: ants-2.4.4/bin/antsLandmarkBasedTransformInitializer  
+#20 27.06   inflating: ants-2.4.4/bin/waitForXGridJobs.pl  
+#20 27.06   inflating: ants-2.4.4/bin/ImageSetStatistics  
+#20 27.16   inflating: ants-2.4.4/bin/ClusterImageStatistics  
+#20 27.26   inflating: ants-2.4.4/bin/antsJointLabelFusion.sh  
+#20 27.26   inflating: ants-2.4.4/bin/ANTSpexec.sh  
+#20 27.26   inflating: ants-2.4.4/bin/antsJointFusion  
+#20 27.37   inflating: ants-2.4.4/bin/LabelGeometryMeasures  
+#20 27.52   inflating: ants-2.4.4/bin/ImageCompare  
+#20 27.62   inflating: ants-2.4.4/bin/ResampleImage  
+#20 27.77   inflating: ants-2.4.4/bin/ANTSUseLandmarkImagesToGetBSplineDisplacementField  
+#20 27.87   inflating: ants-2.4.4/bin/antsLongitudinalCorticalThickness.sh  
+#20 27.88   inflating: ants-2.4.4/bin/CreateWarpedGridImage  
+#20 27.98   inflating: ants-2.4.4/bin/NonLocalSuperResolution  
+#20 28.10   inflating: ants-2.4.4/bin/antsCorticalThickness.sh  
+#20 28.10   inflating: ants-2.4.4/bin/ConvertToJpg  
+#20 28.20   inflating: ants-2.4.4/bin/antsApplyTransformsToPoints  
+#20 28.35   inflating: ants-2.4.4/bin/TimeSCCAN  
+#20 28.45   inflating: ants-2.4.4/bin/PasteImageIntoImage  
+#20 28.56   inflating: ants-2.4.4/bin/simpleSynRegistration  
+#20 28.73   inflating: ants-2.4.4/bin/antsUtilitiesTesting  
+#20 28.88   inflating: ants-2.4.4/bin/waitForSlurmJobs.pl  
+#20 28.88   inflating: ants-2.4.4/bin/antsIntroduction.sh  
+#20 28.88   inflating: ants-2.4.4/bin/ANTSJacobian  
+#20 28.98   inflating: ants-2.4.4/bin/TextureCooccurrenceFeatures  
+#20 29.08   inflating: ants-2.4.4/bin/antsSliceRegularizedRegistration  
+#20 29.24   inflating: ants-2.4.4/bin/AverageAffineTransformNoRigid  
+#20 29.39   inflating: ants-2.4.4/bin/WarpTensorImageMultiTransform  
+#20 29.55   inflating: ants-2.4.4/bin/antsApplyTransforms  
+#20 29.75   inflating: ants-2.4.4/bin/antsAI   
+#20 29.92   inflating: ants-2.4.4/bin/SurfaceCurvature  
+#20 30.03   inflating: ants-2.4.4/bin/CreateDTICohort  
+#20 30.14   inflating: ants-2.4.4/bin/AddNoiseToImage  
+#20 30.25   inflating: ants-2.4.4/bin/antsRegistration  
+#20 30.56   inflating: ants-2.4.4/bin/N3BiasFieldCorrection  
+#20 30.68   inflating: ants-2.4.4/bin/SimulateDisplacementField  
+#20 30.79   inflating: ants-2.4.4/bin/WarpImageMultiTransform  
+#20 30.95   inflating: ants-2.4.4/bin/CopyImageHeaderInformation  
+#20 31.05   inflating: ants-2.4.4/bin/MeasureMinMaxMean  
+#20 31.16   inflating: ants-2.4.4/bin/ConvertImage  
+#20 31.30   inflating: ants-2.4.4/bin/MeasureImageSimilarity  
+#20 31.47   inflating: ants-2.4.4/bin/antsBrainExtraction.sh  
+#20 31.47   inflating: ants-2.4.4/bin/SetDirectionByMatrix  
+#20 31.57   inflating: ants-2.4.4/bin/ANTSIntegrateVectorField  
+#20 31.68   inflating: ants-2.4.4/bin/antsJointTensorFusion  
+#20 31.78   inflating: ants-2.4.4/bin/antsAffineInitializer  
+#20 31.94   inflating: ants-2.4.4/bin/ResetDirection  
+#20 32.04   inflating: ants-2.4.4/bin/compareTwoTransforms  
+#20 32.19   inflating: ants-2.4.4/bin/antsAlignOrigin  
+#20 32.34   inflating: ants-2.4.4/bin/antsMultivariateTemplateConstruction.sh  
+#20 32.35   inflating: ants-2.4.4/bin/antsMotionCorr  
+#20 32.52   inflating: ants-2.4.4/bin/CreateTiledMosaic  
+#20 32.62   inflating: ants-2.4.4/bin/MultiplyImages  
+#20 32.73   inflating: ants-2.4.4/bin/AverageTensorImages  
+#20 32.83   inflating: ants-2.4.4/bin/ConvertScalarImageToRGB  
+#20 32.94   inflating: ants-2.4.4/bin/ANTSUseLandmarkImagesToGetAffineTransform  
+#20 33.09   inflating: ants-2.4.4/bin/ANTS     
+#20 33.26   inflating: ants-2.4.4/bin/SetSpacing  
+#20 33.36   inflating: ants-2.4.4/bin/ANTSIntegrateVelocityField  
+#20 33.51   inflating: ants-2.4.4/bin/ImageMath  
+#20 33.75   inflating: ants-2.4.4/bin/SmoothDisplacementField  
+#20 33.86   inflating: ants-2.4.4/bin/TileImages  
+#20 33.96   inflating: ants-2.4.4/bin/PrintHeader  
+#20 34.07   inflating: ants-2.4.4/bin/sccan    
+#20 34.18   inflating: ants-2.4.4/bin/ExtractRegionFromImage  
+#20 34.28   inflating: ants-2.4.4/bin/antsIntermodalityIntrasubject.sh  
+#20 34.28   inflating: ants-2.4.4/bin/antsBOLDNetworkAnalysis.R  
+#20 34.28   inflating: ants-2.4.4/bin/antsTransformInfo  
+#20 34.38   inflating: ants-2.4.4/bin/antsAtroposN4.sh  
+#20 34.38   inflating: ants-2.4.4/bin/antsRegistrationSyN.sh  
+#20 34.38   inflating: ants-2.4.4/bin/ThresholdImage  
+#20 34.49   inflating: ants-2.4.4/bin/waitForSGEQJobs.pl  
+#20 34.49   inflating: ants-2.4.4/bin/ConvertInputImagePixelTypeToFloat  
+#20 34.59   inflating: ants-2.4.4/bin/WarpTimeSeriesImageMultiTransform  
+#20 34.75   inflating: ants-2.4.4/bin/TextureRunLengthFeatures  
+#20 34.85   inflating: ants-2.4.4/bin/antsMotionCorrDiffusionDirection  
+#20 35.12 curl: /home/jovyan/fsl/lib/libcurl.so.4: no version information available (required by curl)
+#20 35.13   % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+#20 35.13                                  Dload  Upload  Total   Spent   Left   Speed
+#20 35.13   0      0   0      0   0      0      0      0                              0100    635 100    635   0      0   2182      0                              0100    635 100    635   0      0   2182      0                              0
+#20 35.42   0      0   0      0   0      0      0      0                              0100    377 100    377   0      0    667      0                              0100    377 100    377   0      0    667      0                              0
+#20 35.69   0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0           00:02              0  0 44.86M   0 143.7k   0      0  46431      0   16:53   00:03   16:50  56486  8 44.86M   8  3.96M   0      0 965.9k      0   00:47   00:04   00:43  1.08M 20 44.86M  20  9.09M   0      0  1.73M      0   00:25   00:05   00:20  1.94M 32 44.86M  32 14.57M   0      0  2.32M      0   00:19   00:06   00:13  2.55M 45 44.86M  45 20.29M   0      0  2.78M      0   00:16   00:07   00:09  3.86M 58 44.86M  58 26.15M   0      0  3.14M      0   00:14   00:08   00:06  5.06M 71 44.86M  71 32.10M   0      0  3.43M      0   00:13   00:09   00:04  5.48M 84 44.86M  84 38.06M   0      0  3.67M      0   00:12   00:10   00:02  5.68M 98 44.86M  98 43.98M   0      0  3.87M      0   00:11   00:11          5.80M100 44.86M 100 44.86M   0      0  3.89M      0   00:11   00:11          5.80M100 44.86M 100 44.86M   0      0  3.89M      0   00:11   00:11          5.80M100 44.86M 100 44.86M   0      0  3.89M      0   00:11   00:11          5.80M
+#20 DONE 47.4s
+
+#21 [17/23] WORKDIR /home/jovyan
+#21 DONE 0.1s
+
+#22 [18/23] RUN apt-get update && apt-get install -y --no-install-recommends   libgtk-3-0   libwebkit2gtk-4.0-37   libnotify4   libsdl2-2.0-0   freeglut3   && rm -rf /var/lib/apt/lists/*   && .venv/bin/pip --no-cache install --only-binary :all: -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxpython   && .venv/bin/pip install attrdict
+#22 0.562 Get:1 http://archive.ubuntu.com/ubuntu focal InRelease [265 kB]
+#22 0.663 Get:2 http://security.ubuntu.com/ubuntu focal-security InRelease [128 kB]
+#22 0.677 Get:3 http://archive.ubuntu.com/ubuntu focal-updates InRelease [128 kB]
+#22 0.705 Get:4 http://archive.ubuntu.com/ubuntu focal-backports InRelease [128 kB]
+#22 0.766 Get:5 http://archive.ubuntu.com/ubuntu focal/main amd64 Packages [1,275 kB]
+#22 0.849 Get:6 http://archive.ubuntu.com/ubuntu focal/multiverse amd64 Packages [177 kB]
+#22 0.851 Get:7 http://archive.ubuntu.com/ubuntu focal/restricted amd64 Packages [33.4 kB]
+#22 0.851 Get:8 http://archive.ubuntu.com/ubuntu focal/universe amd64 Packages [11.3 MB]
+#22 1.012 Get:9 http://archive.ubuntu.com/ubuntu focal-updates/multiverse amd64 Packages [36.8 kB]
+#22 1.012 Get:10 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 Packages [4,920 kB]
+#22 1.054 Get:11 http://archive.ubuntu.com/ubuntu focal-updates/restricted amd64 Packages [4,998 kB]
+#22 1.116 Get:12 http://archive.ubuntu.com/ubuntu focal-updates/universe amd64 Packages [1,599 kB]
+#22 1.134 Get:13 http://archive.ubuntu.com/ubuntu focal-backports/main amd64 Packages [55.2 kB]
+#22 1.135 Get:14 http://archive.ubuntu.com/ubuntu focal-backports/universe amd64 Packages [28.6 kB]
+#22 1.234 Get:15 http://security.ubuntu.com/ubuntu focal-security/main amd64 Packages [4,432 kB]
+#22 1.840 Get:16 http://security.ubuntu.com/ubuntu focal-security/restricted amd64 Packages [4,801 kB]
+#22 1.950 Get:17 http://security.ubuntu.com/ubuntu focal-security/multiverse amd64 Packages [33.1 kB]
+#22 1.950 Get:18 http://security.ubuntu.com/ubuntu focal-security/universe amd64 Packages [1,308 kB]
+#22 2.158 Fetched 35.7 MB in 2s (20.6 MB/s)
+#22 2.158 Reading package lists...
+#22 2.874 Reading package lists...
+#22 3.568 Building dependency tree...
+#22 3.734 Reading state information...
+#22 3.864 libsdl2-2.0-0 is already the newest version (2.0.10+dfsg1-3).
+#22 3.864 libsdl2-2.0-0 set to manually installed.
+#22 3.864 libnotify4 is already the newest version (0.7.9-1ubuntu3.20.04.2).
+#22 3.864 libnotify4 set to manually installed.
+#22 3.864 The following additional packages will be installed:
+#22 3.864   bubblewrap iso-codes libcap2-bin libgstreamer-gl1.0-0
+#22 3.864   libgstreamer-plugins-base1.0-0 libgstreamer1.0-0 libgtk-3-common libhyphen0
+#22 3.864   libjavascriptcoregtk-4.0-18 libopengl0 liborc-0.4-0 libsecret-1-0
+#22 3.865   libsecret-common libwebpdemux2 libwoff1 xdg-dbus-proxy
+#22 3.865 Suggested packages:
+#22 3.865   isoquery libvisual-0.4-plugins gstreamer1.0-tools gvfs gstreamer1.0-libav
+#22 3.865 Recommended packages:
+#22 3.865   libpam-cap gstreamer1.0-gl gstreamer1.0-plugins-base libgtk-3-bin
+#22 3.865   gstreamer1.0-plugins-good gstreamer1.0-pulseaudio | gstreamer1.0-alsa
+#22 3.902 The following NEW packages will be installed:
+#22 3.902   bubblewrap freeglut3 iso-codes libcap2-bin libgstreamer-gl1.0-0
+#22 3.902   libgstreamer-plugins-base1.0-0 libgstreamer1.0-0 libhyphen0
+#22 3.902   libjavascriptcoregtk-4.0-18 libopengl0 liborc-0.4-0 libsecret-1-0
+#22 3.903   libsecret-common libwebkit2gtk-4.0-37 libwebpdemux2 libwoff1 xdg-dbus-proxy
+#22 3.903 The following packages will be upgraded:
+#22 3.903   libgtk-3-0 libgtk-3-common
+#22 3.991 2 upgraded, 17 newly installed, 0 to remove and 171 not upgraded.
+#22 3.991 Need to get 31.8 MB of archives.
+#22 3.991 After this operation, 123 MB of additional disk space will be used.
+#22 3.991 Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libcap2-bin amd64 1:2.32-1ubuntu0.2 [26.2 kB]
+#22 4.062 Get:2 http://archive.ubuntu.com/ubuntu focal/main amd64 iso-codes all 4.4-1 [2,695 kB]
+#22 4.273 Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 bubblewrap amd64 0.4.0-1ubuntu4.1 [35.3 kB]
+#22 4.274 Get:4 http://archive.ubuntu.com/ubuntu focal/universe amd64 freeglut3 amd64 2.8.1-3 [73.6 kB]
+#22 4.275 Get:5 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libgstreamer1.0-0 amd64 1.16.3-0ubuntu1.2 [894 kB]
+#22 4.288 Get:6 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 liborc-0.4-0 amd64 1:0.4.31-1ubuntu0.1 [188 kB]
+#22 4.290 Get:7 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libgstreamer-plugins-base1.0-0 amd64 1.16.3-0ubuntu1.4 [741 kB]
+#22 4.298 Get:8 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libgstreamer-gl1.0-0 amd64 1.16.3-0ubuntu1.4 [163 kB]
+#22 4.299 Get:9 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libgtk-3-common all 3.24.20-0ubuntu1.2 [234 kB]
+#22 4.301 Get:10 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libgtk-3-0 amd64 3.24.20-0ubuntu1.2 [2,620 kB]
+#22 4.329 Get:11 http://archive.ubuntu.com/ubuntu focal/main amd64 libhyphen0 amd64 2.8.8-7 [27.0 kB]
+#22 4.329 Get:12 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libjavascriptcoregtk-4.0-18 amd64 2.38.6-0ubuntu0.20.04.1 [6,446 kB]
+#22 4.395 Get:13 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libsecret-common all 0.20.4-0ubuntu1 [3,940 B]
+#22 4.396 Get:14 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libsecret-1-0 amd64 0.20.4-0ubuntu1 [110 kB]
+#22 4.397 Get:15 http://archive.ubuntu.com/ubuntu focal/main amd64 xdg-dbus-proxy amd64 0.1.2-1 [23.0 kB]
+#22 4.397 Get:16 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libopengl0 amd64 1.3.2-1~ubuntu0.20.04.2 [29.2 kB]
+#22 4.397 Get:17 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libwebpdemux2 amd64 0.6.1-2ubuntu0.20.04.3 [9,560 B]
+#22 4.398 Get:18 http://archive.ubuntu.com/ubuntu focal/main amd64 libwoff1 amd64 1.0.2-1build2 [42.0 kB]
+#22 4.398 Get:19 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libwebkit2gtk-4.0-37 amd64 2.38.6-0ubuntu0.20.04.1 [17.5 MB]
+#22 4.730 debconf: delaying package configuration, since apt-utils is not installed
+#22 4.774 Fetched 31.8 MB in 1s (47.5 MB/s)
+#22 4.800 Selecting previously unselected package libcap2-bin.
+#22 4.800 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 152764 files and directories currently installed.)
+#22 4.964 Preparing to unpack .../00-libcap2-bin_1%3a2.32-1ubuntu0.2_amd64.deb ...
+#22 4.967 Unpacking libcap2-bin (1:2.32-1ubuntu0.2) ...
+#22 5.008 Selecting previously unselected package iso-codes.
+#22 5.017 Preparing to unpack .../01-iso-codes_4.4-1_all.deb ...
+#22 5.020 Unpacking iso-codes (4.4-1) ...
+#22 5.232 Selecting previously unselected package bubblewrap.
+#22 5.243 Preparing to unpack .../02-bubblewrap_0.4.0-1ubuntu4.1_amd64.deb ...
+#22 5.247 Unpacking bubblewrap (0.4.0-1ubuntu4.1) ...
+#22 5.287 Selecting previously unselected package freeglut3:amd64.
+#22 5.297 Preparing to unpack .../03-freeglut3_2.8.1-3_amd64.deb ...
+#22 5.305 Unpacking freeglut3:amd64 (2.8.1-3) ...
+#22 5.347 Selecting previously unselected package libgstreamer1.0-0:amd64.
+#22 5.356 Preparing to unpack .../04-libgstreamer1.0-0_1.16.3-0ubuntu1.2_amd64.deb ...
+#22 5.360 Unpacking libgstreamer1.0-0:amd64 (1.16.3-0ubuntu1.2) ...
+#22 5.431 Selecting previously unselected package liborc-0.4-0:amd64.
+#22 5.440 Preparing to unpack .../05-liborc-0.4-0_1%3a0.4.31-1ubuntu0.1_amd64.deb ...
+#22 5.444 Unpacking liborc-0.4-0:amd64 (1:0.4.31-1ubuntu0.1) ...
+#22 5.490 Selecting previously unselected package libgstreamer-plugins-base1.0-0:amd64.
+#22 5.500 Preparing to unpack .../06-libgstreamer-plugins-base1.0-0_1.16.3-0ubuntu1.4_amd64.deb ...
+#22 5.505 Unpacking libgstreamer-plugins-base1.0-0:amd64 (1.16.3-0ubuntu1.4) ...
+#22 5.570 Selecting previously unselected package libgstreamer-gl1.0-0:amd64.
+#22 5.580 Preparing to unpack .../07-libgstreamer-gl1.0-0_1.16.3-0ubuntu1.4_amd64.deb ...
+#22 5.584 Unpacking libgstreamer-gl1.0-0:amd64 (1.16.3-0ubuntu1.4) ...
+#22 5.634 Preparing to unpack .../08-libgtk-3-common_3.24.20-0ubuntu1.2_all.deb ...
+#22 5.646 Unpacking libgtk-3-common (3.24.20-0ubuntu1.2) over (3.24.20-0ubuntu1.1) ...
+#22 5.735 Preparing to unpack .../09-libgtk-3-0_3.24.20-0ubuntu1.2_amd64.deb ...
+#22 5.747 Unpacking libgtk-3-0:amd64 (3.24.20-0ubuntu1.2) over (3.24.20-0ubuntu1.1) ...
+#22 5.988 Selecting previously unselected package libhyphen0:amd64.
+#22 5.998 Preparing to unpack .../10-libhyphen0_2.8.8-7_amd64.deb ...
+#22 6.002 Unpacking libhyphen0:amd64 (2.8.8-7) ...
+#22 6.037 Selecting previously unselected package libjavascriptcoregtk-4.0-18:amd64.
+#22 6.046 Preparing to unpack .../11-libjavascriptcoregtk-4.0-18_2.38.6-0ubuntu0.20.04.1_amd64.deb ...
+#22 6.050 Unpacking libjavascriptcoregtk-4.0-18:amd64 (2.38.6-0ubuntu0.20.04.1) ...
+#22 6.317 Selecting previously unselected package libsecret-common.
+#22 6.326 Preparing to unpack .../12-libsecret-common_0.20.4-0ubuntu1_all.deb ...
+#22 6.329 Unpacking libsecret-common (0.20.4-0ubuntu1) ...
+#22 6.363 Selecting previously unselected package libsecret-1-0:amd64.
+#22 6.372 Preparing to unpack .../13-libsecret-1-0_0.20.4-0ubuntu1_amd64.deb ...
+#22 6.376 Unpacking libsecret-1-0:amd64 (0.20.4-0ubuntu1) ...
+#22 6.408 Selecting previously unselected package xdg-dbus-proxy.
+#22 6.417 Preparing to unpack .../14-xdg-dbus-proxy_0.1.2-1_amd64.deb ...
+#22 6.420 Unpacking xdg-dbus-proxy (0.1.2-1) ...
+#22 6.456 Selecting previously unselected package libopengl0:amd64.
+#22 6.464 Preparing to unpack .../15-libopengl0_1.3.2-1~ubuntu0.20.04.2_amd64.deb ...
+#22 6.468 Unpacking libopengl0:amd64 (1.3.2-1~ubuntu0.20.04.2) ...
+#22 6.504 Selecting previously unselected package libwebpdemux2:amd64.
+#22 6.513 Preparing to unpack .../16-libwebpdemux2_0.6.1-2ubuntu0.20.04.3_amd64.deb ...
+#22 6.516 Unpacking libwebpdemux2:amd64 (0.6.1-2ubuntu0.20.04.3) ...
+#22 6.548 Selecting previously unselected package libwoff1:amd64.
+#22 6.557 Preparing to unpack .../17-libwoff1_1.0.2-1build2_amd64.deb ...
+#22 6.561 Unpacking libwoff1:amd64 (1.0.2-1build2) ...
+#22 6.596 Selecting previously unselected package libwebkit2gtk-4.0-37:amd64.
+#22 6.605 Preparing to unpack .../18-libwebkit2gtk-4.0-37_2.38.6-0ubuntu0.20.04.1_amd64.deb ...
+#22 6.609 Unpacking libwebkit2gtk-4.0-37:amd64 (2.38.6-0ubuntu0.20.04.1) ...
+#22 7.263 Setting up bubblewrap (0.4.0-1ubuntu4.1) ...
+#22 7.274 Setting up freeglut3:amd64 (2.8.1-3) ...
+#22 7.284 Setting up libwoff1:amd64 (1.0.2-1build2) ...
+#22 7.295 Setting up libhyphen0:amd64 (2.8.8-7) ...
+#22 7.306 Setting up libwebpdemux2:amd64 (0.6.1-2ubuntu0.20.04.3) ...
+#22 7.316 Setting up libjavascriptcoregtk-4.0-18:amd64 (2.38.6-0ubuntu0.20.04.1) ...
+#22 7.326 Setting up libopengl0:amd64 (1.3.2-1~ubuntu0.20.04.2) ...
+#22 7.337 Setting up libcap2-bin (1:2.32-1ubuntu0.2) ...
+#22 7.348 Setting up liborc-0.4-0:amd64 (1:0.4.31-1ubuntu0.1) ...
+#22 7.358 Setting up xdg-dbus-proxy (0.1.2-1) ...
+#22 7.368 Setting up iso-codes (4.4-1) ...
+#22 7.378 Setting up libsecret-common (0.20.4-0ubuntu1) ...
+#22 7.389 Setting up libgstreamer1.0-0:amd64 (1.16.3-0ubuntu1.2) ...
+#22 7.397 Setcap worked! gst-ptp-helper is not suid!
+#22 7.401 Setting up libgtk-3-common (3.24.20-0ubuntu1.2) ...
+#22 7.415 Setting up libgstreamer-plugins-base1.0-0:amd64 (1.16.3-0ubuntu1.4) ...
+#22 7.425 Setting up libsecret-1-0:amd64 (0.20.4-0ubuntu1) ...
+#22 7.436 Setting up libgstreamer-gl1.0-0:amd64 (1.16.3-0ubuntu1.4) ...
+#22 7.449 Processing triggers for libglib2.0-0:amd64 (2.64.6-1~ubuntu20.04.4) ...
+#22 7.476 Setting up libgtk-3-0:amd64 (3.24.20-0ubuntu1.2) ...
+#22 7.506 Processing triggers for libc-bin (2.31-0ubuntu9.7) ...
+#22 7.840 Setting up libwebkit2gtk-4.0-37:amd64 (2.38.6-0ubuntu0.20.04.1) ...
+#22 7.855 Processing triggers for libc-bin (2.31-0ubuntu9.7) ...
+#22 8.203 Looking in links: https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04
+#22 8.444 Collecting wxpython
+#22 8.462   Downloading https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxpython-4.2.3-cp39-cp39-linux_x86_64.whl (156.4 MB)
+#22 21.16      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 156.4/156.4 MB 12.1 MB/s eta 0:00:00
+#22 21.25 Requirement already satisfied: numpy in ./.venv/lib/python3.9/site-packages (from wxpython) (1.24.3)
+#22 21.25 Requirement already satisfied: typing-extensions in ./.venv/lib/python3.9/site-packages (from wxpython) (4.9.0)
+#22 22.15 Installing collected packages: wxpython
+#22 24.66 Successfully installed wxpython-4.2.3
+#22 24.86 
+#22 24.86 [notice] A new release of pip is available: 23.1.2 -> 25.3
+#22 24.86 [notice] To update, run: /home/jovyan/.venv/bin/python3 -m pip install --upgrade pip
+#22 25.18 WARNING: The directory '/home/jovyan/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+#22 25.30 Collecting attrdict
+#22 25.36   Downloading attrdict-2.0.1-py2.py3-none-any.whl (9.9 kB)
+#22 25.37 Requirement already satisfied: six in ./.venv/lib/python3.9/site-packages (from attrdict) (1.16.0)
+#22 26.25 Installing collected packages: attrdict
+#22 26.28 Successfully installed attrdict-2.0.1
+#22 26.39 
+#22 26.39 [notice] A new release of pip is available: 23.1.2 -> 25.3
+#22 26.39 [notice] To update, run: /home/jovyan/.venv/bin/python3 -m pip install --upgrade pip
+#22 DONE 27.0s
+
+#23 [19/23] COPY --chown=1000:100 requirements.in /home/jovyan/work/requirements.in
+#23 DONE 0.0s
+
+#24 [20/23] RUN .venv/bin/pip --no-cache install pip-tools   && mv /home/jovyan/work/requirements.txt /home/jovyan/work/requirements_base_math.txt   && .venv/bin/pip-compile --build-isolation --output-file /home/jovyan/work/requirements.txt /home/jovyan/work/requirements.in   && .venv/bin/pip --no-cache install --only-binary wxpython -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 -r /home/jovyan/work/requirements.txt   && rm /home/jovyan/work/requirements.in   && echo "Your environment contains these python packages:"   && .venv/bin/pip list   && rm -rf /home/jovyan/.cache/pip
+#24 0.706 Requirement already satisfied: pip-tools in ./.venv/lib/python3.9/site-packages (6.13.0)
+#24 0.714 Requirement already satisfied: build in ./.venv/lib/python3.9/site-packages (from pip-tools) (0.10.0)
+#24 0.715 Requirement already satisfied: click>=8 in ./.venv/lib/python3.9/site-packages (from pip-tools) (8.1.3)
+#24 0.715 Requirement already satisfied: pip>=22.2 in ./.venv/lib/python3.9/site-packages (from pip-tools) (23.1.2)
+#24 0.715 Requirement already satisfied: setuptools in ./.venv/lib/python3.9/site-packages (from pip-tools) (67.8.0)
+#24 0.716 Requirement already satisfied: wheel in ./.venv/lib/python3.9/site-packages (from pip-tools) (0.40.0)
+#24 0.736 Requirement already satisfied: packaging>=19.0 in ./.venv/lib/python3.9/site-packages (from build->pip-tools) (23.1)
+#24 0.737 Requirement already satisfied: pyproject_hooks in ./.venv/lib/python3.9/site-packages (from build->pip-tools) (1.0.0)
+#24 0.738 Requirement already satisfied: tomli>=1.1.0 in ./.venv/lib/python3.9/site-packages (from build->pip-tools) (2.0.1)
+#24 1.759 
+#24 1.759 [notice] A new release of pip is available: 23.1.2 -> 25.3
+#24 1.759 [notice] To update, run: /home/jovyan/.venv/bin/python3 -m pip install --upgrade pip
+#24 2.126 WARNING: the legacy dependency resolver is deprecated and will be removed in future versions of pip-tools. The default resolver will be changed to 'backtracking' in pip-tools 7.0.0. Specify --resolver=backtracking to silence this warning.
+#24 23.45 #
+#24 23.45 # This file is autogenerated by pip-compile with Python 3.9
+#24 23.45 # by the following command:
+#24 23.45 #
+#24 23.45 #    pip-compile --output-file=/home/jovyan/work/requirements.txt /home/jovyan/work/requirements.in
+#24 23.45 #
+#24 23.45 certifi==2026.1.4
+#24 23.45     # via requests
+#24 23.45 charset-normalizer==3.4.4
+#24 23.45     # via requests
+#24 23.45 connected-components-3d==3.26.1
+#24 23.45     # via -r /home/jovyan/work/requirements.in
+#24 23.45 contourpy==1.3.0
+#24 23.45     # via matplotlib
+#24 23.45 cycler==0.12.1
+#24 23.45     # via matplotlib
+#24 23.45 dill==0.4.0
+#24 23.45     # via fslpy
+#24 23.45 fonttools==4.60.2
+#24 23.45     # via matplotlib
+#24 23.45 fsleyes==1.16.3
+#24 23.45     # via -r /home/jovyan/work/requirements.in
+#24 23.45 fsleyes-props==1.12.3
+#24 23.45     # via fsleyes
+#24 23.45 fsleyes-widgets==0.16.0
+#24 23.45     # via
+#24 23.45     #   fsleyes
+#24 23.45     #   fsleyes-props
+#24 23.45 fslpy==3.26.0
+#24 23.45     # via
+#24 23.45     #   fsleyes
+#24 23.45     #   fsleyes-props
+#24 23.45 h5py==3.14.0
+#24 23.45     # via fslpy
+#24 23.45 idna==3.11
+#24 23.45     # via requests
+#24 23.45 importlib-resources==6.5.2
+#24 23.45     # via
+#24 23.45     #   matplotlib
+#24 23.45     #   nibabel
+#24 23.45 jinja2==3.1.6
+#24 23.45     # via fsleyes
+#24 23.45 kiwisolver==1.4.7
+#24 23.45     # via matplotlib
+#24 23.45 markupsafe==3.0.3
+#24 23.45     # via jinja2
+#24 23.45 matplotlib==3.9.4
+#24 23.45     # via
+#24 23.45     #   fsleyes
+#24 23.45     #   fsleyes-props
+#24 23.45     #   fsleyes-widgets
+#24 23.45     #   pyvista
+#24 23.45     #   vtk
+#24 23.45 nibabel==5.3.3
+#24 23.45     # via
+#24 23.45     #   -r /home/jovyan/work/requirements.in
+#24 23.45     #   fsleyes
+#24 23.45     #   fslpy
+#24 23.45 numpy==2.0.2
+#24 23.45     # via
+#24 23.45     #   connected-components-3d
+#24 23.45     #   contourpy
+#24 23.45     #   fsleyes
+#24 23.45     #   fsleyes-props
+#24 23.45     #   fsleyes-widgets
+#24 23.45     #   fslpy
+#24 23.45     #   h5py
+#24 23.45     #   matplotlib
+#24 23.45     #   nibabel
+#24 23.45     #   pyvista
+#24 23.45     #   scipy
+#24 23.45     #   wxpython
+#24 23.45 packaging==25.0
+#24 23.45     # via
+#24 23.45     #   matplotlib
+#24 23.45     #   nibabel
+#24 23.45     #   pooch
+#24 23.45 pillow==11.3.0
+#24 23.45     # via
+#24 23.45     #   fsleyes
+#24 23.45     #   matplotlib
+#24 23.45     #   pyvista
+#24 23.45 platformdirs==4.4.0
+#24 23.45     # via pooch
+#24 23.45 pooch==1.8.2
+#24 23.45     # via pyvista
+#24 23.45 pyopengl==3.1.10
+#24 23.45     # via
+#24 23.45     #   -r /home/jovyan/work/requirements.in
+#24 23.45     #   fsleyes
+#24 23.45 pyopengl-accelerate==3.1.10
+#24 23.45     # via -r /home/jovyan/work/requirements.in
+#24 23.45 pyparsing==3.3.1
+#24 23.45     # via
+#24 23.45     #   fsleyes
+#24 23.45     #   matplotlib
+#24 23.45 python-dateutil==2.9.0.post0
+#24 23.45     # via matplotlib
+#24 23.45 pyvista==0.46.4
+#24 23.45     # via -r /home/jovyan/work/requirements.in
+#24 23.45 requests==2.32.5
+#24 23.45     # via pooch
+#24 23.45 scipy==1.13.1
+#24 23.45     # via
+#24 23.45     #   fsleyes
+#24 23.45     #   fslpy
+#24 23.45 scooby==0.11.0
+#24 23.45     # via pyvista
+#24 23.45 six==1.17.0
+#24 23.45     # via python-dateutil
+#24 23.45 typing-extensions==4.15.0
+#24 23.45     # via
+#24 23.45     #   nibabel
+#24 23.45     #   pyvista
+#24 23.45     #   wxpython
+#24 23.45 urllib3==2.6.3
+#24 23.45     # via requests
+#24 23.45 vtk==9.5.2
+#24 23.45     # via pyvista
+#24 23.45 wxpython==4.2.3
+#24 23.45     # via
+#24 23.45     #   -r /home/jovyan/work/requirements.in
+#24 23.45     #   fsleyes
+#24 23.45     #   fsleyes-props
+#24 23.45     #   fsleyes-widgets
+#24 23.45 zipp==3.23.0
+#24 23.45     # via importlib-resources
+#24 24.03 Looking in links: https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04
+#24 24.18 Collecting certifi==2026.1.4 (from -r /home/jovyan/work/requirements.txt (line 7))
+#24 24.23   Downloading certifi-2026.1.4-py3-none-any.whl (152 kB)
+#24 24.25      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 152.9/152.9 kB 6.4 MB/s eta 0:00:00
+#24 24.49 Collecting charset-normalizer==3.4.4 (from -r /home/jovyan/work/requirements.txt (line 9))
+#24 24.50   Downloading charset_normalizer-3.4.4-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+#24 24.50      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 154.0/154.0 kB 56.0 MB/s eta 0:00:00
+#24 24.79 Collecting connected-components-3d==3.26.1 (from -r /home/jovyan/work/requirements.txt (line 11))
+#24 24.81   Downloading connected_components_3d-3.26.1-cp39-cp39-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (4.6 MB)
+#24 24.88      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 71.4 MB/s eta 0:00:00
+#24 25.06 Collecting contourpy==1.3.0 (from -r /home/jovyan/work/requirements.txt (line 13))
+#24 25.07   Downloading contourpy-1.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (321 kB)
+#24 25.07      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 321.9/321.9 kB 169.3 MB/s eta 0:00:00
+#24 25.13 Collecting cycler==0.12.1 (from -r /home/jovyan/work/requirements.txt (line 15))
+#24 25.14   Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+#24 25.19 Collecting dill==0.4.0 (from -r /home/jovyan/work/requirements.txt (line 17))
+#24 25.21   Downloading dill-0.4.0-py3-none-any.whl (119 kB)
+#24 25.21      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.7/119.7 kB 288.8 MB/s eta 0:00:00
+#24 25.59 Collecting fonttools==4.60.2 (from -r /home/jovyan/work/requirements.txt (line 19))
+#24 25.61   Downloading fonttools-4.60.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.8 MB)
+#24 25.67      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 79.8 MB/s eta 0:00:00
+#24 25.76 Collecting fsleyes==1.16.3 (from -r /home/jovyan/work/requirements.txt (line 21))
+#24 25.78   Downloading fsleyes-1.16.3-py3-none-any.whl (40.4 MB)
+#24 26.27      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.4/40.4 MB 86.2 MB/s eta 0:00:00
+#24 26.36 Collecting fsleyes-props==1.12.3 (from -r /home/jovyan/work/requirements.txt (line 23))
+#24 26.38   Downloading fsleyes_props-1.12.3-py3-none-any.whl (128 kB)
+#24 26.38      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 128.6/128.6 kB 256.4 MB/s eta 0:00:00
+#24 26.45 Collecting fsleyes-widgets==0.16.0 (from -r /home/jovyan/work/requirements.txt (line 25))
+#24 26.46   Downloading fsleyes_widgets-0.16.0-py3-none-any.whl (1.0 MB)
+#24 26.48      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 89.6 MB/s eta 0:00:00
+#24 26.57 Collecting fslpy==3.26.0 (from -r /home/jovyan/work/requirements.txt (line 29))
+#24 26.58   Downloading fslpy-3.26.0-py3-none-any.whl (4.8 MB)
+#24 26.64      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 92.9 MB/s eta 0:00:00
+#24 26.77 Collecting h5py==3.14.0 (from -r /home/jovyan/work/requirements.txt (line 33))
+#24 26.80   Downloading h5py-3.14.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.6 MB)
+#24 26.85      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 92.3 MB/s eta 0:00:00
+#24 26.91 Collecting idna==3.11 (from -r /home/jovyan/work/requirements.txt (line 35))
+#24 26.93   Downloading idna-3.11-py3-none-any.whl (71 kB)
+#24 26.93      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.0/71.0 kB 260.4 MB/s eta 0:00:00
+#24 27.01 Collecting importlib-resources==6.5.2 (from -r /home/jovyan/work/requirements.txt (line 37))
+#24 27.02   Downloading importlib_resources-6.5.2-py3-none-any.whl (37 kB)
+#24 27.09 Collecting jinja2==3.1.6 (from -r /home/jovyan/work/requirements.txt (line 41))
+#24 27.10   Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#24 27.11      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 106.1 MB/s eta 0:00:00
+#24 27.27 Collecting kiwisolver==1.4.7 (from -r /home/jovyan/work/requirements.txt (line 43))
+#24 27.29   Downloading kiwisolver-1.4.7-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+#24 27.31      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 100.8 MB/s eta 0:00:00
+#24 27.46 Collecting markupsafe==3.0.3 (from -r /home/jovyan/work/requirements.txt (line 45))
+#24 27.47   Downloading markupsafe-3.0.3-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (20 kB)
+#24 27.79 Collecting matplotlib==3.9.4 (from -r /home/jovyan/work/requirements.txt (line 47))
+#24 27.81   Downloading matplotlib-3.9.4-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (8.3 MB)
+#24 27.91      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 85.8 MB/s eta 0:00:00
+#24 27.99 Collecting nibabel==5.3.3 (from -r /home/jovyan/work/requirements.txt (line 54))
+#24 28.01   Downloading nibabel-5.3.3-py3-none-any.whl (3.3 MB)
+#24 28.07      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 61.7 MB/s eta 0:00:00
+#24 28.56 Collecting numpy==2.0.2 (from -r /home/jovyan/work/requirements.txt (line 59))
+#24 28.57   Downloading numpy-2.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (19.5 MB)
+#24 28.79      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19.5/19.5 MB 91.5 MB/s eta 0:00:00
+#24 28.87 Collecting packaging==25.0 (from -r /home/jovyan/work/requirements.txt (line 73))
+#24 28.89   Downloading packaging-25.0-py3-none-any.whl (66 kB)
+#24 28.89      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 66.5/66.5 kB 244.9 MB/s eta 0:00:00
+#24 29.27 Collecting pillow==11.3.0 (from -r /home/jovyan/work/requirements.txt (line 78))
+#24 29.29   Downloading pillow-11.3.0-cp39-cp39-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.6 MB)
+#24 29.36      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 94.8 MB/s eta 0:00:00
+#24 29.44 Collecting platformdirs==4.4.0 (from -r /home/jovyan/work/requirements.txt (line 83))
+#24 29.45   Downloading platformdirs-4.4.0-py3-none-any.whl (18 kB)
+#24 29.52 Collecting pooch==1.8.2 (from -r /home/jovyan/work/requirements.txt (line 85))
+#24 29.53   Downloading pooch-1.8.2-py3-none-any.whl (64 kB)
+#24 29.54      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.6/64.6 kB 267.4 MB/s eta 0:00:00
+#24 29.59 Collecting pyopengl==3.1.10 (from -r /home/jovyan/work/requirements.txt (line 87))
+#24 29.61   Downloading pyopengl-3.1.10-py3-none-any.whl (3.2 MB)
+#24 29.65      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.2/3.2 MB 93.4 MB/s eta 0:00:00
+#24 29.76 Collecting pyopengl-accelerate==3.1.10 (from -r /home/jovyan/work/requirements.txt (line 91))
+#24 29.77   Downloading pyopengl_accelerate-3.1.10-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (2.9 MB)
+#24 29.81      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 99.4 MB/s eta 0:00:00
+#24 29.89 Collecting pyparsing==3.3.1 (from -r /home/jovyan/work/requirements.txt (line 93))
+#24 29.90   Downloading pyparsing-3.3.1-py3-none-any.whl (121 kB)
+#24 29.90      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 121.8/121.8 kB 230.9 MB/s eta 0:00:00
+#24 29.96 Collecting python-dateutil==2.9.0.post0 (from -r /home/jovyan/work/requirements.txt (line 97))
+#24 29.97   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#24 29.98      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 229.9/229.9 kB 211.7 MB/s eta 0:00:00
+#24 30.06 Collecting pyvista==0.46.4 (from -r /home/jovyan/work/requirements.txt (line 99))
+#24 30.10   Downloading pyvista-0.46.4-py3-none-any.whl (2.4 MB)
+#24 30.12      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 97.0 MB/s eta 0:00:00
+#24 30.20 Collecting requests==2.32.5 (from -r /home/jovyan/work/requirements.txt (line 101))
+#24 30.22   Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+#24 30.22      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.7/64.7 kB 180.7 MB/s eta 0:00:00
+#24 30.58 Collecting scipy==1.13.1 (from -r /home/jovyan/work/requirements.txt (line 103))
+#24 30.60   Downloading scipy-1.13.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (38.6 MB)
+#24 31.17      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 38.6/38.6 MB 38.2 MB/s eta 0:00:00
+#24 31.27 Collecting scooby==0.11.0 (from -r /home/jovyan/work/requirements.txt (line 107))
+#24 31.28   Downloading scooby-0.11.0-py3-none-any.whl (19 kB)
+#24 31.34 Collecting six==1.17.0 (from -r /home/jovyan/work/requirements.txt (line 109))
+#24 31.35   Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+#24 31.42 Collecting typing-extensions==4.15.0 (from -r /home/jovyan/work/requirements.txt (line 111))
+#24 31.43   Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+#24 31.43      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 219.7 MB/s eta 0:00:00
+#24 31.52 Collecting urllib3==2.6.3 (from -r /home/jovyan/work/requirements.txt (line 116))
+#24 31.53   Downloading urllib3-2.6.3-py3-none-any.whl (131 kB)
+#24 31.54      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 131.6/131.6 kB 181.2 MB/s eta 0:00:00
+#24 31.65 Collecting vtk==9.5.2 (from -r /home/jovyan/work/requirements.txt (line 118))
+#24 31.68   Downloading vtk-9.5.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (112.2 MB)
+#24 32.87      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 112.2/112.2 MB 101.5 MB/s eta 0:00:00
+#24 32.95 Requirement already satisfied: wxpython==4.2.3 in ./.venv/lib/python3.9/site-packages (from -r /home/jovyan/work/requirements.txt (line 120)) (4.2.3)
+#24 33.02 Collecting zipp==3.23.0 (from -r /home/jovyan/work/requirements.txt (line 126))
+#24 33.03   Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
+#24 34.85 Installing collected packages: pyopengl-accelerate, pyopengl, zipp, urllib3, typing-extensions, six, scooby, pyparsing, platformdirs, pillow, packaging, numpy, markupsafe, kiwisolver, idna, fonttools, dill, cycler, charset-normalizer, certifi, scipy, requests, python-dateutil, jinja2, importlib-resources, h5py, contourpy, connected-components-3d, pooch, nibabel, matplotlib, vtk, fslpy, fsleyes-widgets, pyvista, fsleyes-props, fsleyes
+#24 36.41   Attempting uninstall: zipp
+#24 36.41     Found existing installation: zipp 3.15.0
+#24 36.42     Uninstalling zipp-3.15.0:
+#24 36.42       Successfully uninstalled zipp-3.15.0
+#24 36.43   Attempting uninstall: urllib3
+#24 36.44     Found existing installation: urllib3 2.0.2
+#24 36.44     Uninstalling urllib3-2.0.2:
+#24 36.47       Successfully uninstalled urllib3-2.0.2
+#24 36.53   Attempting uninstall: typing-extensions
+#24 36.53     Found existing installation: typing_extensions 4.9.0
+#24 36.53     Uninstalling typing_extensions-4.9.0:
+#24 36.97       Successfully uninstalled typing_extensions-4.9.0
+#24 36.99   Attempting uninstall: six
+#24 36.99     Found existing installation: six 1.16.0
+#24 37.00     Uninstalling six-1.16.0:
+#24 37.40       Successfully uninstalled six-1.16.0
+#24 37.43   Attempting uninstall: pyparsing
+#24 37.43     Found existing installation: pyparsing 3.0.9
+#24 37.43     Uninstalling pyparsing-3.0.9:
+#24 37.45       Successfully uninstalled pyparsing-3.0.9
+#24 37.50   Attempting uninstall: platformdirs
+#24 37.50     Found existing installation: platformdirs 3.5.1
+#24 37.50     Uninstalling platformdirs-3.5.1:
+#24 37.51       Successfully uninstalled platformdirs-3.5.1
+#24 37.53   Attempting uninstall: pillow
+#24 37.53     Found existing installation: Pillow 9.5.0
+#24 37.54     Uninstalling Pillow-9.5.0:
+#24 37.64       Successfully uninstalled Pillow-9.5.0
+#24 37.87   Attempting uninstall: packaging
+#24 37.87     Found existing installation: packaging 23.1
+#24 37.87     Uninstalling packaging-23.1:
+#24 37.89       Successfully uninstalled packaging-23.1
+#24 37.92   Attempting uninstall: numpy
+#24 37.92     Found existing installation: numpy 1.24.3
+#24 37.97     Uninstalling numpy-1.24.3:
+#24 38.64       Successfully uninstalled numpy-1.24.3
+#24 40.13   Attempting uninstall: markupsafe
+#24 40.13     Found existing installation: MarkupSafe 2.1.2
+#24 40.13     Uninstalling MarkupSafe-2.1.2:
+#24 40.14       Successfully uninstalled MarkupSafe-2.1.2
+#24 40.15   Attempting uninstall: kiwisolver
+#24 40.16     Found existing installation: kiwisolver 1.4.4
+#24 40.16     Uninstalling kiwisolver-1.4.4:
+#24 40.18       Successfully uninstalled kiwisolver-1.4.4
+#24 40.21   Attempting uninstall: idna
+#24 40.21     Found existing installation: idna 3.4
+#24 40.21     Uninstalling idna-3.4:
+#24 40.22       Successfully uninstalled idna-3.4
+#24 40.29   Attempting uninstall: fonttools
+#24 40.29     Found existing installation: fonttools 4.39.4
+#24 40.32     Uninstalling fonttools-4.39.4:
+#24 40.56       Successfully uninstalled fonttools-4.39.4
+#24 41.13   Attempting uninstall: dill
+#24 41.13     Found existing installation: dill 0.3.6
+#24 41.13     Uninstalling dill-0.3.6:
+#24 41.17       Successfully uninstalled dill-0.3.6
+#24 41.23   Attempting uninstall: cycler
+#24 41.23     Found existing installation: cycler 0.11.0
+#24 41.23     Uninstalling cycler-0.11.0:
+#24 41.62       Successfully uninstalled cycler-0.11.0
+#24 41.63   Attempting uninstall: charset-normalizer
+#24 41.63     Found existing installation: charset-normalizer 3.1.0
+#24 41.63     Uninstalling charset-normalizer-3.1.0:
+#24 41.65       Successfully uninstalled charset-normalizer-3.1.0
+#24 41.68   Attempting uninstall: certifi
+#24 41.68     Found existing installation: certifi 2023.5.7
+#24 41.68     Uninstalling certifi-2023.5.7:
+#24 41.69       Successfully uninstalled certifi-2023.5.7
+#24 41.70   Attempting uninstall: scipy
+#24 41.70     Found existing installation: scipy 1.10.1
+#24 41.77     Uninstalling scipy-1.10.1:
+#24 42.80       Successfully uninstalled scipy-1.10.1
+#24 45.21   Attempting uninstall: requests
+#24 45.22     Found existing installation: requests 2.31.0
+#24 45.22     Uninstalling requests-2.31.0:
+#24 45.23       Successfully uninstalled requests-2.31.0
+#24 45.27   Attempting uninstall: python-dateutil
+#24 45.27     Found existing installation: python-dateutil 2.8.2
+#24 45.28     Uninstalling python-dateutil-2.8.2:
+#24 45.30       Successfully uninstalled python-dateutil-2.8.2
+#24 45.34   Attempting uninstall: jinja2
+#24 45.34     Found existing installation: Jinja2 3.1.2
+#24 45.34     Uninstalling Jinja2-3.1.2:
+#24 45.36       Successfully uninstalled Jinja2-3.1.2
+#24 45.43   Attempting uninstall: importlib-resources
+#24 45.43     Found existing installation: importlib-resources 5.12.0
+#24 45.43     Uninstalling importlib-resources-5.12.0:
+#24 45.47       Successfully uninstalled importlib-resources-5.12.0
+#24 45.51   Attempting uninstall: h5py
+#24 45.51     Found existing installation: h5py 3.8.0
+#24 45.52     Uninstalling h5py-3.8.0:
+#24 45.61       Successfully uninstalled h5py-3.8.0
+#24 45.77   Attempting uninstall: contourpy
+#24 45.77     Found existing installation: contourpy 1.0.7
+#24 45.77     Uninstalling contourpy-1.0.7:
+#24 45.79       Successfully uninstalled contourpy-1.0.7
+#24 46.28   Attempting uninstall: matplotlib
+#24 46.28     Found existing installation: matplotlib 3.7.1
+#24 46.31     Uninstalling matplotlib-3.7.1:
+#24 47.10       Successfully uninstalled matplotlib-3.7.1
+#24 51.82 Successfully installed certifi-2026.1.4 charset-normalizer-3.4.4 connected-components-3d-3.26.1 contourpy-1.3.0 cycler-0.12.1 dill-0.4.0 fonttools-4.60.2 fsleyes-1.16.3 fsleyes-props-1.12.3 fsleyes-widgets-0.16.0 fslpy-3.26.0 h5py-3.14.0 idna-3.11 importlib-resources-6.5.2 jinja2-3.1.6 kiwisolver-1.4.7 markupsafe-3.0.3 matplotlib-3.9.4 nibabel-5.3.3 numpy-2.0.2 packaging-25.0 pillow-11.3.0 platformdirs-4.4.0 pooch-1.8.2 pyopengl-3.1.10 pyopengl-accelerate-3.1.10 pyparsing-3.3.1 python-dateutil-2.9.0.post0 pyvista-0.46.4 requests-2.32.5 scipy-1.13.1 scooby-0.11.0 six-1.17.0 typing-extensions-4.15.0 urllib3-2.6.3 vtk-9.5.2 zipp-3.23.0
+#24 52.02 
+#24 52.02 [notice] A new release of pip is available: 23.1.2 -> 25.3
+#24 52.02 [notice] To update, run: /home/jovyan/.venv/bin/python3 -m pip install --upgrade pip
+#24 52.53 Your environment contains these python packages:
+#24 53.03 Package                 Version
+#24 53.03 ----------------------- -----------
+#24 53.03 aiofiles                22.1.0
+#24 53.03 aiosqlite               0.19.0
+#24 53.03 anyio                   3.6.2
+#24 53.03 argon2-cffi             21.3.0
+#24 53.03 argon2-cffi-bindings    21.2.0
+#24 53.03 arrow                   1.2.3
+#24 53.03 astroid                 2.15.5
+#24 53.03 asttokens               2.2.1
+#24 53.03 attrdict                2.0.1
+#24 53.03 attrs                   23.1.0
+#24 53.03 autopep8                2.0.2
+#24 53.03 Babel                   2.12.1
+#24 53.03 backcall                0.2.0
+#24 53.03 beautifulsoup4          4.12.2
+#24 53.03 bleach                  6.0.0
+#24 53.03 build                   0.10.0
+#24 53.03 certifi                 2026.1.4
+#24 53.03 cffi                    1.15.1
+#24 53.03 charset-normalizer      3.4.4
+#24 53.03 click                   8.1.3
+#24 53.03 colorama                0.4.6
+#24 53.03 comm                    0.1.3
+#24 53.03 connected-components-3d 3.26.1
+#24 53.03 contourpy               1.3.0
+#24 53.03 cycler                  0.12.1
+#24 53.04 debugpy                 1.6.7
+#24 53.04 decorator               5.1.1
+#24 53.04 defusedxml              0.7.1
+#24 53.04 dill                    0.4.0
+#24 53.04 docstring-to-markdown   0.12
+#24 53.04 entrypoints             0.4
+#24 53.04 et-xmlfile              1.1.0
+#24 53.04 executing               1.2.0
+#24 53.04 fastjsonschema          2.17.1
+#24 53.04 filelock                3.19.1
+#24 53.04 flake8                  6.0.0
+#24 53.04 fonttools               4.60.2
+#24 53.04 fqdn                    1.5.1
+#24 53.04 fsleyes                 1.16.3
+#24 53.04 fsleyes-props           1.12.3
+#24 53.04 fsleyes-widgets         0.16.0
+#24 53.04 fslpy                   3.26.0
+#24 53.04 fsspec                  2025.10.0
+#24 53.04 gitdb                   4.0.10
+#24 53.04 GitPython               3.1.31
+#24 53.04 h5py                    3.14.0
+#24 53.04 idna                    3.11
+#24 53.04 importlib-metadata      6.6.0
+#24 53.04 importlib_resources     6.5.2
+#24 53.04 ipyevents               2.0.1
+#24 53.04 ipykernel               6.23.1
+#24 53.04 ipympl                  0.9.3
+#24 53.04 ipython                 8.13.2
+#24 53.04 ipython-genutils        0.2.0
+#24 53.04 ipywidgets              8.0.6
+#24 53.04 isoduration             20.11.0
+#24 53.04 isort                   5.12.0
+#24 53.04 jedi                    0.18.2
+#24 53.04 Jinja2                  3.1.6
+#24 53.04 joblib                  1.2.0
+#24 53.04 json5                   0.9.14
+#24 53.04 jsonpointer             2.3
+#24 53.04 jsonschema              4.17.3
+#24 53.04 jupyter_client          7.4.1
+#24 53.04 jupyter_core            5.3.0
+#24 53.04 jupyter-events          0.6.3
+#24 53.04 jupyter-lsp             2.1.0
+#24 53.04 jupyter-server          1.24.0
+#24 53.04 jupyter_server_fileid   0.9.0
+#24 53.04 jupyter-server-mathjax  0.2.6
+#24 53.04 jupyter_server_ydoc     0.8.0
+#24 53.04 jupyter-ydoc            0.2.4
+#24 53.05 jupyterlab              3.6.3
+#24 53.05 jupyterlab-git          0.41.0
+#24 53.05 jupyterlab-latex        3.0.0
+#24 53.05 jupyterlab-lsp          4.1.0
+#24 53.05 jupyterlab-pygments     0.2.2
+#24 53.05 jupyterlab_server       2.22.1
+#24 53.05 jupyterlab-widgets      3.0.7
+#24 53.05 kiwisolver              1.4.7
+#24 53.05 lazy-object-proxy       1.9.0
+#24 53.05 MarkupSafe              3.0.3
+#24 53.05 matplotlib              3.9.4
+#24 53.05 matplotlib-inline       0.1.6
+#24 53.05 mccabe                  0.7.0
+#24 53.05 metakernel              0.29.4
+#24 53.05 mistune                 2.0.5
+#24 53.05 mpmath                  1.3.0
+#24 53.05 nbclassic               1.0.0
+#24 53.05 nbclient                0.7.4
+#24 53.05 nbconvert               7.4.0
+#24 53.05 nbdime                  3.2.1
+#24 53.05 nbformat                5.8.0
+#24 53.05 nest-asyncio            1.5.6
+#24 53.05 networkx                3.2.1
+#24 53.05 nibabel                 5.3.3
+#24 53.05 notebook                6.5.4
+#24 53.05 notebook_shim           0.2.3
+#24 53.05 numpy                   2.0.2
+#24 53.05 octave_kernel           0.35.1
+#24 53.05 openpyxl                3.1.2
+#24 53.05 packaging               25.0
+#24 53.05 pandas                  2.0.1
+#24 53.05 pandocfilters           1.5.0
+#24 53.05 parso                   0.8.3
+#24 53.05 pexpect                 4.8.0
+#24 53.05 pickleshare             0.7.5
+#24 53.05 pillow                  11.3.0
+#24 53.05 pip                     23.1.2
+#24 53.05 pip-tools               6.13.0
+#24 53.05 platformdirs            4.4.0
+#24 53.05 plotly                  5.14.1
+#24 53.05 pluggy                  1.0.0
+#24 53.05 pooch                   1.8.2
+#24 53.05 prometheus-client       0.17.0
+#24 53.05 prompt-toolkit          3.0.38
+#24 53.05 psutil                  5.9.5
+#24 53.05 ptyprocess              0.7.0
+#24 53.05 pure-eval               0.2.2
+#24 53.05 pycodestyle             2.10.0
+#24 53.06 pycparser               2.21
+#24 53.06 pydocstyle              6.3.0
+#24 53.06 pyflakes                3.0.1
+#24 53.06 Pygments                2.15.1
+#24 53.06 pylint                  2.17.4
+#24 53.06 PyOpenGL                3.1.10
+#24 53.06 PyOpenGL-accelerate     3.1.10
+#24 53.06 pyparsing               3.3.1
+#24 53.06 pyproject_hooks         1.0.0
+#24 53.06 pyrsistent              0.19.3
+#24 53.06 python-dateutil         2.9.0.post0
+#24 53.06 python-json-logger      2.0.7
+#24 53.06 python-lsp-jsonrpc      1.0.0
+#24 53.06 python-lsp-server       1.7.3
+#24 53.06 pytoolconfig            1.2.5
+#24 53.06 pytz                    2023.3
+#24 53.06 pyvista                 0.46.4
+#24 53.06 PyYAML                  6.0
+#24 53.06 pyzmq                   25.0.2
+#24 53.06 requests                2.32.5
+#24 53.06 rfc3339-validator       0.1.4
+#24 53.06 rfc3986-validator       0.1.1
+#24 53.06 rope                    1.8.0
+#24 53.06 scikit-learn            1.2.2
+#24 53.06 scipy                   1.13.1
+#24 53.06 scooby                  0.11.0
+#24 53.06 Send2Trash              1.8.2
+#24 53.06 setuptools              67.8.0
+#24 53.06 six                     1.17.0
+#24 53.06 smmap                   5.0.0
+#24 53.06 sniffio                 1.3.0
+#24 53.06 snowballstemmer         2.2.0
+#24 53.06 soupsieve               2.4.1
+#24 53.06 stack-data              0.6.2
+#24 53.06 sympy                   1.13.1
+#24 53.06 tenacity                8.2.2
+#24 53.06 terminado               0.17.1
+#24 53.06 threadpoolctl           3.1.0
+#24 53.06 tinycss2                1.2.1
+#24 53.06 tomli                   2.0.1
+#24 53.06 tomlkit                 0.11.8
+#24 53.06 torch                   2.5.1+cpu
+#24 53.06 torchvision             0.20.1+cpu
+#24 53.06 tornado                 6.3.2
+#24 53.06 traitlets               5.9.0
+#24 53.06 typing_extensions       4.15.0
+#24 53.06 tzdata                  2023.3
+#24 53.06 ujson                   5.7.0
+#24 53.06 uri-template            1.2.0
+#24 53.07 urllib3                 2.6.3
+#24 53.07 voila                   0.4.0
+#24 53.07 vtk                     9.5.2
+#24 53.07 watchdog                3.0.0
+#24 53.07 wcwidth                 0.2.6
+#24 53.07 webcolors               1.13
+#24 53.07 webencodings            0.5.1
+#24 53.07 websocket-client        1.5.2
+#24 53.07 websockets              11.0.3
+#24 53.07 whatthepatch            1.0.5
+#24 53.07 wheel                   0.40.0
+#24 53.07 widgetsnbextension      4.0.7
+#24 53.07 wrapt                   1.15.0
+#24 53.07 wxPython                4.2.3
+#24 53.07 xlrd                    2.0.1
+#24 53.07 xlwt                    1.3.0
+#24 53.07 y-py                    0.5.9
+#24 53.07 yapf                    0.33.0
+#24 53.07 ypy-websocket           0.8.2
+#24 53.07 zipp                    3.23.0
+#24 53.08 
+#24 53.08 [notice] A new release of pip is available: 23.1.2 -> 25.3
+#24 53.08 [notice] To update, run: /home/jovyan/.venv/bin/python3 -m pip install --upgrade pip
+#24 DONE 54.5s
+
+#25 [21/23] RUN apt-get update && apt-get install -y jq   && rm -rf /var/lib/apt/lists/*   && jq --arg a "python (Medical Image Processing)" '.display_name = $a' /home/jovyan/.local/share/jupyter/kernels/python-maths/kernel.json > /home/jovyan/.local/share/jupyter/kernels/python-maths/temp.json   && mv /home/jovyan/.local/share/jupyter/kernels/python-maths/temp.json /home/jovyan/.local/share/jupyter/kernels/python-maths/kernel.json
+#25 0.540 Get:1 http://archive.ubuntu.com/ubuntu focal InRelease [265 kB]
+#25 0.639 Get:2 http://security.ubuntu.com/ubuntu focal-security InRelease [128 kB]
+#25 0.652 Get:3 http://archive.ubuntu.com/ubuntu focal-updates InRelease [128 kB]
+#25 0.679 Get:4 http://archive.ubuntu.com/ubuntu focal-backports InRelease [128 kB]
+#25 0.750 Get:5 http://archive.ubuntu.com/ubuntu focal/restricted amd64 Packages [33.4 kB]
+#25 0.779 Get:6 http://archive.ubuntu.com/ubuntu focal/multiverse amd64 Packages [177 kB]
+#25 0.789 Get:7 http://archive.ubuntu.com/ubuntu focal/universe amd64 Packages [11.3 MB]
+#25 0.980 Get:8 http://archive.ubuntu.com/ubuntu focal/main amd64 Packages [1,275 kB]
+#25 1.000 Get:9 http://archive.ubuntu.com/ubuntu focal-updates/universe amd64 Packages [1,599 kB]
+#25 1.015 Get:10 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 Packages [4,920 kB]
+#25 1.077 Get:11 http://archive.ubuntu.com/ubuntu focal-updates/multiverse amd64 Packages [36.8 kB]
+#25 1.077 Get:12 http://archive.ubuntu.com/ubuntu focal-updates/restricted amd64 Packages [4,998 kB]
+#25 1.127 Get:13 http://archive.ubuntu.com/ubuntu focal-backports/main amd64 Packages [55.2 kB]
+#25 1.127 Get:14 http://archive.ubuntu.com/ubuntu focal-backports/universe amd64 Packages [28.6 kB]
+#25 1.204 Get:15 http://security.ubuntu.com/ubuntu focal-security/multiverse amd64 Packages [33.1 kB]
+#25 1.308 Get:16 http://security.ubuntu.com/ubuntu focal-security/restricted amd64 Packages [4,801 kB]
+#25 1.797 Get:17 http://security.ubuntu.com/ubuntu focal-security/universe amd64 Packages [1,308 kB]
+#25 1.826 Get:18 http://security.ubuntu.com/ubuntu focal-security/main amd64 Packages [4,432 kB]
+#25 2.231 Fetched 35.7 MB in 2s (19.5 MB/s)
+#25 2.231 Reading package lists...
+#25 2.959 Reading package lists...
+#25 3.673 Building dependency tree...
+#25 3.863 Reading state information...
+#25 4.008 The following additional packages will be installed:
+#25 4.008   libjq1 libonig5
+#25 4.038 The following NEW packages will be installed:
+#25 4.039   jq libjq1 libonig5
+#25 4.109 0 upgraded, 3 newly installed, 0 to remove and 171 not upgraded.
+#25 4.109 Need to get 313 kB of archives.
+#25 4.109 After this operation, 1,062 kB of additional disk space will be used.
+#25 4.109 Get:1 http://archive.ubuntu.com/ubuntu focal/universe amd64 libonig5 amd64 6.9.4-1 [142 kB]
+#25 4.214 Get:2 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libjq1 amd64 1.6-1ubuntu0.20.04.1 [121 kB]
+#25 4.228 Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 jq amd64 1.6-1ubuntu0.20.04.1 [50.2 kB]
+#25 4.373 debconf: delaying package configuration, since apt-utils is not installed
+#25 4.418 Fetched 313 kB in 0s (1,608 kB/s)
+#25 4.447 Selecting previously unselected package libonig5:amd64.
+#25 4.447 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 154122 files and directories currently installed.)
+#25 4.507 Preparing to unpack .../libonig5_6.9.4-1_amd64.deb ...
+#25 4.516 Unpacking libonig5:amd64 (6.9.4-1) ...
+#25 4.559 Selecting previously unselected package libjq1:amd64.
+#25 4.568 Preparing to unpack .../libjq1_1.6-1ubuntu0.20.04.1_amd64.deb ...
+#25 4.573 Unpacking libjq1:amd64 (1.6-1ubuntu0.20.04.1) ...
+#25 4.606 Selecting previously unselected package jq.
+#25 4.615 Preparing to unpack .../jq_1.6-1ubuntu0.20.04.1_amd64.deb ...
+#25 4.619 Unpacking jq (1.6-1ubuntu0.20.04.1) ...
+#25 4.673 Setting up libonig5:amd64 (6.9.4-1) ...
+#25 4.685 Setting up libjq1:amd64 (1.6-1ubuntu0.20.04.1) ...
+#25 4.697 Setting up jq (1.6-1ubuntu0.20.04.1) ...
+#25 4.709 Processing triggers for libc-bin (2.31-0ubuntu9.7) ...
+#25 DONE 4.8s
+
+#26 [22/23] RUN chmod gu-w /home/jovyan/work/requirements_base_math.txt   && chmod gu-w /home/jovyan/work/requirements.txt
+#26 DONE 0.5s
+
+#27 [23/23] COPY --chown=1000:100 README.ipynb /home/jovyan/work/README.ipynb
+#27 DONE 0.0s
+
+#28 exporting to image
+#28 exporting layers

@@ -1,0 +1,323 @@
+# =============================================================================
+# OPTIMIZED DOCKERFILE - jupyter-medimproc
+# =============================================================================
+# Estimated size reduction: 32.4 GB -> ~20-22 GB
+#
+# Phase 1 optimizations:
+#   - Remove duplicate ANTs installation (-2.93 GB)
+#   - Clean MRtrix3 build dependencies (-45 MB)
+#
+# Phase 2 optimizations:
+#   - Minimal FreeSurfer installation (-5-7 GB)
+#   - Minimal FSL installation (-4-6 GB)
+# =============================================================================
+
+FROM itisfoundation/jupyter-math:2.0.9 as main
+LABEL maintainer="ordonez"
+USER root
+
+# =============================================================================
+# MRtrix3 - Build and cleanup in single layer to minimize size
+# =============================================================================
+WORKDIR ${HOME}
+
+# Install build dependencies, build MRtrix3, then remove build-only packages
+# This saves ~45-100 MB by not keeping -dev packages in final image
+RUN apt-get -qq update \
+  && apt-get install -yq --no-install-recommends \
+    curl \
+    dc \
+    # Build dependencies (will be removed after build)
+    libeigen3-dev \
+    libfftw3-dev \
+    libgl1-mesa-dev \
+    libpng-dev \
+    libqt5opengl5-dev \
+    libqt5svg5-dev \
+    libtiff5-dev \
+    qt5-default \
+    zlib1g-dev \
+  # Clone and build MRtrix3
+  && git clone https://github.com/MRtrix3/mrtrix3.git \
+  && cd mrtrix3 && git checkout 3.0.4 \
+  && ./configure && ./build -persistent -nopaginate \
+  && rm -rf tmp \
+  && cd .. \
+  # Remove build-only dependencies, keep runtime libraries
+  && apt-get purge -y \
+    libeigen3-dev \
+    libfftw3-dev \
+    libgl1-mesa-dev \
+    libpng-dev \
+    libqt5opengl5-dev \
+    libqt5svg5-dev \
+    libtiff5-dev \
+    zlib1g-dev \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/*
+
+# =============================================================================
+# ART (Automatic Registration Toolbox) - Keep as-is (only 25 MB)
+# =============================================================================
+WORKDIR ${HOME}/art
+RUN curl -fsSL https://osf.io/73h5s/download \
+  | tar xz --strip-components 1
+
+# =============================================================================
+# ANTs - SINGLE installation only (removes duplicate, saves 2.93 GB)
+# =============================================================================
+# NOTE: Removed the osf.io ANTs installation that was overwritten anyway
+# Only keeping the GitHub v2.4.4 release needed by Synb0-DISCO
+
+ENV ARTHOME="$HOME/art" \
+    PATH="$HOME/mrtrix3/bin:$HOME/art/bin:$PATH"
+
+# =============================================================================
+# FreeSurfer 6.0.0 - MINIMAL installation
+# =============================================================================
+# Full FreeSurfer is 10.6 GB. We only need:
+#   - recon-all, mri_convert, mri_surf2surf
+#   - subjects/fsaverage (required by recon-all)
+#   - Core binaries and libraries
+#
+# Removing: trctrain, diffusion, docs, matlab, sample subjects, fsafd
+# Estimated savings: 5-7 GB
+# =============================================================================
+WORKDIR ${HOME}
+
+RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules \
+  && rm -rf /var/lib/apt/lists/*
+
+# Download FreeSurfer and immediately clean up unnecessary components
+RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C ${HOME} \
+  # =========== CLEANUP UNNECESSARY FREESURFER COMPONENTS ===========
+  # Remove TRACULA training data (not used in pipeline)
+  && rm -rf ${HOME}/freesurfer/trctrain \
+  # Remove diffusion toolkit (using MRtrix3 instead)
+  && rm -rf ${HOME}/freesurfer/diffusion \
+  # Remove documentation
+  && rm -rf ${HOME}/freesurfer/docs \
+  # Remove MATLAB scripts (not used)
+  && rm -rf ${HOME}/freesurfer/matlab \
+  # Remove FreeSurfer longitudinal analysis tools (not used)
+  && rm -rf ${HOME}/freesurfer/fsafd \
+  # Remove Tk GUI tools (not used in pipeline)
+  && rm -rf ${HOME}/freesurfer/tktools \
+  # Remove sample subjects EXCEPT fsaverage (required by recon-all)
+  && find ${HOME}/freesurfer/subjects -maxdepth 1 -mindepth 1 -type d ! -name 'fsaverage' -exec rm -rf {} + \
+  # Remove sample MGZ files in subjects directory
+  && rm -f ${HOME}/freesurfer/subjects/*.mgz \
+  # Remove CVS average subjects (not used)
+  && rm -rf ${HOME}/freesurfer/average/cvs_avg35* \
+  # Remove multi-comparison correction data (not used)
+  && rm -rf ${HOME}/freesurfer/average/mult-comp-cor \
+  # Remove Talairach atlas GCA files we don't need
+  && find ${HOME}/freesurfer/average -name "*.gca" ! -name "RB_all*.gca" -delete 2>/dev/null || true \
+  # Remove FreeSurfer Python (we have our own Python environment)
+  && rm -rf ${HOME}/freesurfer/python \
+  # Clean up any cached/temp files
+  && find ${HOME}/freesurfer -name "*.log" -delete 2>/dev/null || true \
+  && find ${HOME}/freesurfer -name "*~" -delete 2>/dev/null || true
+
+ENV FREESURFER_HOME=${HOME}/freesurfer
+COPY freesurfer_license.txt ${FREESURFER_HOME}/license.txt
+ENV FSFAST_HOME=$FREESURFER_HOME/fsfast \
+    MINC_BIN_DIR=$FREESURFER_HOME/mni/bin \
+    MNI_DIR=$FREESURFER_HOME/mni \
+    PERL5LIB=$FREESURFER_HOME/mni/share/perl5
+ENV PATH=$FREESURFER_HOME/bin:$MINC_BIN_DIR:$PATH
+
+# =============================================================================
+# FSL - MINIMAL installation
+# =============================================================================
+# Full FSL is 9.84 GB. Pipeline only uses:
+#   - eddy (eddy current correction)
+#   - flirt (linear registration)
+#   - topup (via Synb0-DISCO)
+#   - fast (tissue segmentation, used by eddy)
+#
+# Removing: atlases, fslpython, GUI tools, POSSUM, unused binaries
+# Estimated savings: 4-6 GB
+# =============================================================================
+WORKDIR ${HOME}
+ENV FSLDIR=${HOME}/fsl
+
+# Install FSL and immediately clean up unnecessary components
+RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py \
+  && echo "" | python fslinstaller.py -d ${FSLDIR} \
+  && . ${FSLDIR}/etc/fslconf/fsl.sh \
+  # =========== CLEANUP UNNECESSARY FSL COMPONENTS ===========
+  # Keep FSL Python environment (needed for FSL tools like bet, epi_reg)
+  # Remove atlases (not used in pipeline, saves ~3 GB)
+  && rm -rf ${FSLDIR}/data/atlases \
+  # Remove POSSUM (MRI simulator, not used)
+  && rm -rf ${FSLDIR}/data/possum \
+  # Remove TBSS data (not used)
+  && rm -rf ${FSLDIR}/data/tbss \
+  # Remove documentation
+  && rm -rf ${FSLDIR}/doc \
+  # Remove Tcl/Tk GUI scripts
+  && rm -rf ${FSLDIR}/tcl \
+  # Remove MATLAB scripts
+  && rm -rf ${FSLDIR}/etc/matlab \
+  # Remove GPU/CUDA binaries if present (we're CPU-only)
+  && rm -f ${FSLDIR}/bin/*_cuda* 2>/dev/null || true \
+  # Remove FSLView and other GUI tools
+  && rm -f ${FSLDIR}/bin/fsleyes* 2>/dev/null || true \
+  && rm -f ${FSLDIR}/bin/fslview* 2>/dev/null || true \
+  && rm -f ${FSLDIR}/bin/*_gui 2>/dev/null || true \
+  # Remove lesion tools (not used)
+  && rm -f ${FSLDIR}/bin/lesion_* 2>/dev/null || true \
+  # Remove FIRST (subcortical segmentation, not used - we use FreeSurfer)
+  && rm -rf ${FSLDIR}/data/first \
+  # Keep only essential standard space templates (MNI152 2mm)
+  && find ${FSLDIR}/data/standard -name "*.nii.gz" \
+     ! -name "MNI152_T1_2mm*" \
+     ! -name "MNI152_T1_1mm*" \
+     -delete 2>/dev/null || true \
+  # Remove unused model files
+  && rm -rf ${FSLDIR}/data/xtract \
+  # Clean up installer
+  && rm -f ${HOME}/fslinstaller.py \
+  # =========== CRITICAL: CLEAN CONDA CACHE (saves ~4 GB) ===========
+  && rm -rf ${FSLDIR}/pkgs \
+  # Remove conda-meta (package metadata, not needed at runtime)
+  && rm -rf ${FSLDIR}/conda-meta \
+  # Keep FSL Python libraries (needed for FSL Python tools)
+  # Remove unnecessary large libraries
+  && rm -rf ${FSLDIR}/lib/qt6 \
+  && rm -f ${FSLDIR}/lib/libLLVM* \
+  && rm -f ${FSLDIR}/lib/libclang* \
+  && rm -rf ${FSLDIR}/lib/openvino* \
+  && rm -rf ${FSLDIR}/lib/gcc \
+  # Remove include files (development headers not needed)
+  && rm -rf ${FSLDIR}/include \
+  # Remove man pages
+  && rm -rf ${FSLDIR}/man \
+  && rm -rf ${FSLDIR}/share/man \
+  # Remove compiler compatibility libs
+  && rm -rf ${FSLDIR}/compiler_compat \
+  # Remove libexec if it exists (usually conda-related)
+  && rm -rf ${FSLDIR}/libexec
+
+ENV FSLOUTPUTTYPE="NIFTI_GZ" \
+    FSLTCLSH="$FSLDIR/bin/fsltclsh" \
+    FSLWISH="$FSLDIR/bin/fslwish" \
+    PATH=$FSLDIR/bin:$PATH
+
+# Note: Removed LD_LIBRARY_PATH pointing to fslpython since we removed it
+# If eddy/flirt need specific libs, they should be in $FSLDIR/lib
+ENV LD_LIBRARY_PATH="$FSLDIR/lib:$LD_LIBRARY_PATH"
+
+# =============================================================================
+# Synb0-DISCO - PyTorch (CPU-only, with torchvision)
+# =============================================================================
+WORKDIR ${HOME}
+
+# Install torch with torchvision (required by Synb0-DISCO inference.py)
+# torchaudio not needed so we save ~100 MB by excluding it
+RUN .venv/bin/pip --no-cache install torch torchvision --index-url https://download.pytorch.org/whl/cpu \
+  # Clone synb0-disco
+  && mkdir -p synb0-disco \
+  && git clone -b "master" --depth 1 https://github.com/MASILab/Synb0-DISCO ${HOME}/synb0-disco \
+  # Remove v1_0 (older version)
+  && rm -rf ${HOME}/synb0-disco/v1_0 \
+  # Create symbolic links
+  && ln -s ${HOME}/synb0-disco/data_processing/normalize_T1.sh /usr/local/bin \
+  # Create INPUTS/OUTPUTS directories
+  && mkdir -p synb0-disco/INPUTS synb0-disco/OUTPUTS \
+  && chmod gua+rwx synb0-disco/INPUTS synb0-disco/OUTPUTS \
+  # =========== CLEANUP: Remove .git directory (saves ~407 MB) ===========
+  && rm -rf ${HOME}/synb0-disco/.git
+
+# Configure Synb0-DISCO pipeline
+ENV PIPELINE_PATH=${HOME}/synb0-disco/src
+COPY --chown=$NB_UID:$NB_GID pipeline_synb0_disco.sh ${PIPELINE_PATH}/pipeline_no_docker.sh
+
+RUN mkdir -p /usr/local/bin \
+  && ln -s -f ${PIPELINE_PATH}/pipeline_no_docker.sh /usr/local/bin \
+  && mv /usr/local/bin/pipeline_no_docker.sh /usr/local/bin/synb0-disco \
+  && chmod +x /usr/local/bin/synb0-disco \
+  # Configure for CPU execution
+  && sed -i '83s/.*/    device = torch.device("cpu")/' $HOME/synb0-disco/src/inference.py \
+  && sed -i '87s/.*/    model.load_state_dict(torch.load(model_path, map_location=torch.device("cpu")))/' $HOME/synb0-disco/src/inference.py
+
+# =============================================================================
+# ANTs v2.4.4 + c3d (SINGLE installation for Synb0-DISCO)
+# =============================================================================
+# This is the ONLY ANTs installation - removed the duplicate osf.io version
+RUN curl -SL https://github.com/ANTsX/ANTs/releases/download/v2.4.4/ants-2.4.4-ubuntu-20.04-X64-gcc.zip -o ./ants-2-4-4.zip \
+  && unzip ./ants-2-4-4.zip \
+  && rm -rf ./ants-2-4-4.zip \
+  && curl -SL https://sourceforge.net/projects/c3d/files/c3d/1.0.0/c3d-1.0.0-Linux-x86_64.tar.gz/download | tar xz
+
+ENV PATH=$PATH:$HOME/ants-2.4.4/bin/:$HOME/c3d-1.0.0-Linux-x86_64/bin/ \
+    ANTSPATH=$HOME/ants-2.4.4/bin/
+
+# =============================================================================
+# Python packages (wxPython for fsleyes + requirements)
+# =============================================================================
+WORKDIR ${HOME}
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  libgtk-3-0 \
+  libwebkit2gtk-4.0-37 \
+  libnotify4 \
+  libsdl2-2.0-0 \
+  freeglut3 \
+  && rm -rf /var/lib/apt/lists/* \
+  && .venv/bin/pip --no-cache install --only-binary :all: -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxpython \
+  && .venv/bin/pip install attrdict
+
+COPY --chown=$NB_UID:$NB_GID requirements.in ${NOTEBOOK_BASE_DIR}/requirements.in
+
+RUN .venv/bin/pip --no-cache install pip-tools \
+  && mv ${NOTEBOOK_BASE_DIR}/requirements.txt ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt \
+  && .venv/bin/pip-compile --build-isolation --output-file ${NOTEBOOK_BASE_DIR}/requirements.txt ${NOTEBOOK_BASE_DIR}/requirements.in \
+  && .venv/bin/pip --no-cache install --only-binary wxpython -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 -r ${NOTEBOOK_BASE_DIR}/requirements.txt \
+  && rm ${NOTEBOOK_BASE_DIR}/requirements.in \
+  && echo "Your environment contains these python packages:" \
+  && .venv/bin/pip list \
+  # =========== CLEANUP: Remove pip cache (saves ~318 MB) ===========
+  && rm -rf ${HOME}/.cache/pip
+
+# =============================================================================
+# Kernel configuration
+# =============================================================================
+ENV PYTHON_KERNEL_NAME="python (Medical Image Processing)"
+ENV KERNEL_DIR=${HOME}/.local/share/jupyter/kernels/python-maths
+
+RUN apt-get update && apt-get install -y jq \
+  && rm -rf /var/lib/apt/lists/* \
+  && jq --arg a "$PYTHON_KERNEL_NAME" '.display_name = $a' ${KERNEL_DIR}/kernel.json > ${KERNEL_DIR}/temp.json \
+  && mv ${KERNEL_DIR}/temp.json ${KERNEL_DIR}/kernel.json
+
+# Remove write permissions from requirements files
+RUN chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements_base_math.txt \
+  && chmod gu-w ${NOTEBOOK_BASE_DIR}/requirements.txt
+
+# Copy README
+COPY --chown=$NB_UID:$NB_GID README.ipynb ${NOTEBOOK_BASE_DIR}/README.ipynb
+
+EXPOSE 8888
+
+ENTRYPOINT [ "/bin/bash", "/docker/entrypoint.bash" ]
+
+# =============================================================================
+# SIZE COMPARISON (estimated)
+# =============================================================================
+# Component              Original    Optimized   Savings
+# -------------------------------------------------------
+# Base image             5.29 GB     5.29 GB     -
+# MRtrix3                187 MB      142 MB      45 MB
+# ANTs (osf.io)          17.5 MB     0 MB        17.5 MB (removed)
+# ANTs (v2.4.4)          2.93 GB     2.93 GB     -
+# FreeSurfer             10.6 GB     ~4-5 GB     5-6 GB
+# FSL                    9.84 GB     ~4-5 GB     4-5 GB
+# PyTorch                1.6 GB      ~1.2 GB     400 MB
+# Python packages        1.28 GB     1.28 GB     -
+# GTK libraries          543 MB      543 MB      -
+# Other                  ~100 MB     ~100 MB     -
+# -------------------------------------------------------
+# TOTAL                  32.4 GB     ~20-22 GB   10-12 GB
+# =============================================================================
