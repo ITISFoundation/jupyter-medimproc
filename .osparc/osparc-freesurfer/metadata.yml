@@ -1,0 +1,24 @@
+name: osparc - FreeSurfer (Headless)
+key: simcore/services/comp/osparc-freesurfer
+version: 1.0.0
+integration-version: 1.0.0
+type: computational
+description: Headless FreeSurfer runner.
+authors:
+  - name: Javier Garcia Ordonez
+    email: ordonez@zmt.swiss
+    affiliation: ZMT Zurich MedTech AG
+thumbnail: https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/1024px-Jupyter_logo.svg.png
+contact: ordonez@zmt.swiss
+inputs:
+  input_1:
+    displayOrder: 1.0
+    label: Input Data
+    description: Data to process
+    type: data:*/*
+outputs:
+  output_1:
+    displayOrder: 1.0
+    label: Output Data
+    description: Processed data
+    type: data:*/*
