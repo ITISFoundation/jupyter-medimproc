@@ -1329,3 +1329,7 @@
 
 #28 exporting to image
 #28 exporting layers
+#28 exporting layers 16.8s done
+#28 writing image sha256:76d5bb2e91ec1c63476fa24716a994b2060cca0a424c356050ffbfc49a702f67 done
+#28 naming to docker.io/library/jupyter-medimproc:optimized-v3 done
+#28 DONE 16.8s
