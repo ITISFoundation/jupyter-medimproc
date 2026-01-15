@@ -3,7 +3,7 @@ SHELL = /bin/sh
 
 # Project Configuration
 PROJECT_NAME := jupyter-medimproc
-VERSION := 2.0.0
+VERSION := 1.3.0
 DOCKER_REGISTRY ?= local
 
 # Variant can be: jupyter, runner, or runner-slim

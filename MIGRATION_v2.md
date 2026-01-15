@@ -1,8 +1,8 @@
-# Migration Guide: v1.x to v2.0.0
+# Migration Guide: v1.x to v1.3.0
 
 ## Overview of Changes
 
-Version 2.0.0 represents a major restructuring of the jupyter-medimproc repository:
+Version 1.3.0 represents a major restructuring of the jupyter-medimproc repository:
 
 ### Key Changes
 
@@ -129,7 +129,7 @@ Each variant has its own build and test job:
 2. **Service separation removed**: Can no longer build FreeSurfer-only or FSL-only images
 3. **Directory structure**: Old 6-service structure → new 3-variant structure in `services/`
 4. **CI platform**: GitHub Actions → GitLab CI
-5. **Version number**: Reset to 2.0.0
+5. **Version number**: Reset to 1.3.0
 
 ## Compatibility Notes
 
@@ -207,5 +207,5 @@ For questions or issues:
 ## Timeline
 
 - **v1.x**: Separate FreeSurfer and FSL services (deprecated)
-- **v2.0.0**: Unified services with 3 variants (current)
+- **v1.3.0**: Unified services with 3 variants (current)
 - **Future**: Additional optimizations and toolchain updates

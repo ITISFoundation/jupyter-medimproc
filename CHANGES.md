@@ -259,16 +259,16 @@ make shell VARIANT=jupyter          # Try it out
 ### 2. Test GitLab CI
 ```bash
 git add .
-git commit -m "Restructure to v2.0.0: unified FreeSurfer+FSL with GitLab CI"
+git commit -m "Restructure to v1.3.0: unified FreeSurfer+FSL with GitLab CI"
 git push gitlab main                # Push to GitLab
 # Monitor pipeline in GitLab UI
 ```
 
 ### 3. Tag Release
 ```bash
-git tag -a v2.0.0 -m "Version 2.0.0 - Unified architecture"
-git push origin v2.0.0
-git push gitlab v2.0.0
+git tag -a v1.3.0 -m "Version 1.3.0 - Unified architecture"
+git push origin v1.3.0
+git push gitlab v1.3.0
 ```
 
 ### 4. Update Dependencies
@@ -298,7 +298,7 @@ git push gitlab v2.0.0
 **From:** 6 separate services  
 **To:** 3 variants with both toolchains  
 **CI:** GitHub Actions → GitLab CI  
-**Version:** 1.3.0 → 2.0.0  
+**Version:** 1.3.0 → 1.3.0  
 **Status:** ✅ Ready for testing and deployment  
 
 ---
