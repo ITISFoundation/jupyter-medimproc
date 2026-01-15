@@ -1,48 +1,66 @@
-# JupyterLab for Medical Image Processing (MedImProc)
+# Jupyter MedImProc - Medical Image Processing Service
 
-This is the source code of the JupyterLab Medical Image Processing OSPARC service. It is mostly centered on MRI data, and contains the following packages:
-  "[JupyterLab](https://jupyter.org/) with a variety of Medical Image Processing packages pre-installed, mostly centered on MRI data:
-  - [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki), a comprehensive library of analysis tools for FMRI, MRI and DTI brain imaging data.
-  - [FreeSurfer](https://surfer.nmr.mgh.harvard.edu/), an open source neuroimaging toolkit for processing, analyzing, and visualizing human brain MR images-
-  - [MRtrix3](https://www.mrtrix.org/) provides a set of tools to perform various types of diffusion MRI analyses.
-  - [Spinal Cord Toolbox](https://spinalcordtoolbox.com/), a comprehensive, free and open-source set of command-line tools dedicated to the processing and analysis of spinal cord MRI data.
-  - [Synb0 Disco](https://github.com/MASILab/Synb0-DISCO#readme), for distortion correction of diffusion weighted MRI without reverse phase-encoding scans or field-maps.
-  - Python packages like [nibabel](https://nipy.org/nibabel/), [pyvista](https://docs.pyvista.org/version/stable/), [fsleyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes) and [cc3d](https://github.com/seung-lab/connected-components-3d#readme).
+> **Note**: This repository has been restructured in v2.0.0. For current documentation, please see [README_v2.md](README_v2.md)
 
-Commands from these packages can be run either from a terminal or from Jupyter Lab (using ! before the command) thus also offering visualization possibilities.
-Either single commands can be run, or full .sh files.
+This service provides medical image processing capabilities through three variants:
 
-____
+- **jupyter**: Interactive JupyterLab environment with FreeSurfer + FSL
+- **runner**: Headless runner for automated processing (standard)
+- **runner-slim**: Headless runner with optimized size
 
-## Information for developers of this **o<sup>2</sup>S<sup>2</sup>PARC** service
-Building the docker image:
+## Quick Start
 
-```shell
-make build
+```bash
+# Build a variant
+make build VARIANT=jupyter
+
+# Run tests
+make test VARIANT=jupyter
+
+# Interactive shell
+make shell VARIANT=jupyter
 ```
 
+## Available Tools
 
-Test the built image locally:
+All variants include:
+- [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki) - Comprehensive library for FMRI, MRI and DTI analysis
+- [FreeSurfer](https://surfer.nmr.mgh.harvard.edu/) - Neuroimaging toolkit for brain MR images
+- [MRtrix3](https://www.mrtrix.org/) - Diffusion MRI analysis tools
+- [Synb0-DISCO](https://github.com/MASILab/Synb0-DISCO) - Distortion correction for diffusion MRI
+- ANTs, ART, C3D and other processing tools
 
-```shell
-make run-local
+## Documentation
+
+- **[README_v2.md](README_v2.md)** - Complete documentation
+- **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide
+- **[MIGRATION_v2.md](MIGRATION_v2.md)** - Migration guide from v1.x
+- **[CHANGES.md](CHANGES.md)** - Change log and restructuring details
+
+## Repository Structure
+
 ```
-Note that the `validation` directory will be mounted inside the service.
-
-
-Raising the version can be achieved via one for three methods. The `major`,`minor` or `patch` can be bumped, for example:
-
-```shell
-make version-patch
+.
+├── services/           # Docker service definitions
+│   ├── jupyter/        # Interactive JupyterLab variant
+│   ├── runner/         # Headless runner (standard)
+│   └── runner-slim/    # Headless runner (optimized)
+├── common/             # Shared scripts and entrypoint
+│   ├── scripts/
+│   └── entrypoint.sh
+├── validation/         # Test data and outputs
+├── Makefile           # Build system
+├── docker-compose.yml # Local development
+└── .gitlab-ci.yml     # CI/CD pipeline
 ```
 
+## CI/CD
 
-If you already have a local copy of **o<sup>2</sup>S<sup>2</sup>PARC** running and wish to push data to the local registry:
+Builds are automated via GitLab CI with three parallel pipelines:
+- `jupyter-medimproc-build` / `jupyter-medimproc-test`
+- `runner-medimproc-build` / `runner-medimproc-test`
+- `runner-medimproc-slim-build` / `runner-medimproc-slim-test`
 
-```shell
-make publish-local
-```
+## License
 
-## Testing
-
-A separate repository with test data and pipeline scripts is internally available to validate the usability for internal IT'IS use cases. This is also used to validate new versions of this service.
+See [LICENSE](LICENSE) file.

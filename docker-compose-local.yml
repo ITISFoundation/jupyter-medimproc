@@ -1,9 +1,12 @@
 services:
   jupyter-medimproc:
-    ## Locally-built image
-    # image: simcore/services/dynamic/jupyter-medimproc:1.3.0
-    ## Remote (production) image
-    image: registry.speag.com/ci/osparc-sparc-internal/main/jupyter-medimproc:1.3.0
+    ## Locally-built image (use MEDIMPROC_IMAGE env var to specify variant)
+    # Default to jupyter variant if not specified
+    image: ${MEDIMPROC_IMAGE:-local/jupyter-medimproc-jupyter:2.0.0}
+    ## To test different variants, set MEDIMPROC_IMAGE:
+    ## - local/jupyter-medimproc-jupyter:2.0.0 (default, interactive Jupyter)
+    ## - local/jupyter-medimproc-runner:2.0.0 (headless runner)
+    ## - local/jupyter-medimproc-runner-slim:2.0.0 (optimized headless runner)
     ports:
       - "8888:8888"
     environment:
@@ -16,4 +19,6 @@ services:
       - ${PWD}/tests:/home/jovyan/work/workspace
       - ${PWD}/validation/inputs:/tmp/inputs
       - ${PWD}/validation/outputs:/tmp/outputs
+      - ${PWD}/validation/inputs:/input  # For runner variants
+      - ${PWD}/validation/outputs:/output  # For runner variants
       - ${PWD}/validation/workspace/README.ipynb:/home/jovyan/work/workspace/README.ipynb:ro

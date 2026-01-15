@@ -10,6 +10,7 @@ echo "Installing FSL System to ${INSTALL_DIR} with venv at ${VENV_DIR} (Optimize
 
 # 1. System Dependencies
 apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
     curl \
     unzip \
     wget \

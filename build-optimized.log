@@ -1,105 +1,0 @@
-#0 building with "default" instance using docker driver
-
-#1 [internal] load build definition from Dockerfile.optimized
-#1 transferring dockerfile: 14.58kB done
-#1 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 16)
-#1 WARN: UndefinedVar: Usage of undefined variable '$LD_LIBRARY_PATH' (line 212)
-#1 DONE 0.0s
-
-#2 [internal] load metadata for docker.io/itisfoundation/jupyter-math:2.0.9
-#2 DONE 0.0s
-
-#3 [internal] load .dockerignore
-#3 transferring context: 2B done
-#3 DONE 0.0s
-
-#4 [ 1/23] FROM docker.io/itisfoundation/jupyter-math:2.0.9
-#4 DONE 0.0s
-
-#5 [internal] load build context
-#5 transferring context: 153B done
-#5 DONE 0.0s
-
-#6 [ 3/23] RUN apt-get -qq update   && apt-get install -yq --no-install-recommends     curl     dc     libeigen3-dev     libfftw3-dev     libgl1-mesa-dev     libpng-dev     libqt5opengl5-dev     libqt5svg5-dev     libtiff5-dev     qt5-default     zlib1g-dev   && git clone https://github.com/MRtrix3/mrtrix3.git   && cd mrtrix3 && git checkout 3.0.4   && ./configure && ./build -persistent -nopaginate   && rm -rf tmp   && cd ..   && apt-get purge -y     libeigen3-dev     libfftw3-dev     libgl1-mesa-dev     libpng-dev     libqt5opengl5-dev     libqt5svg5-dev     libtiff5-dev     zlib1g-dev   && apt-get autoremove -y   && rm -rf /var/lib/apt/lists/*
-#6 CACHED
-
-#7 [ 2/23] WORKDIR /home/jovyan
-#7 CACHED
-
-#8 [ 5/23] RUN curl -fsSL https://osf.io/73h5s/download   | tar xz --strip-components 1
-#8 CACHED
-
-#9 [ 6/23] WORKDIR /home/jovyan
-#9 CACHED
-
-#10 [ 4/23] WORKDIR /home/jovyan/art
-#10 CACHED
-
-#11 [ 8/23] RUN wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv -C /home/jovyan   && rm -rf /home/jovyan/freesurfer/trctrain   && rm -rf /home/jovyan/freesurfer/diffusion   && rm -rf /home/jovyan/freesurfer/docs   && rm -rf /home/jovyan/freesurfer/matlab   && rm -rf /home/jovyan/freesurfer/fsafd   && rm -rf /home/jovyan/freesurfer/tktools   && find /home/jovyan/freesurfer/subjects -maxdepth 1 -mindepth 1 -type d ! -name 'fsaverage' -exec rm -rf {} +   && rm -rf /home/jovyan/freesurfer/average/cvs_avg35*   && rm -rf /home/jovyan/freesurfer/average/mult-comp-cor   && find /home/jovyan/freesurfer/average -name "*.gca" ! -name "RB_all*.gca" -delete 2>/dev/null || true   && rm -rf /home/jovyan/freesurfer/python   && find /home/jovyan/freesurfer -name "*.log" -delete 2>/dev/null || true   && find /home/jovyan/freesurfer -name "*~" -delete 2>/dev/null || true
-#11 CACHED
-
-#12 [ 9/23] COPY freesurfer_license.txt /home/jovyan/freesurfer/license.txt
-#12 CACHED
-
-#13 [ 7/23] RUN apt-get update && apt-get install -y tcsh bc libgomp1 perl-modules   && rm -rf /var/lib/apt/lists/*
-#13 CACHED
-
-#14 [10/23] WORKDIR /home/jovyan
-#14 CACHED
-
-#15 [11/23] RUN wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py   && echo "" | python fslinstaller.py -d /home/jovyan/fsl   && . /home/jovyan/fsl/etc/fslconf/fsl.sh   && rm -rf /home/jovyan/fsl/fslpython   && rm -rf /home/jovyan/fsl/data/atlases   && rm -rf /home/jovyan/fsl/data/possum   && rm -rf /home/jovyan/fsl/data/tbss   && rm -rf /home/jovyan/fsl/doc   && rm -rf /home/jovyan/fsl/tcl   && rm -rf /home/jovyan/fsl/etc/matlab   && rm -f /home/jovyan/fsl/bin/*_cuda* 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/fsleyes* 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/fslview* 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/*_gui 2>/dev/null || true   && rm -f /home/jovyan/fsl/bin/lesion_* 2>/dev/null || true   && rm -rf /home/jovyan/fsl/data/first   && find /home/jovyan/fsl/data/standard -name "*.nii.gz"      ! -name "MNI152_T1_2mm*"      ! -name "MNI152_T1_1mm*"      -delete 2>/dev/null || true   && rm -rf /home/jovyan/fsl/data/xtract   && rm -f /home/jovyan/fslinstaller.py   && rm -rf /home/jovyan/fsl/pkgs   && rm -rf /home/jovyan/fsl/conda-meta   && rm -rf /home/jovyan/fsl/lib/python3.*   && rm -rf /home/jovyan/fsl/lib/qt6   && rm -f /home/jovyan/fsl/lib/libLLVM*   && rm -f /home/jovyan/fsl/lib/libclang*   && rm -rf /home/jovyan/fsl/lib/openvino*   && rm -rf /home/jovyan/fsl/lib/gcc   && rm -rf /home/jovyan/fsl/include   && rm -rf /home/jovyan/fsl/man   && rm -rf /home/jovyan/fsl/share/man   && rm -rf /home/jovyan/fsl/compiler_compat   && rm -rf /home/jovyan/fsl/libexec
-#15 0.335 --2026-01-09 10:41:45--  https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
-#15 0.340 Resolving fsl.fmrib.ox.ac.uk (fsl.fmrib.ox.ac.uk)... 129.67.248.66
-#15 0.547 Connecting to fsl.fmrib.ox.ac.uk (fsl.fmrib.ox.ac.uk)|129.67.248.66|:443... connected.
-#15 0.599 HTTP request sent, awaiting response... 301 Moved Permanently
-#15 0.647 Location: https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py [following]
-#15 0.647 --2026-01-09 10:41:45--  https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py
-#15 0.647 Reusing existing connection to fsl.fmrib.ox.ac.uk:443.
-#15 0.647 HTTP request sent, awaiting response... 200 OK
-#15 0.672 Length: 149168 (146K) [application/octet-stream]
-#15 0.673 Saving to: ‘fslinstaller.py’
-#15 0.673 
-#15 0.673      0K .......... .......... .......... .......... .......... 34% 1.05M 0s
-#15 0.720     50K .......... .......... .......... .......... .......... 68% 2.10M 0s
-#15 0.743    100K .......... .......... .......... .......... .....     100% 91.4M=0.07s
-#15 0.743 
-#15 0.743 2026-01-09 10:41:45 (2.02 MB/s) - ‘fslinstaller.py’ saved [149168/149168]
-#15 0.743 
-#15 0.902 [1m[4mFSL installer version:[0m 3.17.0[0m
-#15 0.902 [37mPress CTRL+C at any time to cancel installation[0m
-#15 0.902 [93m[1mRunning the installer script as root user is discouraged! You should
-#15 0.902 run this script as a regular user - you will be asked for your administrator
-#15 0.902 password if required.[0m
-#15 0.905 [37mInstallation log file: /tmp/fslinstaller_jn0pa648.log
-#15 0.905 [0m
-#15 1.038 [92mInstalling FSL implies agreement with the terms of the FSL license - if you
-#15 1.038 do not agree with these terms, you can cancel the installation by pressing
-#15 1.038 CTRL+C.[0m[92m You can view the license at
-#15 1.038 [0m[92m[4mhttps://fsl.fmrib.ox.ac.uk/fsl/docs/license.html[0m
-#15 1.038 [0m
-#15 1.038 [37mDuring the installation process, please note that some system details will
-#15 1.038 be automatically sent to the FSL development team. These details are extremely
-#15 1.038 basic and cannot be used in any way to identify individual users. If you do not
-#15 1.038 want any information to be sent, please cancel this installation by pressing
-#15 1.038 CTRL+C, and re-run the installer with the --skip_registration option.
-#15 1.038 [0m
-#15 1.038 FSL 6.0.7.19 selected for installation[0m
-#15 1.043 Downloading FSL environment specification from https://fsl.fmrib.ox.ac.uk/fsldow
-#15 1.043 nloads/fslconda/releases/fsl-6.0.7.19_linux-64.yml...[0m
-#15 1.124 Downloading FSL environment specification from
-#15 1.124 https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fsl-6.0.7.19_osl-
-#15 1.124 dynamics_linux-64.yml...[0m
-#15 1.203 Downloading FSL environment specification from https://fsl.fmrib.ox.ac.uk/fsldow
-#15 1.203 nloads/fslconda/releases/fsl-6.0.7.19_truenet_linux-64.yml...[0m
-#15 1.279 [1m
-#15 1.279 Installing FSL in /home/jovyan/fsl
-#15 1.279 [0m
-#15 1.279 Downloading miniconda from https://anaconda.org/conda-
-#15 1.279 forge/micromamba/2.1.0/download/linux-64/micromamba-2.1.0-0.tar.bz2...[0m
-#15 2.128 1 / 4 [                                                        ] 0.0 / 5.9 MB[0m [0m|[0m1 / 4 [#                                                       ] 0.1 / 5.9 MB[0m [0m/[0m1 / 4 [##                                                      ] 0.2 / 5.9 MB[0m [0m-[0m1 / 4 [####                                                    ] 0.4 / 5.9 MB[0m [0m\[0m1 / 4 [#####                                                   ] 0.5 / 5.9 MB[0m [0m|[0m1 / 4 [######                                                  ] 0.6 / 5.9 MB[0m [0m/[0m1 / 4 [#######                                                 ] 0.8 / 5.9 MB[0m [0m-[0m1 / 4 [########                                                ] 0.9 / 5.9 MB[0m [0m\[0m1 / 4 [#########                                               ] 1.0 / 5.9 MB[0m [0m|[0m1 / 4 [###########                                             ] 1.1 / 5.9 MB[0m [0m/[0m1 / 4 [############                                            ] 1.2 / 5.9 MB[0m [0m-[0m1 / 4 [#############                                           ] 1.4 / 5.9 MB[0m [0m\[0m1 / 4 [##############                                          ] 1.5 / 5.9 MB[0m [0m|[0m1 / 4 [###############                                         ] 1.6 / 5.9 MB[0m [0m/[0m1 / 4 [#################                                       ] 1.8 / 5.9 MB[0m [0m-[0m1 / 4 [##################                                      ] 1.9 / 5.9 MB[0m [0m\[0m1 / 4 [###################                                     ] 2.0 / 5.9 MB[0m [0m|[0m1 / 4 [####################                                    ] 2.1 / 5.9 MB[0m [0m/[0m1 / 4 [#####################                                   ] 2.2 / 5.9 MB[0m [0m-[0m1 / 4 [######################                                  ] 2.4 / 5.9 MB[0m [0m\[0m1 / 4 [########################                                ] 2.5 / 5.9 MB[0m [0m|[0m1 / 4 [#########################                               ] 2.6 / 5.9 MB[0m [0m/[0m1 / 4 [##########################                              ] 2.8 / 5.9 MB[0m [0m-[0m1 / 4 [###########################                             ] 2.9 / 5.9 MB[0m [0m\[0m1 / 4 [############################                            ] 3.0 / 5.9 MB[0m [0m|[0m1 / 4 [#############################                           ] 3.1 / 5.9 MB[0m [0m/[0m1 / 4 [###############################                         ] 3.2 / 5.9 MB[0m [0m-[0m1 / 4 [################################                        ] 3.4 / 5.9 MB[0m [0m\[0m1 / 4 [#################################                       ] 3.5 / 5.9 MB[0m [0m|[0m1 / 4 [##################################                      ] 3.6 / 5.9 MB[0m [0m/[0m1 / 4 [###################################                     ] 3.8 / 5.9 MB[0m [0m-[0m1 / 4 [#####################################                   ] 3.9 / 5.9 MB[0m [0m\[0m1 / 4 [######################################                  ] 4.0 / 5.9 MB[0m [0m|[0m1 / 4 [#######################################                 ] 4.1 / 5.9 MB[0m [0m/[0m1 / 4 [########################################                ] 4.2 / 5.9 MB[0m [0m-[0m1 / 4 [#########################################               ] 4.4 / 5.9 MB[0m [0m\[0m1 / 4 [##########################################              ] 4.5 / 5.9 MB[0m [0m|[0m1 / 4 [############################################            ] 4.6 / 5.9 MB[0m [0m/[0m1 / 4 [#############################################           ] 4.8 / 5.9 MB[0m [0m-[0m1 / 4 [##############################################          ] 4.9 / 5.9 MB[0m [0m\[0m1 / 4 [###############################################         ] 5.0 / 5.9 MB[0m [0m|[0m1 / 4 [################################################        ] 5.1 / 5.9 MB[0m [0m/[0m1 / 4 [##################################################      ] 5.2 / 5.9 MB[0m [0m-[0m1 / 4 [###################################################     ] 5.4 / 5.9 MB[0m [0m\[0m1 / 4 [####################################################    ] 5.5 / 5.9 MB[0m [0m|[0m1 / 4 [#####################################################   ] 5.6 / 5.9 MB[0m [0m/[0m1 / 4 [######################################################  ] 5.8 / 5.9 MB[0m [0m-[0m1 / 4 [####################################################### ] 5.9 / 5.9 MB[0m [0m\[0m1 / 4 [########################################################] 5.9 / 5.9 MB[0m [0m|[0m[0m
-#15 3.637 Installing conda at /home/jovyan/fsl...[0m
-#15 3.642 2 / 4 [#############################                             ] 50 / 100 %[0m [0m|[0m2 / 4 [#############################                             ] 50 / 100 %[0m [0m/[0m[0m
-#15 4.352 Creating FSL wrapper management scripts...[0m
-#15 4.366 3 / 4 [#########################################################] 100 / 100 %[0m [0m|[0m[0m
-#15 4.371 Installing FSL into /home/jovyan/fsl...[0m
-#15 4.373 4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m|[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m/[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m-[0m4 / 4 [                                                           ] 0 / 100 %[0m [0m\[0m
