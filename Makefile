@@ -4,15 +4,14 @@ SHELL = /bin/sh
 # Project Configuration
 PROJECT_NAME := jupyter-medimproc
 VERSION := 1.3.0
-DOCKER_REGISTRY ?= local
 
 # Variant can be: jupyter, runner, or runner-slim
 VARIANT ?= jupyter
 
-# Docker Image Names
-JUPYTER_IMAGE := $(DOCKER_REGISTRY)/$(PROJECT_NAME)-jupyter
-RUNNER_IMAGE := $(DOCKER_REGISTRY)/$(PROJECT_NAME)-runner
-RUNNER_SLIM_IMAGE := $(DOCKER_REGISTRY)/$(PROJECT_NAME)-runner-slim
+# Docker Image Names (simcore registry paths)
+JUPYTER_IMAGE := simcore/services/dynamic/jupyter-medimproc
+RUNNER_IMAGE := simcore/services/comp/runner-medimproc
+RUNNER_SLIM_IMAGE := simcore/services/comp/runner-medimproc-slim
 
 # Select the appropriate image based on VARIANT
 ifeq ($(VARIANT),jupyter)
