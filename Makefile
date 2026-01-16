@@ -36,7 +36,6 @@ build: ## Build docker image for specified VARIANT (default: jupyter)
 	@echo "Building $(IMAGE_NAME):$(VERSION) from $(DOCKERFILE)"
 	docker build \
 		-t $(IMAGE_NAME):$(VERSION) \
-		-t $(IMAGE_NAME):latest \
 		-f $(DOCKERFILE) \
 		.
 
@@ -88,7 +87,13 @@ test: ## Run tests for the specified VARIANT
 	@if [ "$(VARIANT)" = "jupyter" ]; then \
 		docker run --rm $(IMAGE_NAME):$(VERSION) jupyter --version; \
 	else \
-		docker run --rm $(IMAGE_NAME):$(VERSION) /bin/bash -c "freesurfer --version || echo 'FreeSurfer check'"; \
+		mkdir -p /tmp/test_input /tmp/test_output; \
+		docker run --rm \
+			-v /tmp/test_input:/input \
+			-v /tmp/test_output:/output \
+			-e DY_SIDECAR_PATH_INPUTS=/input \
+			-e DY_SIDECAR_PATH_OUTPUTS=/output \
+			$(IMAGE_NAME):$(VERSION) /bin/bash -c "freesurfer --version 2>&1 | head -2 && fsl --version"; \
 	fi
 
 .PHONY: shell
@@ -123,6 +128,10 @@ down: ## Stop docker-compose services
 logs: ## View docker-compose logs
 	docker-compose logs -f
 
+.PHONY: push
+push: # push to both remotes
+	git push gitlab
+	git push github
 # ============================================================================
 # Cleanup
 # ============================================================================

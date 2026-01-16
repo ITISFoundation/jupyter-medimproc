@@ -1,166 +1,19 @@
-# GitLab CI configuration for jupyter-medimproc
-# This repository is mirrored to GitLab for building due to memory requirements
-image: itisfoundation/ubuntu-bionic-build-docker@sha256:eaafc56563db702281b4221108b0696967b7a621cf2e09579a7f12a799819a03
+variables:  
+  CI_SERVICE_INTEGRATION_LIBRARY: itisfoundation/ci-service-integration-library:v2.2.1  
 
-variables:
-  # Docker in docker variant, see https://docs.gitlab.com/ee/ci/services/using_docker_build.html#use-docker-in-docker-executor
-  DOCKER_HOST: tcp://docker:2375/
-  DOCKER_DRIVER: overlay2
-  # CI image prefix
-  SC_CI_PROJECT_PATH_NAME: ci/$CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG
-  SC_CI_TEST_IMAGE_PREFIX: $SC_CI_TESTING_REGISTRY/ci/$CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG
-  USER: root
+stages:  
+  - build  
 
-services:
-   - docker:dind
-
-before_script:
-  - docker info
-
-stages:
-  - build
-  - test
-
-# ============================================================================
-# JUPYTER-MEDIMPROC (Interactive Jupyter version)
-# ============================================================================
-
-jupyter-medimproc-build:
-  stage: build
-  tags:
-    - DOCKER
-  script:
-    - echo "$SC_CI_TESTING_REGISTRY_PASSWORD" | docker login -u "$SC_CI_TESTING_REGISTRY_USER" --password-stdin $SC_CI_TESTING_REGISTRY
-    - echo "$SC_CI_MASTER_REGISTRY_PASSWORD" | docker login -u "$SC_CI_MASTER_REGISTRY_USER" --password-stdin $SC_CI_MASTER_REGISTRY
-    - export DOCKER_REGISTRY=$SC_CI_MASTER_REGISTRY
-    - make pull-latest VARIANT=jupyter || true
-    - export DOCKER_REGISTRY=$SC_CI_TEST_IMAGE_PREFIX
-    - make build VARIANT=jupyter
-    - make push-force VARIANT=jupyter
-  only:
-    refs:
-      - branches
-      - merge_requests
-    changes:
-      - "services/jupyter/**/*"
-      - "common/**/*"
-      - ".gitlab-ci.yml"
-  environment:
-    name: $CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG/jupyter-medimproc
-
-jupyter-medimproc-test:
-  stage: test
-  tags:
-    - DOCKER
-  needs: ["jupyter-medimproc-build"]
-  script:
-    - echo "$SC_CI_TESTING_REGISTRY_PASSWORD" | docker login -u "$SC_CI_TESTING_REGISTRY_USER" --password-stdin $SC_CI_TESTING_REGISTRY
-    - echo "$SC_CI_MASTER_REGISTRY_PASSWORD" | docker login -u "$SC_CI_MASTER_REGISTRY_USER" --password-stdin $SC_CI_MASTER_REGISTRY
-    - export DOCKER_REGISTRY=$SC_CI_TEST_IMAGE_PREFIX
-    - make pull-latest VARIANT=jupyter
-    - make tag-local VARIANT=jupyter
-    - make test VARIANT=jupyter
-  only:
-    refs:
-      - branches
-      - merge_requests
-    changes:
-      - "services/jupyter/**/*"
-      - "common/**/*"
-      - ".gitlab-ci.yml"
-
-# ============================================================================
-# RUNNER-MEDIMPROC (Headless runner - standard)
-# ============================================================================
-
-runner-medimproc-build:
-  stage: build
-  tags:
-    - DOCKER
-  script:
-    - echo "$SC_CI_TESTING_REGISTRY_PASSWORD" | docker login -u "$SC_CI_TESTING_REGISTRY_USER" --password-stdin $SC_CI_TESTING_REGISTRY
-    - echo "$SC_CI_MASTER_REGISTRY_PASSWORD" | docker login -u "$SC_CI_MASTER_REGISTRY_USER" --password-stdin $SC_CI_MASTER_REGISTRY
-    - export DOCKER_REGISTRY=$SC_CI_MASTER_REGISTRY
-    - make pull-latest VARIANT=runner || true
-    - export DOCKER_REGISTRY=$SC_CI_TEST_IMAGE_PREFIX
-    - make build VARIANT=runner
-    - make push-force VARIANT=runner
-  only:
-    refs:
-      - branches
-      - merge_requests
-    changes:
-      - "services/runner/**/*"
-      - "common/**/*"
-      - ".gitlab-ci.yml"
-  environment:
-    name: $CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG/runner-medimproc
-
-runner-medimproc-test:
-  stage: test
-  tags:
-    - DOCKER
-  needs: ["runner-medimproc-build"]
-  script:
-    - echo "$SC_CI_TESTING_REGISTRY_PASSWORD" | docker login -u "$SC_CI_TESTING_REGISTRY_USER" --password-stdin $SC_CI_TESTING_REGISTRY
-    - echo "$SC_CI_MASTER_REGISTRY_PASSWORD" | docker login -u "$SC_CI_MASTER_REGISTRY_USER" --password-stdin $SC_CI_MASTER_REGISTRY
-    - export DOCKER_REGISTRY=$SC_CI_TEST_IMAGE_PREFIX
-    - make pull-latest VARIANT=runner
-    - make tag-local VARIANT=runner
-    - make test VARIANT=runner
-  only:
-    refs:
-      - branches
-      - merge_requests
-    changes:
-      - "services/runner/**/*"
-      - "common/**/*"
-      - ".gitlab-ci.yml"
-
-# ============================================================================
-# RUNNER-MEDIMPROC-SLIM (Headless runner - optimized)
-# ============================================================================
-
-runner-medimproc-slim-build:
-  stage: build
-  tags:
-    - DOCKER
-  script:
-    - echo "$SC_CI_TESTING_REGISTRY_PASSWORD" | docker login -u "$SC_CI_TESTING_REGISTRY_USER" --password-stdin $SC_CI_TESTING_REGISTRY
-    - echo "$SC_CI_MASTER_REGISTRY_PASSWORD" | docker login -u "$SC_CI_MASTER_REGISTRY_USER" --password-stdin $SC_CI_MASTER_REGISTRY
-    - export DOCKER_REGISTRY=$SC_CI_MASTER_REGISTRY
-    - make pull-latest VARIANT=runner-slim || true
-    - export DOCKER_REGISTRY=$SC_CI_TEST_IMAGE_PREFIX
-    - make build VARIANT=runner-slim
-    - make push-force VARIANT=runner-slim
-  only:
-    refs:
-      - branches
-      - merge_requests
-    changes:
-      - "services/runner-slim/**/*"
-      - "common/**/*"
-      - ".gitlab-ci.yml"
-  environment:
-    name: $CI_PROJECT_PATH_SLUG/$CI_COMMIT_REF_SLUG/runner-medimproc-slim
-
-runner-medimproc-slim-test:
-  stage: test
-  tags:
-    - DOCKER
-  needs: ["runner-medimproc-slim-build"]
-  script:
-    - echo "$SC_CI_TESTING_REGISTRY_PASSWORD" | docker login -u "$SC_CI_TESTING_REGISTRY_USER" --password-stdin $SC_CI_TESTING_REGISTRY
-    - echo "$SC_CI_MASTER_REGISTRY_PASSWORD" | docker login -u "$SC_CI_MASTER_REGISTRY_USER" --password-stdin $SC_CI_MASTER_REGISTRY
-    - export DOCKER_REGISTRY=$SC_CI_TEST_IMAGE_PREFIX
-    - make pull-latest VARIANT=runner-slim
-    - make tag-local VARIANT=runner-slim
-    - make test VARIANT=runner-slim
-  only:
-    refs:
-      - branches
-      - merge_requests
-    changes:
-      - "services/runner-slim/**/*"
-      - "common/**/*"
-      - ".gitlab-ci.yml"
+build-images:  
+  stage: build  
+  image: $CI_SERVICE_INTEGRATION_LIBRARY  
+  tags:  
+    - DOCKER  
+    - XSERVER  
+    - GPU  
+    - LINUX  
+  script:  
+    # CI just checks if build works  
+    - ooil --version  
+    - ooil compose  
+    - docker compose build 
