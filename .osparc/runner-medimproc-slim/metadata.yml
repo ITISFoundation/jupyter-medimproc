@@ -1,0 +1,69 @@
+name: Medical Image Processing Runner (Optimized)
+thumbnail: https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/1024px-Jupyter_logo.svg.png
+description:
+  "Optimized headless runner for Medical Image Processing pipelines with selected pre-installed packages:
+  - [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki), a comprehensive library of analysis tools for FMRI, MRI and DTI brain imaging data.
+  - [FreeSurfer](https://surfer.nmr.mgh.harvard.edu/), an open source neuroimaging toolkit for processing, analyzing, and visualizing human brain MR images.
+  - Python packages like [nibabel](https://nipy.org/nibabel/) and [cc3d](https://github.com/seung-lab/connected-components-3d#readme).
+
+  This is an optimized computational service with reduced image size, designed to run scripts and pipelines in batch mode.
+  "
+key: simcore/services/comp/runner-medimproc-slim
+version: 1.3.0
+integration-version: 2.0.0
+type: computational
+authors:
+  - name: Javier Garcia Ordonez
+    email: ordonez@zmt.swiss
+    affiliation: ZMT Zurich MedTech AG
+contact: ordonez@zmt.swiss
+inputs:
+  input_1:
+    displayOrder: 1.0
+    label: input_files_1
+    description:
+      Any input files. One or several files compressed in a zip will be
+      downloaded in an inputs folder.
+    type: data:*/*
+  input_2:
+    displayOrder: 2.0
+    label: input_files_2
+    description:
+      Any input files. One or several files compressed in a zip will be
+      downloaded in an inputs folder.
+    type: data:*/*
+  input_3:
+    displayOrder: 3.0
+    label: input_files_3
+    description:
+      Any input files. One or several files compressed in a zip will be
+      downloaded in an inputs folder.
+    type: data:*/*
+  input_4:
+    displayOrder: 4.0
+    label: input_files_4
+    description:
+      Any input files. One or several files compressed in a zip will be
+      downloaded in an inputs folder.
+    type: data:*/*
+outputs:
+  output_1:
+    displayOrder: 1.0
+    label: Output files 1
+    description: Output files uploaded from the outputs folder
+    type: data:*/*
+  output_2:
+    displayOrder: 2.0
+    label: Output files 2
+    description: Output files uploaded from the outputs folder
+    type: data:*/*
+  output_3:
+    displayOrder: 3.0
+    label: Output files 3
+    description: Output files uploaded from the outputs folder
+    type: data:*/*
+  output_4:
+    displayOrder: 4.0
+    label: Output files 4
+    description: Output files uploaded from the outputs folder
+    type: data:*/*
