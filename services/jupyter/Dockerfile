@@ -1,4 +1,7 @@
-# Interactive Jupyter MedImProc (FreeSurfer + FSL)
+# Stage 1: Extract FreeSurfer from official image
+FROM freesurfer/freesurfer:6.0 as freesurfer-base
+
+# Stage 2: Interactive Jupyter MedImProc (FreeSurfer + FSL)
 FROM itisfoundation/jupyter-math:2.0.9 as runtime
 LABEL maintainer="ordonez"
 USER root
@@ -7,6 +10,9 @@ USER root
 ENV INSTALL_DIR=${HOME} \
     VENV_DIR=${HOME}/.venv \
     OPTIMIZED=false
+
+# Copy FreeSurfer from official image (much faster than FTP download)
+COPY --from=freesurfer-base /opt/freesurfer ${HOME}/freesurfer
 
 # Install FreeSurfer stack (Layer 1)
 COPY common/scripts/install_freesurfer.sh /tmp/install_freesurfer.sh

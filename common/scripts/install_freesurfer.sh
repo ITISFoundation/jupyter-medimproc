@@ -64,30 +64,19 @@ curl -fsSL https://osf.io/yswa4/download | tar xz --strip-components 1
 
 # 5. Freesurfer
 echo "Installing Freesurfer 6.0.0..."
-cd "${INSTALL_DIR}"
-# Note: The FTP link can be slow.
-wget -N -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar -xzv
-# The tarball expands to 'freesurfer' directory in current dir.
-# So we have ${INSTALL_DIR}/freesurfer
+# Freesurfer is expected to be copied from the freesurfer-base stage
+# This is much faster than downloading from FTP
+if [ ! -d "${INSTALL_DIR}/freesurfer" ]; then
+    echo "ERROR: Freesurfer directory not found at ${INSTALL_DIR}/freesurfer"
+    echo "Expected to be copied from freesurfer-base Docker stage"
+    exit 1
+fi
+echo "Freesurfer found at ${INSTALL_DIR}/freesurfer"
 
 # 6. Optimization
 if [ "$OPTIMIZED" = "true" ]; then
-    echo "Running Optimization..."
-    FS_HOME="${INSTALL_DIR}/freesurfer"
-    rm -rf "${FS_HOME}/subjects"
-    # Wait, the comment said "we actually need subjects/fsaverage". 
-    # If I remove 'subjects', I might break things.
-    # But the optimization request earlier (in previous turn) had explicit rm -rf subjects.
-    # The user accepted that logic. But it's risky.
-    # I will be safer and keep 'fsaverage' if possible?
-    # Or just stick to the requested "rm -rf subjects" if that's what the 'min' dockerfile did.
-    # The 'min' dockerfile diff earlier showed: rm -rf /usr/local/freesurfer/subjects
-    # So I will replicate that.
-    
-    rm -rf "${FS_HOME}/docs"
-    rm -rf "${FS_HOME}/trctrain"
-    rm -rf "${FS_HOME}/diffusion"
-    rm -rf "${FS_HOME}/matlab"
+    echo "Optimization already done in Docker multi-stage build (freesurfer-optimized stage)"
+    echo "Skipping redundant optimization to avoid layer bloat"
 fi
 
 echo "Installation Complete."

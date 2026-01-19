@@ -1,4 +1,10 @@
-# Headless Runner MedImProc (FreeSurfer + FSL) - Slim/Optimized
+# Stage 1: Extract FreeSurfer from official image (remove unnecessary files in same layer in optimized MedImProc Runner)
+FROM freesurfer/freesurfer:6.0 as freesurfer-optimized
+RUN cd /opt/freesurfer && \
+    rm -rf subjects docs trctrain diffusion matlab && \
+    echo "FreeSurfer optimized"
+
+# Stage 2: Headless Runner MedImProc (FreeSurfer + FSL) - Slim/Optimized
 FROM ubuntu:22.04 as runtime
 LABEL maintainer="ordonez"
 ENV DEBIAN_FRONTEND=noninteractive
@@ -15,8 +21,10 @@ ENV INSTALL_DIR=${HOME} \
     VENV_DIR=${HOME}/.venv \
     OPTIMIZED=true
 
-# Install FreeSurfer stack (Layer 1)
+# Install FreeSurfer stack dependencies and tools (MRtrix3, ANTs, ART)
+# Then copy optimized FreeSurfer afterward
 COPY common/scripts/install_freesurfer.sh /tmp/install_freesurfer.sh
+COPY --from=freesurfer-optimized /opt/freesurfer ${HOME}/freesurfer
 RUN chmod +x /tmp/install_freesurfer.sh && \
     /tmp/install_freesurfer.sh && \
     rm /tmp/install_freesurfer.sh

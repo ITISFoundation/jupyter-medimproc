@@ -1,4 +1,7 @@
-# Headless Runner MedImProc (FreeSurfer + FSL) - Standard
+# Stage 1: Extract FreeSurfer from official image
+FROM freesurfer/freesurfer:6.0 as freesurfer-base
+
+# Stage 2: Headless Runner MedImProc (FreeSurfer + FSL) - Standard
 FROM ubuntu:22.04 as runtime
 LABEL maintainer="ordonez"
 ENV DEBIAN_FRONTEND=noninteractive
@@ -14,6 +17,9 @@ RUN useradd --uid ${SC_USER_ID} --shell /bin/bash --create-home --home ${HOME} $
 ENV INSTALL_DIR=${HOME} \
     VENV_DIR=${HOME}/.venv \
     OPTIMIZED=false
+
+# Copy FreeSurfer from official image (much faster than FTP download)
+COPY --from=freesurfer-base /opt/freesurfer ${HOME}/freesurfer
 
 # Install FreeSurfer stack (Layer 1)
 COPY common/scripts/install_freesurfer.sh /tmp/install_freesurfer.sh
