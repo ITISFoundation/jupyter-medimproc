@@ -44,7 +44,7 @@ check_file ".gitlab-ci.yml"
 check_file "Makefile"
 check_file "docker-compose.yml"
 check_file "freesurfer_license.txt"
-check_file "common/scripts/install_freesurfer.sh"
+check_file "common/scripts/install_mrtrix3_art.sh"
 check_file "common/scripts/install_fsl.sh"
 check_file "common/entrypoint.sh"
 
@@ -79,11 +79,11 @@ echo "=================================================="
 echo ""
 
 # Check execute permissions
-if [ -x "common/scripts/install_freesurfer.sh" ]; then
-    echo -e "${GREEN}✓${NC} install_freesurfer.sh is executable"
+if [ -x "common/scripts/install_mrtrix3_art.sh" ]; then
+    echo -e "${GREEN}✓${NC} install_mrtrix3_art.sh is executable"
 else
-    echo -e "${YELLOW}⚠${NC} install_freesurfer.sh is not executable"
-    echo "  Run: chmod +x common/scripts/install_freesurfer.sh"
+    echo -e "${YELLOW}⚠${NC} install_mrtrix3_art.sh is not executable"
+    echo "  Run: chmod +x common/scripts/install_mrtrix3_art.sh"
 fi
 
 if [ -x "common/scripts/install_fsl.sh" ]; then

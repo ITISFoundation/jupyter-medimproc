@@ -55,46 +55,13 @@ build-nc: ## Build without cache for specified VARIANT
 		.
 
 # ============================================================================
-# Docker Registry Operations
-# ============================================================================
-
-.PHONY: pull-latest
-pull-latest: ## Pull latest image from registry
-	docker pull $(IMAGE_NAME):latest || true
-
-.PHONY: push
-push: ## Push image to registry
-	docker push $(IMAGE_NAME):$(VERSION)
-	docker push $(IMAGE_NAME):latest
-
-.PHONY: push-force
-push-force: ## Force push image to registry (used in CI)
-	docker push $(IMAGE_NAME):$(VERSION)
-	docker push $(IMAGE_NAME):latest
-
-.PHONY: tag-local
-tag-local: ## Tag image as local for testing
-	docker tag $(IMAGE_NAME):$(VERSION) $(IMAGE_NAME):local
-	docker tag $(IMAGE_NAME):latest $(IMAGE_NAME):local-latest
-
-# ============================================================================
 # Testing
 # ============================================================================
 
 .PHONY: test
-test: ## Run tests for the specified VARIANT
-	@echo "Running tests for $(VARIANT)..."
-	@if [ "$(VARIANT)" = "jupyter" ]; then \
-		docker run --rm $(IMAGE_NAME):$(VERSION) jupyter --version; \
-	else \
-		mkdir -p /tmp/test_input /tmp/test_output; \
-		docker run --rm \
-			-v /tmp/test_input:/input \
-			-v /tmp/test_output:/output \
-			-e DY_SIDECAR_PATH_INPUTS=/input \
-			-e DY_SIDECAR_PATH_OUTPUTS=/output \
-			$(IMAGE_NAME):$(VERSION) /bin/bash -c "freesurfer --version 2>&1 | head -2 && fsl --version"; \
-	fi
+test:
+	@echo "To test the images, please execute one of the 'test-...' make commands in the 'tests' subfolder"
+	@echo "If you do not have it, you can clone it from https://git.speag.com/ordonez/medimproc-testing-pipelines"
 
 .PHONY: shell
 shell: ## Run interactive shell in the image

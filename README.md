@@ -71,7 +71,7 @@ All variants include both toolchains:
 │       └── Dockerfile
 ├── common/
 │   ├── scripts/
-│   │   ├── install_freesurfer.sh  # FreeSurfer stack installation
+│   │   ├── install_mrtrix3_art.sh  # FreeSurfer stack installation
 │   │   └── install_fsl.sh         # FSL stack installation
 │   └── entrypoint.sh              # Runner entrypoint
 ├── validation/           # Test data and outputs
@@ -169,14 +169,14 @@ make test-pipeline VARIANT=runner  # Full pipeline test (slow)
 - User: `jovyan` (UID 1000)
 
 ### simcore/services/comp/runner-medimproc
-- Based on `ubuntu:22.04`
+- Based on `ubuntu:24.04`
 - Headless runner
 - Full installation (not optimized)
 - User: `scu` (UID 8004)
 - Includes entrypoint for runner integration
 
 ### simcore/services/comp/runner-medimproc-slim
-- Based on `ubuntu:22.04`
+- Based on `ubuntu:24.04`
 - Headless runner
 - **Optimized installation** (removes docs, examples, etc.)
 - User: `scu` (UID 8004)

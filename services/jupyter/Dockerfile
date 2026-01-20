@@ -1,41 +1,63 @@
-# Stage 1: Extract FreeSurfer from official image
+# ============================================================================
+# Stage 1: Extract FreeSurfer from official image (Full Version)
+# ============================================================================
 FROM freesurfer/freesurfer:6.0 as freesurfer-base
 
-# Stage 2: Interactive Jupyter MedImProc (FreeSurfer + FSL)
-FROM itisfoundation/jupyter-math:2.0.9 as runtime
+# ============================================================================
+# Stage 2: Shared MedImProc Base (Common to all variants)
+# This stage installs all neuroimaging software to /opt/medimproc
+# to enable layer sharing across jupyter, runner, and runner-slim variants
+# NOTE: This stage is identical to the one in runner/Dockerfile
+# Docker will reuse these layers when building multiple variants
+# ============================================================================
+FROM ubuntu:24.04 as medimproc-common-base
 LABEL maintainer="ordonez"
-USER root
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Set installation environment
-ENV INSTALL_DIR=${HOME} \
-    VENV_DIR=${HOME}/.venv \
+# Set installation paths to shared location (not user-specific)
+ENV INSTALL_DIR=/opt/medimproc \
+    VENV_DIR=/opt/medimproc/.venv \
     OPTIMIZED=false
 
-# Copy FreeSurfer from official image (much faster than FTP download)
-COPY --from=freesurfer-base /opt/freesurfer ${HOME}/freesurfer
+# Install neuroimaging tools (MRtrix3, ART) and their dependencies
+COPY common/scripts/install_system_deps.sh /tmp/install_system_deps.sh
+COPY common/scripts/install_mrtrix3.sh /tmp/install_mrtrix3.sh
+COPY common/scripts/install_art.sh /tmp/install_art.sh
+RUN chmod +x /tmp/install_system_deps.sh /tmp/install_mrtrix3.sh /tmp/install_art.sh && \
+    /tmp/install_system_deps.sh && \
+    /tmp/install_mrtrix3.sh && \
+    /tmp/install_art.sh && \
+    rm /tmp/install_system_deps.sh /tmp/install_mrtrix3.sh /tmp/install_art.sh
 
-# Install FreeSurfer stack (Layer 1)
-COPY common/scripts/install_freesurfer.sh /tmp/install_freesurfer.sh
-RUN chmod +x /tmp/install_freesurfer.sh && \
-    /tmp/install_freesurfer.sh && \
-    rm /tmp/install_freesurfer.sh
-
-# Install FSL stack (Layer 2)
+# Install FSL stack (largest layer ~8-10GB - want to share this!)
 COPY common/scripts/install_fsl.sh /tmp/install_fsl.sh
 RUN chmod +x /tmp/install_fsl.sh && \
     /tmp/install_fsl.sh && \
     rm /tmp/install_fsl.sh
 
-# Copy FreeSurfer license
-COPY freesurfer_license.txt ${HOME}/freesurfer/license.txt
+# ============================================================================
+# Stage 3: Runtime - Interactive Jupyter MedImProc (Full Version)
+# ============================================================================
+FROM itisfoundation/jupyter-math:2.0.9 as runtime
+LABEL maintainer="ordonez"
+USER root
 
-# Copy custom Synb0 pipeline script
-COPY pipeline_synb0_disco.sh ${HOME}/synb0-disco/src/pipeline_no_docker.sh
-RUN chmod +x ${HOME}/synb0-disco/src/pipeline_no_docker.sh && \
-    ln -s ${HOME}/synb0-disco/src/pipeline_no_docker.sh /usr/local/bin/pipeline_no_docker.sh
+# Copy all neuroimaging software from shared base
+COPY --from=medimproc-common-base /opt/medimproc ${HOME}/
+# Copy FreeSurfer from official image (much faster than FTP download)
+COPY --from=freesurfer-base /opt/freesurfer ${HOME}/freesurfer
 
-# Fix permissions
-RUN chown -R 1000:100 ${HOME}
+# Post-installation setup (license, pipeline, permissions)
+COPY freesurfer_license.txt /tmp/freesurfer_license.txt
+COPY pipeline_synb0_disco.sh /tmp/pipeline_synb0_disco.sh
+COPY common/scripts/setup_freesurfer_license.sh /tmp/setup_freesurfer_license.sh
+COPY common/scripts/setup_synb0_pipeline.sh /tmp/setup_synb0_pipeline.sh
+COPY common/scripts/fix_permissions.sh /tmp/fix_permissions.sh
+RUN chmod +x /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh && \
+    TARGET_USER=1000 TARGET_GROUP=100 TARGET_DIR=${HOME} /tmp/fix_permissions.sh && \
+    /tmp/setup_freesurfer_license.sh && \
+    /tmp/setup_synb0_pipeline.sh && \
+    rm /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh /tmp/freesurfer_license.txt /tmp/pipeline_synb0_disco.sh
 
 # ============================================================================
 # ENVIRONMENT VARIABLES - FreeSurfer

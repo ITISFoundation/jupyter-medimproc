@@ -36,7 +36,7 @@ fi
 echo "setting correct user id/group id..."
 HOST_USERID=$(stat --format=%u "${INPUT_FOLDER}")
 HOST_GROUPID=$(stat --format=%g "${INPUT_FOLDER}")
-CONT_GROUPNAME=$(getent group "${HOST_GROUPID}" | cut --delimiter=: --fields=1)
+CONT_GROUPNAME=$(getent group "${HOST_GROUPID}" | cut --delimiter=: --fields=1 | head -n1)
 if [ "$HOST_USERID" -eq 0 ]
 then
     echo "Warning: Folder mounted owned by root user... adding $SC_USER_NAME to root..."
