@@ -1,0 +1,11 @@
+services:
+  common-base-image:
+    image: common-base-image:${VERSION}
+    build:
+      context: .
+      dockerfile: common/Dockerfile.base
+      network: host
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 1.1.1.1

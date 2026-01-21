@@ -84,15 +84,15 @@ shell-runner-slim: ## Run interactive shell in runner-slim variant
 
 .PHONY: up
 up: ## Start docker-compose services
-	docker-compose up -d
+	docker compose up -d
 
 .PHONY: down
 down: ## Stop docker-compose services
-	docker-compose down
+	docker compose down
 
 .PHONY: logs
 logs: ## View docker-compose logs
-	docker-compose logs -f
+	docker compose logs -f
 
 .PHONY: push
 push: # push to both remotes

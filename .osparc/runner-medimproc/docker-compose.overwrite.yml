@@ -1,6 +1,8 @@
 version: "3.7"
 services:
   runner-medimproc:
+    depends_on:
+      - common-base-image
     build:
       context: .
       dockerfile: services/runner/Dockerfile

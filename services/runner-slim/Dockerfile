@@ -1,19 +1,24 @@
 # ============================================================================
-# Import all common builder stages from base Dockerfile
+# Runtime - Headless Runner MedImProc (Slim/Optimized Version)
+# Copies all neuroimaging components from common-base-image builder stages
+# Creates optimized FSL and FreeSurfer in this layer for reduced image size
 # ============================================================================
-ARG COMMON_BASE_IMAGE=common-base:latest
-FROM ${COMMON_BASE_IMAGE} AS freesurfer-optimized
-FROM ${COMMON_BASE_IMAGE} AS fsl-optimized
-FROM ${COMMON_BASE_IMAGE} AS ants-builder
-FROM ${COMMON_BASE_IMAGE} AS c3d-builder
-FROM ${COMMON_BASE_IMAGE} AS pytorch-builder
-FROM ${COMMON_BASE_IMAGE} AS synb0-disco-builder
-FROM ${COMMON_BASE_IMAGE} AS mrtrix-art-builder
+ARG VERSION=1.3.1
 
-# ============================================================================
-# Stage: Runtime - Headless Runner MedImProc (Slim/Optimized Version)
-# ============================================================================
-FROM ubuntu:24.04 as runtime
+# Stage: Optimize FreeSurfer for slim build
+FROM common-base-image:${VERSION} AS freesurfer-optimized
+RUN cd /opt/freesurfer && \
+    rm -rf subjects docs trctrain diffusion matlab && \
+    echo "FreeSurfer optimized"
+
+# Stage: Optimize FSL for slim build
+FROM common-base-image:${VERSION} AS fsl-optimized
+RUN cd /opt/medimproc/fsl && \
+    rm -rf data/standard doc extras/src src && \
+    echo "FSL optimized"
+
+# Stage: Final runtime
+FROM ubuntu:24.04 AS runtime
 LABEL maintainer="ordonez"
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -24,16 +29,17 @@ ENV SC_USER_ID=8004 \
 
 RUN useradd --uid ${SC_USER_ID} --shell /bin/bash --create-home --home ${HOME} ${SC_USER_NAME}
 
-# Copy all neuroimaging components from builder stages (using optimized FSL)
+# Copy optimized components from optimization stages
 COPY --from=fsl-optimized /opt/medimproc/fsl ${HOME}/fsl
-COPY --from=ants-builder /opt/medimproc/ants-2.4.4 ${HOME}/ants-2.4.4
-COPY --from=c3d-builder /opt/medimproc/c3d-1.0.0-Linux-x86_64 ${HOME}/c3d-1.0.0-Linux-x86_64
-COPY --from=pytorch-builder /opt/medimproc/.venv ${HOME}/.venv
-COPY --from=synb0-disco-builder /opt/medimproc/synb0-disco ${HOME}/synb0-disco
-COPY --from=mrtrix-art-builder /opt/medimproc/mrtrix3 ${HOME}/mrtrix3
-COPY --from=mrtrix-art-builder /opt/medimproc/art ${HOME}/art
-# Copy optimized FreeSurfer from optimized stage
 COPY --from=freesurfer-optimized /opt/freesurfer ${HOME}/freesurfer
+
+# Copy remaining components from fsl-optimized stage (which has all from common-base-image)
+COPY --from=fsl-optimized /opt/medimproc/ants-2.4.4 ${HOME}/ants-2.4.4
+COPY --from=fsl-optimized /opt/medimproc/c3d-1.0.0-Linux-x86_64 ${HOME}/c3d-1.0.0-Linux-x86_64
+COPY --from=fsl-optimized /opt/medimproc/.venv ${HOME}/.venv
+COPY --from=fsl-optimized /opt/medimproc/synb0-disco ${HOME}/synb0-disco
+COPY --from=fsl-optimized /opt/medimproc/mrtrix3 ${HOME}/mrtrix3
+COPY --from=fsl-optimized /opt/medimproc/art ${HOME}/art
 
 # Post-installation setup (license, pipeline, permissions)
 COPY freesurfer_license.txt /tmp/freesurfer_license.txt

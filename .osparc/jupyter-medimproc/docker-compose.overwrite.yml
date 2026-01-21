@@ -1,6 +1,8 @@
 version: "3.7"
 services:
   jupyter-medimproc:
+    depends_on:
+      - common-base-image
     build:
       context: .
       dockerfile: services/jupyter/Dockerfile
