@@ -50,7 +50,6 @@ build-nc: ## Build without cache for specified VARIANT
 	@echo "Building $(IMAGE_NAME):$(VERSION) without cache"
 	docker build --no-cache \
 		-t $(IMAGE_NAME):$(VERSION) \
-		-t $(IMAGE_NAME):latest \
 		-f $(DOCKERFILE) \
 		.
 
@@ -105,13 +104,9 @@ push: # push to both remotes
 
 .PHONY: clean
 clean: ## Remove built images
-	docker rmi $(JUPYTER_IMAGE):$(VERSION) $(JUPYTER_IMAGE):latest || true
-	docker rmi $(RUNNER_IMAGE):$(VERSION) $(RUNNER_IMAGE):latest || true
-	docker rmi $(RUNNER_SLIM_IMAGE):$(VERSION) $(RUNNER_SLIM_IMAGE):latest || true
-
-.PHONY: prune
-prune: ## Prune docker system
-	docker system prune -f
+	docker rmi $(JUPYTER_IMAGE):$(VERSION) || true
+	docker rmi $(RUNNER_IMAGE):$(VERSION) || true
+	docker rmi $(RUNNER_SLIM_IMAGE):$(VERSION) || true
 
 # ============================================================================
 # Versioning

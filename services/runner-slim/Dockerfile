@@ -1,46 +1,17 @@
 # ============================================================================
-# Stage 1: Extract FreeSurfer from official image (Optimized Version)
+# Import all common builder stages from base Dockerfile
 # ============================================================================
-FROM freesurfer/freesurfer:6.0 as freesurfer-optimized
-RUN cd /opt/freesurfer && \
-    rm -rf subjects docs trctrain diffusion matlab && \
-    echo "FreeSurfer optimized"
-
-# ============================================================================
-# Stage 2: Shared MedImProc Base (Common to all variants)
-# This stage installs all neuroimaging software to /opt/medimproc
-# to enable layer sharing across jupyter, runner, and runner-slim variants
-# NOTE: This stage is identical to the one in runner/Dockerfile
-# Docker will reuse these layers when building multiple variants
-# ============================================================================
-FROM ubuntu:24.04 as medimproc-common-base
-LABEL maintainer="ordonez"
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Set installation paths to shared location (not user-specific)
-# OPTIMIZED=true will reduce FSL size by removing docs/standard data
-ENV INSTALL_DIR=/opt/medimproc \
-    VENV_DIR=/opt/medimproc/.venv \
-    OPTIMIZED=true
-
-# Install neuroimaging tools (MRtrix3, ART) and their dependencies
-COPY common/scripts/install_system_deps.sh /tmp/install_system_deps.sh
-COPY common/scripts/install_mrtrix3.sh /tmp/install_mrtrix3.sh
-COPY common/scripts/install_art.sh /tmp/install_art.sh
-RUN chmod +x /tmp/install_system_deps.sh /tmp/install_mrtrix3.sh /tmp/install_art.sh && \
-    /tmp/install_system_deps.sh && \
-    /tmp/install_mrtrix3.sh && \
-    /tmp/install_art.sh && \
-    rm /tmp/install_system_deps.sh /tmp/install_mrtrix3.sh /tmp/install_art.sh
-
-# Install FSL stack (largest layer ~5-6GB optimized - want to share this!)
-COPY common/scripts/install_fsl.sh /tmp/install_fsl.sh
-RUN chmod +x /tmp/install_fsl.sh && \
-    /tmp/install_fsl.sh && \
-    rm /tmp/install_fsl.sh
+ARG COMMON_BASE_IMAGE=common-base:latest
+FROM ${COMMON_BASE_IMAGE} AS freesurfer-optimized
+FROM ${COMMON_BASE_IMAGE} AS fsl-optimized
+FROM ${COMMON_BASE_IMAGE} AS ants-builder
+FROM ${COMMON_BASE_IMAGE} AS c3d-builder
+FROM ${COMMON_BASE_IMAGE} AS pytorch-builder
+FROM ${COMMON_BASE_IMAGE} AS synb0-disco-builder
+FROM ${COMMON_BASE_IMAGE} AS mrtrix-art-builder
 
 # ============================================================================
-# Stage 3: Runtime - Headless Runner MedImProc (Slim/Optimized Version)
+# Stage: Runtime - Headless Runner MedImProc (Slim/Optimized Version)
 # ============================================================================
 FROM ubuntu:24.04 as runtime
 LABEL maintainer="ordonez"
@@ -53,8 +24,14 @@ ENV SC_USER_ID=8004 \
 
 RUN useradd --uid ${SC_USER_ID} --shell /bin/bash --create-home --home ${HOME} ${SC_USER_NAME}
 
-# Copy all neuroimaging software from shared base
-COPY --from=medimproc-common-base /opt/medimproc ${HOME}/
+# Copy all neuroimaging components from builder stages (using optimized FSL)
+COPY --from=fsl-optimized /opt/medimproc/fsl ${HOME}/fsl
+COPY --from=ants-builder /opt/medimproc/ants-2.4.4 ${HOME}/ants-2.4.4
+COPY --from=c3d-builder /opt/medimproc/c3d-1.0.0-Linux-x86_64 ${HOME}/c3d-1.0.0-Linux-x86_64
+COPY --from=pytorch-builder /opt/medimproc/.venv ${HOME}/.venv
+COPY --from=synb0-disco-builder /opt/medimproc/synb0-disco ${HOME}/synb0-disco
+COPY --from=mrtrix-art-builder /opt/medimproc/mrtrix3 ${HOME}/mrtrix3
+COPY --from=mrtrix-art-builder /opt/medimproc/art ${HOME}/art
 # Copy optimized FreeSurfer from optimized stage
 COPY --from=freesurfer-optimized /opt/freesurfer ${HOME}/freesurfer
 

@@ -1,0 +1,148 @@
+# ============================================================================
+# Common Base Dockerfile for MedImProc Services
+# This file contains all shared builder stages used by:
+#   - services/jupyter/Dockerfile
+#   - services/runner/Dockerfile  
+#   - services/runner-slim/Dockerfile
+# ============================================================================
+
+# ============================================================================
+# Stage: FreeSurfer Base (Full Version)
+# ============================================================================
+FROM freesurfer/freesurfer:6.0 AS freesurfer-base
+
+# ============================================================================
+# Stage: FreeSurfer Optimized (Slim Version)
+# ============================================================================
+FROM freesurfer/freesurfer:6.0 AS freesurfer-optimized
+RUN cd /opt/freesurfer && \
+    rm -rf subjects docs trctrain diffusion matlab && \
+    echo "FreeSurfer optimized"
+
+# ============================================================================
+# Stage: System Base (Shared dependencies for all builder stages)
+# ============================================================================
+FROM ubuntu:24.04 AS system-base
+LABEL maintainer="ordonez"
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies needed by all components
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    unzip \
+    wget \
+    git \
+    python3 \
+    python3-pip \
+    python3-venv \
+    bc \
+    file \
+    bzip2 \
+    tar \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create python symlink for FSL installer
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# ============================================================================
+# Stage: FSL Builder (Full Version)
+# ============================================================================
+FROM system-base AS fsl-builder
+ENV INSTALL_DIR=/opt/medimproc
+
+# Install FSL (~8-10GB - largest component, build it separately for caching)
+ARG FSL_VERSION=6.0.7.0
+RUN mkdir -p /tmp/fsl_install && cd /tmp/fsl_install && \
+    wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py && \
+    echo "" | python fslinstaller.py --dest ${INSTALL_DIR}/fsl --fslversion ${FSL_VERSION} && \
+    . ${INSTALL_DIR}/fsl/etc/fslconf/fsl.sh && \
+    rm -rf /tmp/fsl_install
+
+# ============================================================================
+# Stage: FSL Builder (Optimized Version)
+# ============================================================================
+FROM system-base AS fsl-optimized
+ENV INSTALL_DIR=/opt/medimproc
+
+# Install FSL and remove unnecessary files for slim build (~5-6GB optimized)
+ARG FSL_VERSION=6.0.7.0
+RUN mkdir -p /tmp/fsl_install && cd /tmp/fsl_install && \
+    wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py && \
+    echo "" | python fslinstaller.py --dest ${INSTALL_DIR}/fsl --fslversion ${FSL_VERSION} && \
+    . ${INSTALL_DIR}/fsl/etc/fslconf/fsl.sh && \
+    rm -rf /tmp/fsl_install && \
+    cd ${INSTALL_DIR}/fsl && \
+    rm -rf data/standard doc extras/src src
+
+# ============================================================================
+# Stage: ANTs Builder
+# ============================================================================
+FROM system-base AS ants-builder
+ENV INSTALL_DIR=/opt/medimproc
+
+# Install ANTs 2.4.4 (pre-compiled binary, fast)
+ARG ANTS_VERSION=2.4.4
+RUN mkdir -p ${INSTALL_DIR} && \
+    cd ${INSTALL_DIR} && \
+    curl -SL https://github.com/ANTsX/ANTs/releases/download/v${ANTS_VERSION}/ants-${ANTS_VERSION}-ubuntu-20.04-X64-gcc.zip -o ants.zip && \
+    unzip ants.zip && \
+    rm ants.zip
+
+# ============================================================================
+# Stage: C3D Builder
+# ============================================================================
+FROM system-base AS c3d-builder
+ENV INSTALL_DIR=/opt/medimproc
+
+# Install C3D 1.0.0 (pre-compiled binary, very fast)
+ARG C3D_VERSION=1.0.0
+RUN mkdir -p ${INSTALL_DIR} && \
+    cd ${INSTALL_DIR} && \
+    curl -SL https://sourceforge.net/projects/c3d/files/c3d/${C3D_VERSION}/c3d-${C3D_VERSION}-Linux-x86_64.tar.gz/download -o c3d.tar.gz && \
+    tar -xzf c3d.tar.gz && \
+    rm c3d.tar.gz
+
+# ============================================================================
+# Stage: PyTorch Builder
+# ============================================================================
+FROM system-base AS pytorch-builder
+ENV INSTALL_DIR=/opt/medimproc \
+    VENV_DIR=/opt/medimproc/.venv
+
+# Create Python virtual environment and install PyTorch (CPU version)
+# Only install torch - torchvision and torchaudio not needed by Synb0-DISCO
+ARG PYTORCH_VERSION=2.2.0
+RUN mkdir -p ${INSTALL_DIR} && \
+    python3 -m venv ${VENV_DIR} && \
+    ${VENV_DIR}/bin/pip install --no-cache-dir torch==${PYTORCH_VERSION} --index-url https://download.pytorch.org/whl/cpu
+
+# ============================================================================
+# Stage: Synb0-DISCO Builder
+# ============================================================================
+FROM pytorch-builder AS synb0-disco-builder
+ENV INSTALL_DIR=/opt/medimproc
+
+# Clone Synb0-DISCO repository (pinned to v3.1 release for reproducibility)
+ARG SYNB0_VERSION=v3.1
+RUN cd ${INSTALL_DIR} && \
+    git clone --branch ${SYNB0_VERSION} --depth 1 https://github.com/MASILab/Synb0-DISCO synb0-disco && \
+    rm -rf ${INSTALL_DIR}/synb0-disco/v1_0 && \
+    mkdir -p ${INSTALL_DIR}/synb0-disco/INPUTS ${INSTALL_DIR}/synb0-disco/OUTPUTS && \
+    chmod -R 777 ${INSTALL_DIR}/synb0-disco/INPUTS ${INSTALL_DIR}/synb0-disco/OUTPUTS
+
+# ============================================================================
+# Stage: MRtrix3 and ART Builder
+# ============================================================================
+FROM system-base AS mrtrix-art-builder
+ENV INSTALL_DIR=/opt/medimproc
+
+# Install neuroimaging tools (MRtrix3, ART) and their dependencies
+COPY common/scripts/install_system_deps.sh /tmp/install_system_deps.sh
+COPY common/scripts/install_mrtrix3.sh /tmp/install_mrtrix3.sh
+COPY common/scripts/install_art.sh /tmp/install_art.sh
+RUN chmod +x /tmp/install_system_deps.sh /tmp/install_mrtrix3.sh /tmp/install_art.sh && \
+    /tmp/install_system_deps.sh && \
+    /tmp/install_mrtrix3.sh && \
+    /tmp/install_art.sh && \
+    rm /tmp/install_system_deps.sh /tmp/install_mrtrix3.sh /tmp/install_art.sh
