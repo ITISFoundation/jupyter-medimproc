@@ -56,5 +56,8 @@ ENV FSLDIR=${HOME}/fsl \
     LD_LIBRARY_PATH="${HOME}/fsl/fslpython/envs/fslpython/lib/:${HOME}/fsl/lib:${LD_LIBRARY_PATH}" \
     PATH="${HOME}/fsl/share/fsl/bin:${HOME}/.venv/bin:${HOME}/ants-2.4.4/bin:${PATH}"
 
+# install runtime dependencies for neuroimaging tools (tcsh for FreeSurfer, etc.)
+RUN apt-get update && apt-get install -y adduser tcsh bc libgomp1 perl-modules dc && rm -rf /var/lib/apt/lists/*
+
 USER jovyan
 WORKDIR ${HOME}

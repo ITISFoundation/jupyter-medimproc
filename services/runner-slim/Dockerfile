@@ -88,6 +88,10 @@ ENV SC_BUILD_TARGET="runtime" \
 COPY common/entrypoint.sh /docker/entrypoint.sh
 RUN chmod +x /docker/entrypoint.sh
 
+# Install adduser for entrypoint script and remove default ubuntu user (avoids UID 1000 conflict)
+# Also install runtime dependencies for neuroimaging tools (tcsh for FreeSurfer, etc.)
+RUN apt-get update && apt-get install -y adduser tcsh bc libgomp1 perl-modules dc && userdel ubuntu && rm -rf /var/lib/apt/lists/*
+
 WORKDIR ${HOME}
 ENTRYPOINT [ "/docker/entrypoint.sh" ]
 CMD [ "/bin/bash" ]
