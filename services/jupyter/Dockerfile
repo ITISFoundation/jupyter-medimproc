@@ -56,8 +56,16 @@ ENV FSLDIR=${HOME}/fsl \
     LD_LIBRARY_PATH="${HOME}/fsl/fslpython/envs/fslpython/lib/:${HOME}/fsl/lib:${LD_LIBRARY_PATH}" \
     PATH="${HOME}/fsl/share/fsl/bin:${HOME}/.venv/bin:${HOME}/ants-2.4.4/bin:${PATH}"
 
-# install runtime dependencies for neuroimaging tools (tcsh for FreeSurfer, etc.)
-RUN apt-get update && apt-get install -y adduser tcsh bc libgomp1 perl-modules dc && rm -rf /var/lib/apt/lists/*
+    
+# Set environment for MNI tools from FreeSurfer
+ENV PATH="/home/jovyan/freesurfer/mni/bin:${PATH}"
+
+# Install adduser for entrypoint script and remove default ubuntu user (avoids UID 1000 conflict)
+# Also install runtime dependencies for neuroimaging tools
+# - tcsh: required by FreeSurfer
+# - perl: required by nu_correct with full core modules
+# - bc, dc, libgomp1: required by various neuroimaging tools
+RUN apt-get update && apt-get install -y --no-install-recommends adduser tcsh bc libgomp1 perl dc && rm -rf /var/lib/apt/lists/*
 
 USER jovyan
 WORKDIR ${HOME}

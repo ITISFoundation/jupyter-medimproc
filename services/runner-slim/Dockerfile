@@ -88,9 +88,15 @@ ENV SC_BUILD_TARGET="runtime" \
 COPY common/entrypoint.sh /docker/entrypoint.sh
 RUN chmod +x /docker/entrypoint.sh
 
+# Set environment for MNI tools from FreeSurfer
+ENV PATH="/home/jovyan/freesurfer/mni/bin:${PATH}"
+
 # Install adduser for entrypoint script and remove default ubuntu user (avoids UID 1000 conflict)
-# Also install runtime dependencies for neuroimaging tools (tcsh for FreeSurfer, etc.)
-RUN apt-get update && apt-get install -y adduser tcsh bc libgomp1 perl-modules dc && userdel ubuntu && rm -rf /var/lib/apt/lists/*
+# Also install runtime dependencies for neuroimaging tools
+# - tcsh: required by FreeSurfer
+# - perl: required by nu_correct with full core modules
+# - bc, dc, libgomp1: required by various neuroimaging tools
+RUN apt-get update && apt-get install -y --no-install-recommends adduser tcsh bc libgomp1 perl dc && userdel ubuntu && rm -rf /var/lib/apt/lists/*
 
 WORKDIR ${HOME}
 ENTRYPOINT [ "/docker/entrypoint.sh" ]
