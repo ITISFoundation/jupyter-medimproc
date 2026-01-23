@@ -27,8 +27,8 @@ COPY common/scripts/setup_freesurfer_license.sh /tmp/setup_freesurfer_license.sh
 COPY common/scripts/setup_synb0_pipeline.sh /tmp/setup_synb0_pipeline.sh
 COPY common/scripts/fix_permissions.sh /tmp/fix_permissions.sh
 RUN chmod +x /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh && \
-    TARGET_USER=1000 TARGET_GROUP=100 TARGET_DIR=${HOME} /tmp/fix_permissions.sh && \
-    /tmp/setup_freesurfer_license.sh && \
+    # TARGET_USER=1000 TARGET_GROUP=100 TARGET_DIR=${HOME} /tmp/fix_permissions.sh && \
+    INSTALL_DIR=${HOME} /tmp/setup_freesurfer_license.sh && \
     /tmp/setup_synb0_pipeline.sh && \
     rm /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh /tmp/freesurfer_license.txt /tmp/pipeline_synb0_disco.sh
 
