@@ -19,8 +19,9 @@ mkdir -p "${INSTALL_DIR}/synb0-disco/src"
 cp /tmp/pipeline_synb0_disco.sh "${INSTALL_DIR}/synb0-disco/src/pipeline_no_docker.sh"
 chmod +x "${INSTALL_DIR}/synb0-disco/src/pipeline_no_docker.sh"
 
-# Create symlink for easy access
+# Create symlinks for easy access (both names for compatibility)
 ln -sf "${INSTALL_DIR}/synb0-disco/src/pipeline_no_docker.sh" /usr/local/bin/pipeline_no_docker.sh
+ln -sf "${INSTALL_DIR}/synb0-disco/src/pipeline_no_docker.sh" /usr/local/bin/synb0-disco
 
 echo "Synb0-DISCO pipeline installed at ${INSTALL_DIR}/synb0-disco/src/pipeline_no_docker.sh"
-echo "Symlink created at /usr/local/bin/pipeline_no_docker.sh"
+echo "Symlinks created at /usr/local/bin/pipeline_no_docker.sh and /usr/local/bin/synb0-disco"

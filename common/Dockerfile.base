@@ -64,8 +64,6 @@ RUN rm -rf /tmp/fsl_install
 # ============================================================================
 # Stage: ANTs Builder
 # ============================================================================
-# Stage: ANTs Builder
-# ============================================================================
 FROM system-base AS ants-builder
 ENV INSTALL_DIR=/opt/medimproc
 
@@ -128,15 +126,44 @@ ENV INSTALL_DIR=/opt/medimproc
 # Create installation directory first
 RUN mkdir -p ${INSTALL_DIR}
 
-# Install neuroimaging tools (MRtrix3, ART) and their dependencies
-COPY common/scripts/install_system_deps.sh /tmp/install_system_deps.sh
-COPY common/scripts/install_mrtrix3.sh /tmp/install_mrtrix3.sh
-COPY common/scripts/install_art.sh /tmp/install_art.sh
-RUN chmod +x /tmp/install_system_deps.sh /tmp/install_mrtrix3.sh /tmp/install_art.sh && \
-    /tmp/install_system_deps.sh && \
-    /tmp/install_mrtrix3.sh && \
-    /tmp/install_art.sh && \
-    rm /tmp/install_system_deps.sh /tmp/install_mrtrix3.sh /tmp/install_art.sh
+# Install system dependencies for MRtrix3, ART, and other tools
+RUN apt-get -qq update && apt-get install -yq --no-install-recommends \
+    ca-certificates \
+    curl \
+    dc \
+    git \
+    wget \
+    python3 \
+    build-essential \
+    g++ \
+    libeigen3-dev \
+    libfftw3-dev \
+    libgl1-mesa-dev \
+    libpng-dev \
+    libqt5opengl5-dev \
+    libqt5svg5-dev \
+    libtiff5-dev \
+    qtbase5-dev \
+    zlib1g-dev \
+    tcsh \
+    bc \
+    libgomp1 \
+    perl-modules \
+    && rm -rf /var/lib/apt/lists/*
+
+# Build MRtrix3
+RUN cd ${INSTALL_DIR} && \
+    git clone https://github.com/MRtrix3/mrtrix3.git && \
+    cd mrtrix3 && \
+    git checkout 3.0.4 && \
+    ./configure && \
+    ./build -persistent -nopaginate && \
+    rm -rf tmp
+
+# Install ART (Automatic Registration Toolbox)
+RUN mkdir -p ${INSTALL_DIR}/art && \
+    cd ${INSTALL_DIR}/art && \
+    curl -fsSL https://osf.io/73h5s/download | tar xz --strip-components 1
 
 # ============================================================================
 # Final Assembly Stage - Contains all components in /opt/medimproc

@@ -9,6 +9,12 @@ FROM itisfoundation/jupyter-math:2.0.9 AS runtime
 LABEL maintainer="ordonez"
 USER root
 
+# Install runtime dependencies
+COPY common/scripts/install_runtime_deps.sh /tmp/install_runtime_deps.sh
+RUN chmod +x /tmp/install_runtime_deps.sh && \
+    /tmp/install_runtime_deps.sh && \
+    rm /tmp/install_runtime_deps.sh
+
 # Copy all neuroimaging components from common-base builder stages
 COPY --from=common /opt/medimproc/fsl ${HOME}/fsl
 COPY --from=common /opt/medimproc/ants-2.4.4 ${HOME}/ants-2.4.4
@@ -20,17 +26,15 @@ COPY --from=common /opt/medimproc/art ${HOME}/art
 # Copy FreeSurfer from official image (much faster than FTP download)
 COPY --from=common /opt/freesurfer ${HOME}/freesurfer
 
-# Post-installation setup (license, pipeline, permissions)
+# Post-installation setup (license, pipeline)
 COPY freesurfer_license.txt /tmp/freesurfer_license.txt
 COPY pipeline_synb0_disco.sh /tmp/pipeline_synb0_disco.sh
 COPY common/scripts/setup_freesurfer_license.sh /tmp/setup_freesurfer_license.sh
 COPY common/scripts/setup_synb0_pipeline.sh /tmp/setup_synb0_pipeline.sh
-COPY common/scripts/fix_permissions.sh /tmp/fix_permissions.sh
-RUN chmod +x /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh && \
-    # TARGET_USER=1000 TARGET_GROUP=100 TARGET_DIR=${HOME} /tmp/fix_permissions.sh && \
+RUN chmod +x /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh && \
     INSTALL_DIR=${HOME} /tmp/setup_freesurfer_license.sh && \
-    /tmp/setup_synb0_pipeline.sh && \
-    rm /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh /tmp/freesurfer_license.txt /tmp/pipeline_synb0_disco.sh
+    INSTALL_DIR=${HOME} /tmp/setup_synb0_pipeline.sh && \
+    rm /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/freesurfer_license.txt /tmp/pipeline_synb0_disco.sh
 
 # ============================================================================
 # ENVIRONMENT VARIABLES - FreeSurfer

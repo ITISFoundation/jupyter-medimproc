@@ -5,7 +5,3 @@ services:
       context: .
       dockerfile: common/Dockerfile.base
       network: host
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
-      - 1.1.1.1
