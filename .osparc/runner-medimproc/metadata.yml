@@ -12,7 +12,7 @@ description:
   This is a computational service designed to run scripts and pipelines in batch mode.
   "
 key: simcore/services/comp/runner-medimproc
-version: 1.3.2
+version: 1.3.3
 integration-version: 2.0.0
 type: computational
 authors:
