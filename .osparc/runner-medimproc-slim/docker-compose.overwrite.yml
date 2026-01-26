@@ -2,7 +2,7 @@ version: "3.7"
 services:
   runner-medimproc-slim:
     depends_on:
-      - common-base-image
+      - medimproc-common
     build:
       context: .
       dockerfile: services/runner-slim/Dockerfile

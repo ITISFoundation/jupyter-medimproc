@@ -1,0 +1,14 @@
+name: "Base medimproc image"
+thumbnail:
+description: "common steps between different Medical Image Processing (MedImProc) flavours - avoids repetition"
+key: simcore/services/dynamic/medimproc-common
+version: 1.3.2
+integration-version: 2.0.0
+type: dynamic
+authors:
+  - name: Javier Garcia Ordonez
+    email: ordonez@zmt.swiss
+    affiliation: ZMT Zurich MedTech AG
+contact: ordonez@zmt.swiss
+inputs: {}
+outputs: {}

@@ -1,9 +1,9 @@
 # ============================================================================
 # Runtime - Interactive Jupyter MedImProc (Full Version)
-# Copies all neuroimaging components from common-base-image builder stages
+# Copies all neuroimaging components from medimproc-common builder stages
 # ============================================================================
-ARG VERSION=1.3.1
-FROM common-base-image:${VERSION} AS common
+ARG VERSION=1.3.2
+FROM simcore/services/dynamic/medimproc-common:${VERSION} AS common
 
 FROM itisfoundation/jupyter-math:2.0.9 AS runtime
 LABEL maintainer="ordonez"
@@ -27,8 +27,8 @@ COPY common/scripts/setup_freesurfer_license.sh /tmp/setup_freesurfer_license.sh
 COPY common/scripts/setup_synb0_pipeline.sh /tmp/setup_synb0_pipeline.sh
 COPY common/scripts/fix_permissions.sh /tmp/fix_permissions.sh
 RUN chmod +x /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh && \
-    TARGET_USER=1000 TARGET_GROUP=100 TARGET_DIR=${HOME} /tmp/fix_permissions.sh && \
-    /tmp/setup_freesurfer_license.sh && \
+    # TARGET_USER=1000 TARGET_GROUP=100 TARGET_DIR=${HOME} /tmp/fix_permissions.sh && \
+    INSTALL_DIR=${HOME} /tmp/setup_freesurfer_license.sh && \
     /tmp/setup_synb0_pipeline.sh && \
     rm /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh /tmp/freesurfer_license.txt /tmp/pipeline_synb0_disco.sh
 
@@ -55,6 +55,10 @@ ENV FSLDIR=${HOME}/fsl \
     FSLWISH="${HOME}/fsl/bin/fslwish" \
     LD_LIBRARY_PATH="${HOME}/fsl/fslpython/envs/fslpython/lib/:${HOME}/fsl/lib:${LD_LIBRARY_PATH}" \
     PATH="${HOME}/fsl/share/fsl/bin:${HOME}/.venv/bin:${HOME}/ants-2.4.4/bin:${PATH}"
+
+    
+# Set environment for MNI tools from FreeSurfer
+ENV PATH="/home/jovyan/freesurfer/mni/bin:${PATH}"
 
 USER jovyan
 WORKDIR ${HOME}
