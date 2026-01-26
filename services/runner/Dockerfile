@@ -1,9 +1,9 @@
 # ============================================================================
 # Runtime - Headless Runner MedImProc (Full Version)
-# Copies all neuroimaging components from common-base-image builder stages
+# Copies all neuroimaging components from medimproc-common builder stages
 # ============================================================================
-ARG VERSION=1.3.1
-FROM common-base-image:${VERSION} AS common
+ARG VERSION=1.3.2
+FROM simcore/services/dynamic/medimproc-common:${VERSION} AS common
 
 FROM ubuntu:24.04 AS runtime
 LABEL maintainer="ordonez"
@@ -33,8 +33,8 @@ COPY common/scripts/setup_freesurfer_license.sh /tmp/setup_freesurfer_license.sh
 COPY common/scripts/setup_synb0_pipeline.sh /tmp/setup_synb0_pipeline.sh
 COPY common/scripts/fix_permissions.sh /tmp/fix_permissions.sh
 RUN chmod +x /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh && \
-    TARGET_USER=${SC_USER_NAME} TARGET_GROUP=${SC_USER_ID} TARGET_DIR=${HOME} /tmp/fix_permissions.sh && \
-    /tmp/setup_freesurfer_license.sh && \
+    # TARGET_USER=${SC_USER_NAME} TARGET_GROUP=${SC_USER_ID} TARGET_DIR=${HOME} /tmp/fix_permissions.sh && \
+    INSTALL_DIR=${HOME} /tmp/setup_freesurfer_license.sh && \
     /tmp/setup_synb0_pipeline.sh && \
     rm /tmp/setup_freesurfer_license.sh /tmp/setup_synb0_pipeline.sh /tmp/fix_permissions.sh /tmp/freesurfer_license.txt /tmp/pipeline_synb0_disco.sh
 
@@ -72,6 +72,16 @@ ENV SC_BUILD_TARGET="runtime" \
 # Entrypoint
 COPY common/entrypoint.sh /docker/entrypoint.sh
 RUN chmod +x /docker/entrypoint.sh
+
+# Set environment for MNI tools from FreeSurfer
+ENV PATH="/home/jovyan/freesurfer/mni/bin:${PATH}"
+
+# Install adduser for entrypoint script and remove default ubuntu user (avoids UID 1000 conflict)
+# Also install runtime dependencies for neuroimaging tools
+# - tcsh: required by FreeSurfer
+# - perl: required by nu_correct with full core modules
+# - bc, dc, libgomp1: required by various neuroimaging tools
+RUN apt-get update && apt-get install -y --no-install-recommends adduser tcsh bc libgomp1 perl dc && userdel ubuntu && rm -rf /var/lib/apt/lists/*
 
 WORKDIR ${HOME}
 ENTRYPOINT [ "/docker/entrypoint.sh" ]
