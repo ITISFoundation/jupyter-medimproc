@@ -1,20 +1,39 @@
 # ============================================================================
 # Runtime - Headless Runner MedImProc (Slim/Optimized Version)
-# Copies all neuroimaging components from common-base-image builder stages
+# Copies all neuroimaging components from medimproc-common builder stages
 # Creates optimized FSL and FreeSurfer in this layer for reduced image size
 # ============================================================================
-ARG VERSION=1.3.1
+ARG VERSION=1.3.2
 
 # Stage: Optimize FreeSurfer for slim build
-FROM common-base-image:${VERSION} AS freesurfer-optimized
+FROM simcore/services/dynamic/medimproc-common:${VERSION} AS freesurfer-optimized
 RUN cd /opt/freesurfer && \
-    rm -rf subjects docs trctrain diffusion matlab && \
+    # Remove example subjects and data (already done but keep for clarity)
+    rm -rf subjects docs && \
+    # Remove toolkits not needed for headless structural recon
+    rm -rf fsfast trctrain diffusion matlab tktools && \
+    # Remove GUI tools (freeview, etc.) - not needed for headless runner
+    rm -rf python/packages python/scripts/freeview* python/scripts/tkmedit* && \
+    # Remove alternative models/atlases not used in default recon-all
+    rm -rf models/DKTatlas* models/ExVivo* && \
+    # Clean up docs and license files (keep main license.txt)
+    find . -type f -name "README*" -delete 2>/dev/null || true && \
+    find . -type f -name "*.pdf" -delete 2>/dev/null || true && \
     echo "FreeSurfer optimized"
 
 # Stage: Optimize FSL for slim build
-FROM common-base-image:${VERSION} AS fsl-optimized
+FROM simcore/services/dynamic/medimproc-common:${VERSION} AS fsl-optimized
 RUN cd /opt/medimproc/fsl && \
-    rm -rf data/standard doc extras/src src && \
+    # Remove unused data directories (~2.4GB)
+    rm -rf data/first data/omm data/xtract_data data/possum data/feat5 doc extras/src src && \
+    # Remove FSL Python packages (pipeline uses separate .venv) (~1.5GB)
+    rm -rf lib/python3.12/site-packages/scipy lib/python3.12/site-packages/pandas \
+           lib/python3.12/site-packages/matplotlib lib/python3.12/site-packages/numpy && \
+    # Remove compiler/build tools not needed at runtime (~1GB)
+    rm -rf lib/gcc lib/libLLVM* lib/libclang* lib/openvino-* && \
+    # Clean Python cache files
+    find lib/python3.12 -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true && \
+    find lib/python3.12 -type d -name "tests" -exec rm -rf {} + 2>/dev/null || true && \
     echo "FSL optimized"
 
 # Stage: Final runtime
@@ -33,7 +52,7 @@ RUN useradd --uid ${SC_USER_ID} --shell /bin/bash --create-home --home ${HOME} $
 COPY --from=fsl-optimized /opt/medimproc/fsl ${HOME}/fsl
 COPY --from=freesurfer-optimized /opt/freesurfer ${HOME}/freesurfer
 
-# Copy remaining components from fsl-optimized stage (which has all from common-base-image)
+# Copy remaining components from fsl-optimized stage (which has all from medimproc-common)
 COPY --from=fsl-optimized /opt/medimproc/ants-2.4.4 ${HOME}/ants-2.4.4
 COPY --from=fsl-optimized /opt/medimproc/c3d-1.0.0-Linux-x86_64 ${HOME}/c3d-1.0.0-Linux-x86_64
 COPY --from=fsl-optimized /opt/medimproc/.venv ${HOME}/.venv

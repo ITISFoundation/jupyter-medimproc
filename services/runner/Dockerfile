@@ -1,9 +1,9 @@
 # ============================================================================
 # Runtime - Headless Runner MedImProc (Full Version)
-# Copies all neuroimaging components from common-base-image builder stages
+# Copies all neuroimaging components from medimproc-common builder stages
 # ============================================================================
-ARG VERSION=1.3.1
-FROM common-base-image:${VERSION} AS common
+ARG VERSION=1.3.2
+FROM simcore/services/dynamic/medimproc-common:${VERSION} AS common
 
 FROM ubuntu:24.04 AS runtime
 LABEL maintainer="ordonez"

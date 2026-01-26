@@ -1,9 +1,9 @@
 # ============================================================================
 # Runtime - Interactive Jupyter MedImProc (Full Version)
-# Copies all neuroimaging components from common-base-image builder stages
+# Copies all neuroimaging components from medimproc-common builder stages
 # ============================================================================
-ARG VERSION=1.3.1
-FROM common-base-image:${VERSION} AS common
+ARG VERSION=1.3.2
+FROM simcore/services/dynamic/medimproc-common:${VERSION} AS common
 
 FROM itisfoundation/jupyter-math:2.0.9 AS runtime
 LABEL maintainer="ordonez"
@@ -55,17 +55,6 @@ ENV FSLDIR=${HOME}/fsl \
     FSLWISH="${HOME}/fsl/bin/fslwish" \
     LD_LIBRARY_PATH="${HOME}/fsl/fslpython/envs/fslpython/lib/:${HOME}/fsl/lib:${LD_LIBRARY_PATH}" \
     PATH="${HOME}/fsl/share/fsl/bin:${HOME}/.venv/bin:${HOME}/ants-2.4.4/bin:${PATH}"
-
-    
-# Set environment for MNI tools from FreeSurfer
-ENV PATH="/home/jovyan/freesurfer/mni/bin:${PATH}"
-
-# Install adduser for entrypoint script and remove default ubuntu user (avoids UID 1000 conflict)
-# Also install runtime dependencies for neuroimaging tools
-# - tcsh: required by FreeSurfer
-# - perl: required by nu_correct with full core modules
-# - bc, dc, libgomp1: required by various neuroimaging tools
-RUN apt-get update && apt-get install -y --no-install-recommends adduser tcsh bc libgomp1 perl dc && rm -rf /var/lib/apt/lists/*
 
 USER jovyan
 WORKDIR ${HOME}

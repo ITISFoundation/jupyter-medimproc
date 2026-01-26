@@ -3,7 +3,7 @@ SHELL = /bin/sh
 
 # Project Configuration
 PROJECT_NAME := jupyter-medimproc
-VERSION := 1.3.1
+VERSION := 1.3.2
 
 # Variant can be: jupyter, runner, or runner-slim
 VARIANT ?= jupyter
@@ -31,27 +31,15 @@ endif
 # Build Targets
 # ============================================================================
 
-.PHONY: build
-build: ## Build docker image for specified VARIANT (default: jupyter)
-	@echo "Building $(IMAGE_NAME):$(VERSION) from $(DOCKERFILE)"
-	docker build \
-		-t $(IMAGE_NAME):$(VERSION) \
-		-f $(DOCKERFILE) \
-		.
+.PHONY: compose-spec
+compose-spec: ## runs ooil to assemble the docker-compose.yml file
+	@docker run -it --rm -v $(PWD):/medimproc \
+		-u $(shell id -u):$(shell id -g) \
+		itisfoundation/ci-service-integration-library:v2.2.1 \
+		sh -c "cd /medimproc && ooil compose"
 
-.PHONY: build-all
-build-all: ## Build all three variants
-	$(MAKE) build VARIANT=jupyter
-	$(MAKE) build VARIANT=runner
-	$(MAKE) build VARIANT=runner-slim
-
-.PHONY: build-nc
-build-nc: ## Build without cache for specified VARIANT
-	@echo "Building $(IMAGE_NAME):$(VERSION) without cache"
-	docker build --no-cache \
-		-t $(IMAGE_NAME):$(VERSION) \
-		-f $(DOCKERFILE) \
-		.
+build: | compose-spec	## build docker image
+	docker compose build
 
 # ============================================================================
 # Testing

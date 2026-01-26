@@ -1,6 +1,6 @@
 services:
-  common-base-image:
-    image: common-base-image:${VERSION}
+  medimproc-common:
+    image: medimproc-common:${VERSION}
     build:
       context: .
       dockerfile: common/Dockerfile.base
