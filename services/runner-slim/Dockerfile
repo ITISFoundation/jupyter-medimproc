@@ -3,7 +3,7 @@
 # Copies all neuroimaging components from medimproc-common builder stages
 # Creates optimized FSL and FreeSurfer in this layer for reduced image size
 # ============================================================================
-ARG VERSION=1.3.2
+ARG VERSION
 
 # Stage: Optimize FreeSurfer for slim build
 FROM simcore/services/dynamic/medimproc-common:${VERSION} AS freesurfer-optimized

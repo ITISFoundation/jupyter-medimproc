@@ -4,5 +4,7 @@ services:
     depends_on:
       - medimproc-common
     build:
-      context: ./services/jupyter
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: services/jupyter/Dockerfile
+      args:
+        VERSION: "1.3.3"

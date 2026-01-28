@@ -4,5 +4,7 @@ services:
     depends_on:
       - medimproc-common
     build:
-      context: ./services/runner-slim
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: services/runner-slim/Dockerfile
+      args:
+        VERSION: "1.3.3"

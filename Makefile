@@ -35,6 +35,7 @@ endif
 compose-spec: ## runs ooil to assemble the docker-compose.yml file
 	@docker run -it --rm -v $(PWD):/medimproc \
 		-u $(shell id -u):$(shell id -g) \
+		-e VERSION=$(VERSION) \
 		itisfoundation/ci-service-integration-library:v2.2.1 \
 		sh -c "cd /medimproc && ooil compose"
 
