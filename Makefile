@@ -3,7 +3,7 @@ SHELL = /bin/sh
 
 # Project Configuration
 PROJECT_NAME := jupyter-medimproc
-VERSION := 1.3.3
+VERSION := 1.4.0
 
 # Variant can be: jupyter, runner, or runner-slim
 VARIANT ?= jupyter
@@ -106,7 +106,8 @@ define _bumpversion
 	@docker run -it --rm -v $(PWD):/build \
 		-u $(shell id -u):$(shell id -g) \
 		itisfoundation/ci-service-integration-library:v2.2.1 \
-		sh -c "cd /build && bump2version --verbose --list --config-file $(1) $(subst $(2),,$@)"
+		sh -c "cd /build && bump2version --verbose --list --config-file $(1) $(subst $(2),,$@) --allow-dirty"
+	## --allow-dirty bcs the presence of a submodule seems to make it always "dirty"
 endef
 
 .PHONY: version-patch version-minor version-major

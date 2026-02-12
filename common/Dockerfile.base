@@ -166,6 +166,27 @@ RUN mkdir -p ${INSTALL_DIR}/art && \
     curl -fsSL https://osf.io/73h5s/download | tar xz --strip-components 1
 
 # ============================================================================
+# Stage: Spinal Cord Toolbox Builder
+# ============================================================================
+FROM system-base AS sct-builder
+ENV INSTALL_DIR=/opt/medimproc
+
+# Install dependencies required by SCT installer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Clone SCT and install
+ARG SCT_VERSION=7.2
+RUN mkdir -p ${INSTALL_DIR} && \
+    cd ${INSTALL_DIR} && \
+    git clone --branch ${SCT_VERSION} --depth 1 https://github.com/spinalcordtoolbox/spinalcordtoolbox sct && \
+    cd sct && \
+    ./install_sct -i -y
+
+# ============================================================================
 # Final Assembly Stage - Contains all components in /opt/medimproc
 # ============================================================================
 FROM system-base AS final
@@ -179,6 +200,6 @@ COPY --from=pytorch-builder /opt/medimproc/.venv /opt/medimproc/.venv
 COPY --from=synb0-disco-builder /opt/medimproc/synb0-disco /opt/medimproc/synb0-disco
 COPY --from=mrtrix-art-builder /opt/medimproc/mrtrix3 /opt/medimproc/mrtrix3
 COPY --from=mrtrix-art-builder /opt/medimproc/art /opt/medimproc/art
+COPY --from=sct-builder /opt/medimproc/sct /opt/medimproc/sct
 # Copy FreeSurfer from official image
 COPY --from=freesurfer-base /opt/freesurfer /opt/freesurfer
-
