@@ -1,24 +1,19 @@
-image:
-  name: itisfoundation/ci-service-integration-library:v1.0.1-dev-40
-  entrypoint: ["/bin/sh", "-c"]
+variables:  
+  CI_SERVICE_INTEGRATION_LIBRARY: itisfoundation/ci-service-integration-library:v2.2.1  
 
-stages:
-  - build
+stages:  
+  - build  
 
-verify-image-build:
-  image: itisfoundation/ci-service-integration-library:v1.0.1-dev-40
-  tags:
-    - DOCKER
-    - LINUX
-
-  stage: build
-  script:
-    - ooil --version
-    - ooil compose
-    - service docker start
-    - docker info | grep "Docker Root"
-    - df -h
-    # - docker-compose build --quiet
-    - make build
-    - docker images
-    - echo "DONE"
+build-images:  
+  stage: build  
+  image: $CI_SERVICE_INTEGRATION_LIBRARY  
+  tags:  
+    - DOCKER  
+    - XSERVER  
+    - GPU  
+    - LINUX  
+  script:  
+    # CI just checks if build works  
+    - ooil --version  
+    - ooil compose  
+    - docker compose build 
