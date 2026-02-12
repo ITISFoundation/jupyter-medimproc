@@ -1,0 +1,6 @@
+services:
+  medimproc-common:
+    build:
+      context: .
+      dockerfile: common/Dockerfile.base
+      network: host

@@ -1,0 +1,19 @@
+variables:  
+  CI_SERVICE_INTEGRATION_LIBRARY: itisfoundation/ci-service-integration-library:v2.2.1  
+
+stages:  
+  - build  
+
+build-images:  
+  stage: build  
+  image: $CI_SERVICE_INTEGRATION_LIBRARY  
+  tags:  
+    - DOCKER  
+    - XSERVER  
+    - GPU  
+    - LINUX  
+  script:  
+    # CI just checks if build works  
+    - ooil --version  
+    - ooil compose  
+    - docker compose build 

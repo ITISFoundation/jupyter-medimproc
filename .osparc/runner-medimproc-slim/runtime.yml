@@ -1,0 +1,12 @@
+restart-policy: no-restart
+settings:
+  - name: constraints
+    type: string
+    value:
+      - node.platform.os == linux
+  - name: Resources
+    type: Resources
+    value:
+      Limits:
+        NanoCPUs: 4000000000
+        MemoryBytes: 17179869184

@@ -1,8 +1,9 @@
 version: "3.7"
 services:
-  jupyter-medimproc:
+  runner-medimproc:
     depends_on:
       - medimproc-common
     build:
       context: .
-      dockerfile: services/jupyter/Dockerfile
+      dockerfile: services/runner/Dockerfile
+      
