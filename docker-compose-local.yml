@@ -1,16 +1,24 @@
-version: '3.7'
 services:
   jupyter-medimproc:
-    image: simcore/services/dynamic/jupyter-medimproc:1.0.1
+    ## Locally-built image (use MEDIMPROC_IMAGE env var to specify variant)
+    # Default to jupyter variant if not specified
+    image: ${MEDIMPROC_IMAGE:-simcore/services/dynamic/jupyter-medimproc:1.3.4}
+    ## To test different variants, set MEDIMPROC_IMAGE:
+    ## - simcore/services/dynamic/jupyter-medimproc:1.3.4 (default, interactive Jupyter)
+    ## - simcore/services/comp/runner-medimproc:1.3.4 (headless runner)
+    ## - simcore/services/comp/runner-medimproc-slim:1.3.4 (optimized headless runner)
     ports:
       - "8888:8888"
     environment:
       - DY_SIDECAR_PATH_INPUTS=/tmp/inputs
       - DY_SIDECAR_PATH_OUTPUTS=/tmp/outputs
+      - DY_SIDECAR_PATH_WORKSPACE=/home/jovyan/work/workspace
       - DY_BOOT_OPTION_BOOT_MODE=0
-      - DY_SIDECAR_PATH/home/jovyan/work/workspace
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${PWD}/validation/workspace:/home/jovyan/work/workspace
+      - ${PWD}/tests:/home/jovyan/work/workspace
       - ${PWD}/validation/inputs:/tmp/inputs
       - ${PWD}/validation/outputs:/tmp/outputs
+      - ${PWD}/validation/inputs:/input  # For runner variants
+      - ${PWD}/validation/outputs:/output  # For runner variants
+      - ${PWD}/validation/workspace/README.ipynb:/home/jovyan/work/workspace/README.ipynb:ro

@@ -50,11 +50,13 @@ tmp/
 # not interested in storing this file
 docker-compose.yml
 
-# ignore all files in validation
-validation/
-
 *.ignore.*
 
 ## Test folder, only for local testing
 Fariba_FSL_codes
 Fariba_full_pipeline
+Fariba_full_pipeline_rightbeforesynb0disco
+Fariba_full_pipeline.zip
+*.zip
+Matthew_pipeline/*
+validation/workspace/README.ipynb
