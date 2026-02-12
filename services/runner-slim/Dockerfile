@@ -3,10 +3,8 @@
 # Copies all neuroimaging components from medimproc-common builder stages
 # Creates optimized FSL and FreeSurfer in this layer for reduced image size
 # ============================================================================
-ARG VERSION
-
 # Stage: Optimize FreeSurfer for slim build
-FROM simcore/services/dynamic/medimproc-common:${VERSION} AS freesurfer-optimized
+FROM simcore/services/dynamic/medimproc-common:0.0.0 AS freesurfer-optimized
 RUN cd /opt/freesurfer && \
     # Remove example subjects and data (already done but keep for clarity)
     rm -rf subjects docs && \
@@ -43,7 +41,7 @@ RUN cd /opt/freesurfer && \
     echo "FreeSurfer optimized"
 
 # Stage: Optimize FSL for slim build
-FROM simcore/services/dynamic/medimproc-common:${VERSION} AS fsl-optimized
+FROM simcore/services/dynamic/medimproc-common:0.0.0 AS fsl-optimized
 RUN cd /opt/medimproc/fsl && \
     # Remove unused data directories (~2.4GB)
     rm -rf data/first data/omm data/xtract_data data/possum data/feat5 doc extras/src src && \

@@ -2,8 +2,7 @@
 # Runtime - Interactive Jupyter MedImProc (Full Version)
 # Copies all neuroimaging components from medimproc-common builder stages
 # ============================================================================
-ARG VERSION
-FROM simcore/services/dynamic/medimproc-common:${VERSION} AS common
+FROM simcore/services/dynamic/medimproc-common:0.0.0 AS common
 
 FROM itisfoundation/jupyter-math:2.0.9 AS runtime
 LABEL maintainer="ordonez"
