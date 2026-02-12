@@ -56,7 +56,10 @@ All variants include both toolchains:
 - **Synb0-DISCO**: Distortion correction for diffusion weighted MRI
 - **ANTs 2.4.4**: Advanced normalization tools (FSL variant)
 - **C3D**: Image processing toolkit
-- **PyTorch** (CPU): Deep learning framework for Synb0-DISCO
+- **PyTorch**: Deep learning framework for Synb0-DISCO (CPU version)
+
+### Spinal Cord Toolbox
+- **Spinal Cord Toolbox 7.2**: Comprehensive set of tools for processing and analysis of spinal cord MRI data (Available in `jupyter` and `runner` variants only)
 
 ## Repository Structure
 
@@ -367,12 +370,12 @@ source $FSLDIR/etc/fslconf/fsl.sh
 
 ## Versioning
 
-Current version: **1.3.0**
+Current version: **1.4.0**
 
 ```bash
-make version-patch  # 1.3.0 -> 1.3.3
-make version-minor  # 1.3.0 -> 1.4.0
-make version-major  # 1.3.0 -> 2.0.0
+make version-patch  # 1.4.0 -> 1.3.5
+make version-minor  # 1.4.0 -> 1.4.0
+make version-major  # 1.4.0 -> 2.0.0
 ```
 
 ## Help

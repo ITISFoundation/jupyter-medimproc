@@ -1,0 +1,3 @@
+[submodule "medimproc-testing-pipelines"]
+	path = medimproc-testing-pipelines
+	url = git@git.speag.com:ordonez/medimproc-testing-pipelines.git

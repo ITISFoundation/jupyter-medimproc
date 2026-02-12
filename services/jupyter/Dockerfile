@@ -22,6 +22,7 @@ COPY --from=common /opt/medimproc/.venv ${HOME}/.venv
 COPY --from=common /opt/medimproc/synb0-disco ${HOME}/synb0-disco
 COPY --from=common /opt/medimproc/mrtrix3 ${HOME}/mrtrix3
 COPY --from=common /opt/medimproc/art ${HOME}/art
+COPY --from=common --chown=jovyan:users /opt/medimproc/sct /opt/medimproc/sct
 # Copy FreeSurfer from official image (much faster than FTP download)
 COPY --from=common /opt/freesurfer ${HOME}/freesurfer
 
@@ -58,6 +59,12 @@ ENV FSLDIR=${HOME}/fsl \
     FSLWISH="${HOME}/fsl/bin/fslwish" \
     LD_LIBRARY_PATH="${HOME}/fsl/fslpython/envs/fslpython/lib/:${HOME}/fsl/lib:${LD_LIBRARY_PATH}" \
     PATH="${HOME}/fsl/share/fsl/bin:${HOME}/.venv/bin:${HOME}/ants-2.4.4/bin:${PATH}"
+
+# ============================================================================
+# ENVIRONMENT VARIABLES - Spinal Cord Toolbox
+# ============================================================================
+ENV SCT_DIR=/opt/medimproc/sct \
+    PATH="/opt/medimproc/sct/bin:${PATH}"
 
 USER jovyan
 WORKDIR ${HOME}
