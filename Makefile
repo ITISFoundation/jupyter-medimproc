@@ -40,7 +40,7 @@ compose-spec: ## runs ooil to assemble the docker-compose.yml file
 		sh -c "cd /medimproc && ooil compose"
 
 build: | compose-spec	## build docker image
-	docker compose build
+	docker compose -f docker-compose-local.yml build
 
 # ============================================================================
 # Testing
@@ -73,15 +73,15 @@ shell-runner-slim: ## Run interactive shell in runner-slim variant
 
 .PHONY: up
 up: ## Start docker-compose services
-	docker compose up -d
+	docker compose -f docker-compose-local.yml up -d
 
 .PHONY: down
 down: ## Stop docker-compose services
-	docker compose down
+	docker compose -f docker-compose-local.yml down
 
 .PHONY: logs
 logs: ## View docker-compose logs
-	docker compose logs -f
+	docker compose -f docker-compose-local.yml logs -f
 
 .PHONY: push
 push: # push to both remotes
