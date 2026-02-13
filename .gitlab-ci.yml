@@ -9,8 +9,6 @@ build-images:
   image: $CI_SERVICE_INTEGRATION_LIBRARY  
   tags:  
     - DOCKER  
-    - XSERVER  
-    - GPU  
     - LINUX  
   script:  
     # CI just checks if build works  
