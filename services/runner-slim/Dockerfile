@@ -174,7 +174,7 @@ ENV SC_BUILD_TARGET="runtime" \
     OUTPUT_FOLDER="/output"
 
 # Entrypoint
-COPY common/entrypoint.sh /docker/entrypoint.sh
+COPY common/scripts/entrypoint_runner.sh /docker/entrypoint.sh
 RUN chmod +x /docker/entrypoint.sh
 
 # Set environment for MNI tools from FreeSurfer
