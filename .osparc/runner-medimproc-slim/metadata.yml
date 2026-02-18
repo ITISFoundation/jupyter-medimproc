@@ -14,9 +14,9 @@ integration-version: 2.0.0
 type: computational
 authors:
   - name: Javier Garcia Ordonez
-    email: ordonez@zmt.swiss
+    email: ordonez@itis.swiss
     affiliation: ZMT Zurich MedTech AG
-contact: ordonez@zmt.swiss
+contact: ordonez@itis.swiss
 inputs:
   input_1:
     displayOrder: 1.0
