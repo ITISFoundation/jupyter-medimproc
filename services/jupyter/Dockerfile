@@ -66,5 +66,20 @@ ENV FSLDIR=${HOME}/fsl \
 ENV SCT_DIR=/opt/medimproc/sct \
     PATH="/opt/medimproc/sct/bin:${PATH}"
 
-USER jovyan
+
+
+#######################################################################################
+### Jupyter Environment Setup
+#######################################################################################
+### Should not be necessary -- this inherits from Jupyter Math
+# so it should already ahve all the tooling set right
+# # Entrypoint
+# COPY common/scripts/entrypoint_jupyter.sh /docker/entrypoint.sh
+# RUN chmod +x /docker/entrypoint.sh
+    
+RUN echo 'export PATH="/home/${NB_USER}/.venv/bin:$PATH"' >> "/home/${NB_USER}/.bashrc"
 WORKDIR ${HOME}
+EXPOSE 8888
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=3 CMD [ "/docker/docker_healthcheck.bash" ]
+ENTRYPOINT [ "/bin/bash", "/docker/entrypoint.bash" ]

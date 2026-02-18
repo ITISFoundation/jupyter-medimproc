@@ -393,7 +393,7 @@ docker inspect simcore/services/dynamic/jupyter-medimproc:latest
 
 ## Authors
 
-- Javier Garcia Ordonez (ordonez@zmt.swiss)
+- Javier Garcia Ordonez (ordonez@itis.swiss)
 - ZMT Zurich MedTech AG
 
 ## License
