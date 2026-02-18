@@ -370,12 +370,12 @@ source $FSLDIR/etc/fslconf/fsl.sh
 
 ## Versioning
 
-Current version: **1.4.0**
+Current version: **1.4.1**
 
 ```bash
-make version-patch  # 1.4.0 -> 1.3.5
-make version-minor  # 1.4.0 -> 1.4.0
-make version-major  # 1.4.0 -> 2.0.0
+make version-patch  # 1.4.1 -> 1.3.5
+make version-minor  # 1.4.1 -> 1.4.1
+make version-major  # 1.4.1 -> 2.0.0
 ```
 
 ## Help

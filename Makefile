@@ -3,7 +3,7 @@ SHELL = /bin/sh
 
 # Project Configuration
 PROJECT_NAME := jupyter-medimproc
-VERSION := 1.4.0
+VERSION := 1.4.1
 
 # Variant can be: jupyter, runner, or runner-slim
 VARIANT ?= jupyter
